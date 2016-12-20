@@ -1,0 +1,86 @@
+# 
+# Wavefront material file
+# Converted by the DEEP Exploration  Deep Exploration 5.5 5.5.4.2708 Release
+# Right Hemisphere, LTD
+# http://www.righthemisphere.com/
+# 
+
+newmtl L2
+Ka 0.654902 0.639216 0.623529
+Kd 0.972549 0.972549 0.968628
+Ks 1 1 1
+illum 2
+Ns 157.586
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl SILVER
+Ka 0.654902 0.639216 0.623529
+Kd 0.972549 0.972549 0.968628
+Ks 1 1 1
+illum 2
+Ns 181.019
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl REFMAP.GIF
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl COCACOLA
+Ka 0.639216 0.639216 0.639216
+Kd 0.85098 0.890196 0.901961
+Ks 0.678431 0.882353 0.945098
+illum 2
+Ns 1552.09
+map_Kd COKE.bmp
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Explorer_Default
+Ka 0.117647 0.117647 0.117647
+Kd 0.752941 0.752941 0.752941
+Ks 0.752941 0.752941 0.752941
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl BLACK_MATTE
+Ka 0.0980392 0.0980392 0.0980392
+Kd 0.0980392 0.0980392 0.0980392
+Ks 1 1 1
+illum 2
+Ns 2.82843
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 

@@ -1,0 +1,466 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		969183C21ADCC42700063791 /* All */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 969183C51ADCC42700063791 /* Build configuration list for PBXAggregateTarget "All" */;
+			buildPhases = (
+			);
+			dependencies = (
+				969183C71ADCC43200063791 /* PBXTargetDependency */,
+			);
+			name = All;
+			productName = All;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		9639C1711ADC8EC700E0A7F1 /* libchai3d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C0AD71ADC8E1F007C1E56 /* libchai3d.a */; };
+		965C0ADA1ADC8E4B007C1E56 /* v_repExtCHAI3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 965C0AD81ADC8E4B007C1E56 /* v_repExtCHAI3D.cpp */; };
+		965C0ADB1ADC8E4B007C1E56 /* v_repExtCHAI3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 965C0AD91ADC8E4B007C1E56 /* v_repExtCHAI3D.h */; };
+		96F0E0641ADCA4CE00AD76F3 /* luaFunctionData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 96F0E0611ADCA4CE00AD76F3 /* luaFunctionData.cpp */; };
+		96F0E0651ADCA4CE00AD76F3 /* luaFunctionDataItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 96F0E0621ADCA4CE00AD76F3 /* luaFunctionDataItem.cpp */; };
+		96F0E0661ADCA4CE00AD76F3 /* v_repLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 96F0E0631ADCA4CE00AD76F3 /* v_repLib.cpp */; };
+		96F0E06C1ADCA4DA00AD76F3 /* v_repLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 96F0E0671ADCA4DA00AD76F3 /* v_repLib.h */; };
+		96F0E06D1ADCA4DA00AD76F3 /* luaFunctionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 96F0E0681ADCA4DA00AD76F3 /* luaFunctionData.h */; };
+		96F0E06E1ADCA4DA00AD76F3 /* luaFunctionDataItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 96F0E0691ADCA4DA00AD76F3 /* luaFunctionDataItem.h */; };
+		96F0E06F1ADCA4DA00AD76F3 /* v_repConst.h in Headers */ = {isa = PBXBuildFile; fileRef = 96F0E06A1ADCA4DA00AD76F3 /* v_repConst.h */; };
+		96F0E0701ADCA4DA00AD76F3 /* v_repTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 96F0E06B1ADCA4DA00AD76F3 /* v_repTypes.h */; };
+		96F0E0721ADCA4F300AD76F3 /* libdrd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0E0711ADCA4F300AD76F3 /* libdrd.a */; };
+		96F0E0741ADCA52300AD76F3 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0E0731ADCA52300AD76F3 /* CoreFoundation.framework */; };
+		96F0E0761ADCA52E00AD76F3 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0E0751ADCA52E00AD76F3 /* IOKit.framework */; };
+		96F0E0781ADCA54800AD76F3 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0E0771ADCA54800AD76F3 /* CoreAudio.framework */; };
+		96F0E07A1ADCA55800AD76F3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0E0791ADCA55800AD76F3 /* AudioToolbox.framework */; };
+		96F0E07C1ADCA56200AD76F3 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0E07B1ADCA56200AD76F3 /* AudioUnit.framework */; };
+		96F0E07E1ADCA57B00AD76F3 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0E07D1ADCA57B00AD76F3 /* OpenGL.framework */; };
+		96F0E0801ADCA58A00AD76F3 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0E07F1ADCA58A00AD76F3 /* CoreServices.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9639C16E1ADC8EB700E0A7F1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 965C0AD21ADC8E1E007C1E56 /* libchai3d.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = chai3d;
+		};
+		965C0AD61ADC8E1F007C1E56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 965C0AD21ADC8E1E007C1E56 /* libchai3d.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
+			remoteInfo = chai3d;
+		};
+		969183C61ADCC43200063791 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 963615261ADC8D50007F8C64 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9636152D1ADC8D50007F8C64;
+			remoteInfo = v_repExtCHAI3D;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		9636152E1ADC8D50007F8C64 /* libv_repExtCHAI3D.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libv_repExtCHAI3D.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		965C0AD21ADC8E1E007C1E56 /* libchai3d.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libchai3d.xcodeproj; path = ../../libchai3d.xcodeproj; sourceTree = "<group>"; };
+		965C0AD81ADC8E4B007C1E56 /* v_repExtCHAI3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = v_repExtCHAI3D.cpp; path = src/v_repExtCHAI3D.cpp; sourceTree = "<group>"; };
+		965C0AD91ADC8E4B007C1E56 /* v_repExtCHAI3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = v_repExtCHAI3D.h; path = src/v_repExtCHAI3D.h; sourceTree = "<group>"; };
+		96F0E0611ADCA4CE00AD76F3 /* luaFunctionData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = luaFunctionData.cpp; path = "external/V-REP/common/luaFunctionData.cpp"; sourceTree = "<group>"; };
+		96F0E0621ADCA4CE00AD76F3 /* luaFunctionDataItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = luaFunctionDataItem.cpp; path = "external/V-REP/common/luaFunctionDataItem.cpp"; sourceTree = "<group>"; };
+		96F0E0631ADCA4CE00AD76F3 /* v_repLib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = v_repLib.cpp; path = "external/V-REP/common/v_repLib.cpp"; sourceTree = "<group>"; };
+		96F0E0671ADCA4DA00AD76F3 /* v_repLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = v_repLib.h; path = "external/V-REP/include/v_repLib.h"; sourceTree = "<group>"; };
+		96F0E0681ADCA4DA00AD76F3 /* luaFunctionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = luaFunctionData.h; path = "external/V-REP/include/luaFunctionData.h"; sourceTree = "<group>"; };
+		96F0E0691ADCA4DA00AD76F3 /* luaFunctionDataItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = luaFunctionDataItem.h; path = "external/V-REP/include/luaFunctionDataItem.h"; sourceTree = "<group>"; };
+		96F0E06A1ADCA4DA00AD76F3 /* v_repConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = v_repConst.h; path = "external/V-REP/include/v_repConst.h"; sourceTree = "<group>"; };
+		96F0E06B1ADCA4DA00AD76F3 /* v_repTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = v_repTypes.h; path = "external/V-REP/include/v_repTypes.h"; sourceTree = "<group>"; };
+		96F0E0711ADCA4F300AD76F3 /* libdrd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdrd.a; path = ../../external/DHD/lib/mac/libdrd.a; sourceTree = "<group>"; };
+		96F0E0731ADCA52300AD76F3 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		96F0E0751ADCA52E00AD76F3 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		96F0E0771ADCA54800AD76F3 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		96F0E0791ADCA55800AD76F3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		96F0E07B1ADCA56200AD76F3 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		96F0E07D1ADCA57B00AD76F3 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		96F0E07F1ADCA58A00AD76F3 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9636152B1ADC8D50007F8C64 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9639C1711ADC8EC700E0A7F1 /* libchai3d.a in Frameworks */,
+				96F0E0721ADCA4F300AD76F3 /* libdrd.a in Frameworks */,
+				96F0E0741ADCA52300AD76F3 /* CoreFoundation.framework in Frameworks */,
+				96F0E0761ADCA52E00AD76F3 /* IOKit.framework in Frameworks */,
+				96F0E07E1ADCA57B00AD76F3 /* OpenGL.framework in Frameworks */,
+				96F0E0801ADCA58A00AD76F3 /* CoreServices.framework in Frameworks */,
+				96F0E0781ADCA54800AD76F3 /* CoreAudio.framework in Frameworks */,
+				96F0E07A1ADCA55800AD76F3 /* AudioToolbox.framework in Frameworks */,
+				96F0E07C1ADCA56200AD76F3 /* AudioUnit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		963615251ADC8D50007F8C64 = {
+			isa = PBXGroup;
+			children = (
+				965C0AD21ADC8E1E007C1E56 /* libchai3d.xcodeproj */,
+				965C0AD11ADC8DFF007C1E56 /* Frameworks */,
+				965C0AD01ADC8DF2007C1E56 /* Source */,
+				965C0ACF1ADC8DE9007C1E56 /* External */,
+				9636152F1ADC8D50007F8C64 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9636152F1ADC8D50007F8C64 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9636152E1ADC8D50007F8C64 /* libv_repExtCHAI3D.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		965C0ACF1ADC8DE9007C1E56 /* External */ = {
+			isa = PBXGroup;
+			children = (
+				96F0E05E1ADCA48B00AD76F3 /* V-REP */,
+				96F0E0711ADCA4F300AD76F3 /* libdrd.a */,
+			);
+			name = External;
+			sourceTree = "<group>";
+		};
+		965C0AD01ADC8DF2007C1E56 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				965C0AD81ADC8E4B007C1E56 /* v_repExtCHAI3D.cpp */,
+				965C0AD91ADC8E4B007C1E56 /* v_repExtCHAI3D.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		965C0AD11ADC8DFF007C1E56 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				96F0E07F1ADCA58A00AD76F3 /* CoreServices.framework */,
+				96F0E07D1ADCA57B00AD76F3 /* OpenGL.framework */,
+				96F0E07B1ADCA56200AD76F3 /* AudioUnit.framework */,
+				96F0E0791ADCA55800AD76F3 /* AudioToolbox.framework */,
+				96F0E0771ADCA54800AD76F3 /* CoreAudio.framework */,
+				96F0E0751ADCA52E00AD76F3 /* IOKit.framework */,
+				96F0E0731ADCA52300AD76F3 /* CoreFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		965C0AD31ADC8E1E007C1E56 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				965C0AD71ADC8E1F007C1E56 /* libchai3d.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		96F0E05E1ADCA48B00AD76F3 /* V-REP */ = {
+			isa = PBXGroup;
+			children = (
+				96F0E0601ADCA4B300AD76F3 /* include */,
+				96F0E05F1ADCA49900AD76F3 /* common */,
+			);
+			name = "V-REP";
+			sourceTree = "<group>";
+		};
+		96F0E05F1ADCA49900AD76F3 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				96F0E0611ADCA4CE00AD76F3 /* luaFunctionData.cpp */,
+				96F0E0621ADCA4CE00AD76F3 /* luaFunctionDataItem.cpp */,
+				96F0E0631ADCA4CE00AD76F3 /* v_repLib.cpp */,
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+		96F0E0601ADCA4B300AD76F3 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				96F0E0671ADCA4DA00AD76F3 /* v_repLib.h */,
+				96F0E0681ADCA4DA00AD76F3 /* luaFunctionData.h */,
+				96F0E0691ADCA4DA00AD76F3 /* luaFunctionDataItem.h */,
+				96F0E06A1ADCA4DA00AD76F3 /* v_repConst.h */,
+				96F0E06B1ADCA4DA00AD76F3 /* v_repTypes.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		9636152C1ADC8D50007F8C64 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96F0E06E1ADCA4DA00AD76F3 /* luaFunctionDataItem.h in Headers */,
+				96F0E0701ADCA4DA00AD76F3 /* v_repTypes.h in Headers */,
+				965C0ADB1ADC8E4B007C1E56 /* v_repExtCHAI3D.h in Headers */,
+				96F0E06D1ADCA4DA00AD76F3 /* luaFunctionData.h in Headers */,
+				96F0E06C1ADCA4DA00AD76F3 /* v_repLib.h in Headers */,
+				96F0E06F1ADCA4DA00AD76F3 /* v_repConst.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		9636152D1ADC8D50007F8C64 /* v_repExtCHAI3D */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 963615391ADC8D50007F8C64 /* Build configuration list for PBXNativeTarget "v_repExtCHAI3D" */;
+			buildPhases = (
+				9636152C1ADC8D50007F8C64 /* Headers */,
+				9636152A1ADC8D50007F8C64 /* Sources */,
+				9636152B1ADC8D50007F8C64 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9639C16F1ADC8EB700E0A7F1 /* PBXTargetDependency */,
+			);
+			name = v_repExtCHAI3D;
+			productName = v_repExtCHAI3D;
+			productReference = 9636152E1ADC8D50007F8C64 /* libv_repExtCHAI3D.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		963615261ADC8D50007F8C64 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = CHAI3D;
+				TargetAttributes = {
+					9636152D1ADC8D50007F8C64 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+					969183C21ADCC42700063791 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+				};
+			};
+			buildConfigurationList = 963615291ADC8D50007F8C64 /* Build configuration list for PBXProject "chai3d-V-REP" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 963615251ADC8D50007F8C64;
+			productRefGroup = 9636152F1ADC8D50007F8C64 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 965C0AD31ADC8E1E007C1E56 /* Products */;
+					ProjectRef = 965C0AD21ADC8E1E007C1E56 /* libchai3d.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				9636152D1ADC8D50007F8C64 /* v_repExtCHAI3D */,
+				969183C21ADCC42700063791 /* All */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		965C0AD71ADC8E1F007C1E56 /* libchai3d.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libchai3d.a;
+			remoteRef = 965C0AD61ADC8E1F007C1E56 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9636152A1ADC8D50007F8C64 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96F0E0661ADCA4CE00AD76F3 /* v_repLib.cpp in Sources */,
+				96F0E0641ADCA4CE00AD76F3 /* luaFunctionData.cpp in Sources */,
+				96F0E0651ADCA4CE00AD76F3 /* luaFunctionDataItem.cpp in Sources */,
+				965C0ADA1ADC8E4B007C1E56 /* v_repExtCHAI3D.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9639C16F1ADC8EB700E0A7F1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = chai3d;
+			targetProxy = 9639C16E1ADC8EB700E0A7F1 /* PBXContainerItemProxy */;
+		};
+		969183C71ADCC43200063791 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9636152D1ADC8D50007F8C64 /* v_repExtCHAI3D */;
+			targetProxy = 969183C61ADCC43200063791 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		963615371ADC8D50007F8C64 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/mac";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = MACOSX;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OBJROOT = "obj/$(CONFIGURATION)/mac";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGETNAME)";
+				SDKROOT = macosx;
+				SYMROOT = "bin/mac-$(CURRENT_ARCH)";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = "-Wno-deprecated";
+			};
+			name = Debug;
+		};
+		963615381ADC8D50007F8C64 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/mac";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = MACOSX;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OBJROOT = "obj/$(CONFIGURATION)/mac";
+				PRODUCT_NAME = "$(TARGETNAME)";
+				SDKROOT = macosx;
+				SYMROOT = "bin/mac-$(CURRENT_ARCH)";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = "-Wno-deprecated";
+			};
+			name = Release;
+		};
+		9636153A1ADC8D50007F8C64 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/seb/workspace/sdk/external/chai3d/external/DHD/lib/mac,
+				);
+				MACH_O_TYPE = mh_dylib;
+				USER_HEADER_SEARCH_PATHS = "./src ../../src ../../external/Eigen";
+			};
+			name = Debug;
+		};
+		9636153B1ADC8D50007F8C64 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/seb/workspace/sdk/external/chai3d/external/DHD/lib/mac,
+				);
+				MACH_O_TYPE = mh_dylib;
+				USER_HEADER_SEARCH_PATHS = "./src ../../src ../../external/Eigen";
+			};
+			name = Release;
+		};
+		969183C31ADCC42700063791 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		969183C41ADCC42700063791 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		963615291ADC8D50007F8C64 /* Build configuration list for PBXProject "chai3d-V-REP" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				963615371ADC8D50007F8C64 /* Debug */,
+				963615381ADC8D50007F8C64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		963615391ADC8D50007F8C64 /* Build configuration list for PBXNativeTarget "v_repExtCHAI3D" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9636153A1ADC8D50007F8C64 /* Debug */,
+				9636153B1ADC8D50007F8C64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		969183C51ADCC42700063791 /* Build configuration list for PBXAggregateTarget "All" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				969183C31ADCC42700063791 /* Debug */,
+				969183C41ADCC42700063791 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 963615261ADC8D50007F8C64 /* Project object */;
+}

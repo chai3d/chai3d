@@ -1,0 +1,38 @@
+# 
+# Wavefront material file
+# Converted by the DEEP Exploration  Deep Exploration 5.5 5.5.4.2708 Release
+# Right Hemisphere, LTD
+# http://www.righthemisphere.com/
+# 
+
+newmtl hMIRA_TEAL
+Ka 0.211765 0.117647 0.490196
+Kd 0.262745 0.501961 0.941176
+Ks 0.639216 0.74902 0.890196
+illum 2
+Ns 388.023
+map_Kd CCUBE_I.SXP
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl REFMAP.GIF
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl BEIGE_MATTE
+Ka 0.407843 0.121569 0.180392
+Kd 0.407843 0.121569 0.180392
+Ks 0.905882 0.905882 0.905882
+illum 2
+Ns 39.3966
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 

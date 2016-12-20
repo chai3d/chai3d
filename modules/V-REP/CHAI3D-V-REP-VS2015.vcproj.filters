@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="v_repExtCHAI3D.cpp" />
+    <ClCompile Include="../common/luaFunctionData.cpp">
+      <Filter>V-REP/common</Filter>
+    </ClCompile>
+    <ClCompile Include="../common/luaFunctionDataItem.cpp">
+      <Filter>V-REP/common</Filter>
+    </ClCompile>
+    <ClCompile Include="../common/v_repLib.cpp">
+      <Filter>V-REP/common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="v_repExtCHAI3D.h" />
+    <ClInclude Include="../include/luaFunctionData.h">
+      <Filter>V-REP/include</Filter>
+    </ClInclude>
+    <ClInclude Include="../include/luaFunctionDataItem.h">
+      <Filter>V-REP/include</Filter>
+    </ClInclude>
+    <ClInclude Include="../include/v_repConst.h">
+      <Filter>V-REP/include</Filter>
+    </ClInclude>
+    <ClInclude Include="../include/v_repLib.h">
+      <Filter>V-REP/include</Filter>
+    </ClInclude>
+    <ClInclude Include="../include/v_repTypes.h">
+      <Filter>V-REP/include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="V-REP">
+      <UniqueIdentifier>{294c9a8f-4b79-4999-9aa0-09e70863d82c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="V-REP/include">
+      <UniqueIdentifier>{ef3179ac-6574-4071-8f7a-52dee229a85c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="V-REP/common">
+      <UniqueIdentifier>{121e4023-c1a9-400e-a92b-9dc5d1eef8c8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,38 @@
+# 
+# Wavefront material file
+# Converted by the DEEP Exploration  Deep Exploration 5.5 5.5.4.2708 Release
+# Right Hemisphere, LTD
+# http://www.righthemisphere.com/
+# 
+
+newmtl Nerve
+Ka 1 0.45098 0.235294
+Kd 1 0.45098 0.235294
+Ks 0.898039 0.898039 0.898039
+illum 2
+Ns 10.5561
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Tooth
+Ka 1 0.956863 0.886275
+Kd 1 0.956863 0.886275
+Ks 0.898039 0.898039 0.898039
+illum 2
+Ns 9.84916
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 

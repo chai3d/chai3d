@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="/home/seb/workspace/svn.chai3d.org/tags/3.2.0/doc/doxygen/chai3d.tag$classchai3d_1_1c_generic_type.html" title="chai3d::cGenericType" alt="" coords="5,56,155,83"/>
+<area shape="rect" id="node2" href="/home/seb/workspace/svn.chai3d.org/tags/3.2.0/doc/doxygen/chai3d.tag$classchai3d_1_1c_generic_object.html" title="chai3d::cGenericObject" alt="" coords="203,56,361,83"/>
+<area shape="rect" id="node3" href="$classc_o_d_e_generic_body.html" title="This class implements an ODE dynamic object. " alt="" coords="409,5,543,32"/>
+<area shape="rect" id="node4" href="$classc_o_d_e_world.html" title="This class implements an ODE dynamic world. " alt="" coords="430,56,522,83"/>
+</map>
