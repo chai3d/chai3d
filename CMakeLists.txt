@@ -137,9 +137,23 @@ endif ()
 # static library
 #
 
+# find system Eigen 
+# - eigen3
+set(EIGEN3_INCLUDE_DIR $ENV{EIGEN3_INCLUDE_DIR})
+if(NOT EIGEN3_INCLUDE_DIR)
+  find_package(Eigen3 QUIET)
+  # TODO: Find automatic way to find for Ubuntu 14.04
+  if(NOT EIGEN3_INCLUDE_DIR)
+    set(EIGEN3_INCLUDE_DIR /usr/include/eigen3)
+  endif()
+endif()
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+
 # header search path
 include_directories (${PROJECT_SOURCE_DIR}/src)
-include_directories (${PROJECT_SOURCE_DIR}/external/Eigen)
+include_directories (EIGEN3_INCLUDE_DIR)
+# include_directories (${PROJECT_SOURCE_DIR}/external/Eigen)
 include_directories (${PROJECT_SOURCE_DIR}/external/glew/include)
 include_directories (${PROJECT_SOURCE_DIR}/external/giflib/include)
 include_directories (${PROJECT_SOURCE_DIR}/external/lib3ds/include)
@@ -160,7 +174,8 @@ include_directories (${PROJECT_SOURCE_DIR}/external/theoraplayer/src/Theora)
 file (GLOB_RECURSE source RELATIVE ${CHAI3D_SOURCE_DIR} ${CHAI3D_SOURCE_DIR}/src/*.cpp ${CHAI3D_SOURCE_DIR}/src/*.h)
 
 # static library external dependencies source files
-file (GLOB_RECURSE source_eigen     RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/Eigen/Eigen/*)
+file (GLOB_RECURSE source_eigen     RELATIVE ${PROJECT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIR}/Eigen/*)
+# file (GLOB_RECURSE source_eigen     RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/Eigen/Eigen/*)
 file (GLOB_RECURSE source_gif       RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/giflib/*.c       ${PROJECT_SOURCE_DIR}/external/giflib/*.h)
 file (GLOB_RECURSE source_glew      RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/glew/*.c         ${PROJECT_SOURCE_DIR}/external/glew/*.h)
 file (GLOB_RECURSE source_3ds       RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/lib3ds/*.c       ${PROJECT_SOURCE_DIR}/external/lib3ds/*.h)
@@ -193,7 +208,7 @@ add_definitions (${PROJECT_DEFINITIONS} -DGLEW_STATIC -DAL_ALEXT_PROTOTYPES -DAL
 add_library (chai3d STATIC ${source} ${source_eigen} ${source_gif} ${source_glew} ${source_3ds} ${source_jpeg} ${source_png} ${source_pugixml} ${source_openal} ${source_theora})
 
 # library exports
-set (CHAI3D_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src" "${PROJECT_SOURCE_DIR}/external/Eigen" "${PROJECT_SOURCE_DIR}/external/glew/include" "${OPENGL_INCLUDE_DIR}")
+set (CHAI3D_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src" "${EIGEN3_INCLUDE_DIR}" "${PROJECT_SOURCE_DIR}/external/glew/include" "${OPENGL_INCLUDE_DIR}")
 set (CHAI3D_LIBRARIES chai3d ${OPENGL_LIBRARIES})
 set (CHAI3D_DEFINITIONS ${PROJECT_DEFINITIONS})
 if (NOT ${CMAKE_SYSTEM_NAME} MATCHES Windows)
