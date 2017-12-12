@@ -805,16 +805,28 @@ bool cPhantomDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force, 
         return (C_ERROR);
     }
 
+	// clamp forces and torques to prevent device damage
+	cVector3d force(a_force);
+	force.clamp(m_specifications.m_maxLinearForce);
+
+	cVector3d torque(a_torque);
+	torque.clamp(m_specifications.m_maxAngularTorque);
+
+	double gripperForce = ((a_gripperForce < 0) ? -1 : 1) * std::min(
+		std::abs(a_gripperForce),
+		std::abs(m_specifications.m_maxGripperForce)
+	);
+
     // send force and torque command
-    int error = hdPhantomSetForceAndTorque(m_deviceID, &a_force(0), &a_force(1), &a_force(2), &a_torque(0), &a_torque(1), &a_torque(2));
+    int error = hdPhantomSetForceAndTorque(m_deviceID, &force(0), &force(1), &force(2), &torque(0), &torque(1), &torque(2));
     if (error == -1)
     { 
         return (C_ERROR);
     }
 
     // store new commanded values
-    m_prevForce  = a_force;
-    m_prevTorque = a_torque;
+    m_prevForce  = force;
+    m_prevTorque = torque;
 
     // return success
     return (C_SUCCESS);

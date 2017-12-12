@@ -594,21 +594,33 @@ bool cMyCustomDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force,
 
     bool result = C_SUCCESS;
 
+	// clamp forces and torques to prevent device damage
+	cVector3d force(a_force);
+	force.clamp(m_specifications.m_maxLinearForce);
+
+	cVector3d torque(a_torque);
+	torque.clamp(m_specifications.m_maxAngularTorque);
+
+	double gripperForce = ((a_gripperForce < 0) ? -1 : 1) * std::min(
+		std::abs(a_gripperForce),
+		std::abs(m_specifications.m_maxGripperForce)
+	);
+
     // store new force value.
-    m_prevForce = a_force;
-    m_prevTorque = a_torque;
-    m_prevGripperForce = a_gripperForce;
+    m_prevForce = force;
+    m_prevTorque = torque;
+    m_prevGripperForce = gripperForce;
 
     // retrieve force, torque, and gripper force components in individual variables
-    double fx = a_force(0);
-    double fy = a_force(1);
-    double fz = a_force(2);
+    double fx = force(0);
+    double fy = force(1);
+    double fz = force(2);
 
-    double tx = a_torque(0);
-    double ty = a_torque(1);
-    double tz = a_torque(2);
+    double tx = torque(0);
+    double ty = torque(1);
+    double tz = torque(2);
 
-    double gf = a_gripperForce;
+    double fg = gripperForce;
 
     // *** INSERT YOUR CODE HERE ***
 

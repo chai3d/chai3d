@@ -1565,6 +1565,18 @@ bool cDeltaDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force,
     // check if forces need to be enable (happens only once)
     if (m_statusEnableForcesFirstTime) { enableForces(true); }
 
+	// clamp forces and torques to prevent device damage
+	cVector3d force(a_force);
+	force.clamp(m_specifications.m_maxLinearForce);
+
+	cVector3d torque(a_torque);
+	torque.clamp(m_specifications.m_maxAngularTorque);
+
+	double gripperForce = ((a_gripperForce < 0) ? -1 : 1) * std::min(
+		std::abs(a_gripperForce),
+		std::abs(m_specifications.m_maxGripperForce)
+	);
+
     // computer gripper user switch gripper force
     double gripperAngle;
     double gripperUserSwitchForce = 0.0;
@@ -1572,32 +1584,32 @@ bool cDeltaDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force,
     {
         gripperUserSwitchForce = computeGripperUserSwitchForce(gripperAngle, 0.0);
     }
+    double gripperForceWithUserSwitch = gripperForce + gripperUserSwitchForce;
 
-    // adjust gripper command for left or right hand device
-    double gripperForce = a_gripperForce + gripperUserSwitchForce;
+	// adjust gripper command for left or right hand device
     if (m_specifications.m_leftHand)
     {
-        gripperForce =-gripperForce;
+		gripperForceWithUserSwitch =-gripperForceWithUserSwitch;
     }
 
     if (m_specifications.m_actuatedRotation)
     {
         if (s_dhdSetForceAndTorqueAndGripperForce)
         {
-            int error = dhdSetForceAndTorqueAndGripperForce(a_force(0),
-                                                            a_force(1),
-                                                            a_force(2),
-                                                            a_torque(0),
-                                                            a_torque(1),
-                                                            a_torque(2),
-                                                            gripperForce,
+            int error = dhdSetForceAndTorqueAndGripperForce(force(0),
+                                                            force(1),
+                                                            force(2),
+                                                            torque(0),
+                                                            torque(1),
+                                                            torque(2),
+                                                            gripperForceWithUserSwitch,
                                                             m_deviceID);
             if (error < 0) { return (C_ERROR); }
 
             // store new commanded values
-            m_prevForce  = a_force;
-            m_prevTorque  = a_torque;
-            m_prevGripperForce = a_gripperForce;
+            m_prevForce  = force;
+            m_prevTorque  = torque;
+            m_prevGripperForce = gripperForce;
         }
         else
         {
@@ -1608,27 +1620,27 @@ bool cDeltaDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force,
     {
         if (s_flagUsingSDK32 && !m_specifications.m_actuatedGripper && s_dhdSetForce)
         {
-            int error = dhdSetForce(a_force(0),
-                a_force(1),
-                a_force(2),
-                m_deviceID);
+            int error = dhdSetForce(force(0),
+                                    force(1),
+                                    force(2),
+                                    m_deviceID);
             if (error < 0) { return (C_ERROR); }
 
             // store new commanded values
-            m_prevForce = a_force;
+            m_prevForce = force;
         }
         else if (s_dhdSetForceAndGripperForce)
         {
-            int error = dhdSetForceAndGripperForce(a_force(0),
-                                                   a_force(1),
-                                                   a_force(2),
-                                                   gripperForce,
+            int error = dhdSetForceAndGripperForce(force(0),
+                                                   force(1),
+                                                   force(2),
+                                                   gripperForceWithUserSwitch,
                                                    m_deviceID);
             if (error < 0) { return (C_ERROR); }
 
             // store new commanded values
-            m_prevForce = a_force;
-            m_prevGripperForce = a_gripperForce;
+            m_prevForce = force;
+            m_prevGripperForce = gripperForce;
         }
         else
         {
