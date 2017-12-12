@@ -368,7 +368,7 @@ public:
     bool  setForceAndTorque(const cVector3d& a_force, const cVector3d& a_torque) { return (setForceAndTorqueAndGripperForce(a_force, a_torque, 0.0)); }
 
     //! This method sends a force [N], torque [N*m], and gripper force [N] command to the haptic device.
-    virtual bool setForceAndTorqueAndGripperForce(const cVector3d& a_force, const cVector3d& a_torque, double a_gripperForce) { cSleepMs(1); return (m_deviceReady); }
+    virtual bool setForceAndTorqueAndGripperForce(const cVector3d& a_force, const cVector3d& a_torque, const double a_gripperForce) { cSleepMs(1); return (m_deviceReady); }
 
 
     //--------------------------------------------------------------------------

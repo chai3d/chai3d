@@ -1557,7 +1557,7 @@ bool cDeltaDevice::getGripperAngleRad(double& a_angle)
 //==============================================================================
 bool cDeltaDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force,
                                                    const cVector3d& a_torque,
-                                                   double a_gripperForce)
+                                                   const double a_gripperForce)
 {
     // check if the system is available
     if (!m_deviceReady) return (C_ERROR);

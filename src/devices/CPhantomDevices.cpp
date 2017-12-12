@@ -797,7 +797,7 @@ bool cPhantomDevice::getRotation(cMatrix3d& a_rotation)
     \return __true__ if the operation succeeds, __false__ otherwise.
 */
 //==============================================================================
-bool cPhantomDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force, const cVector3d& a_torque, double a_gripperForce)
+bool cPhantomDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force, const cVector3d& a_torque, const double a_gripperForce)
 {
     // check if drivers are installed
     if (!m_deviceReady)
