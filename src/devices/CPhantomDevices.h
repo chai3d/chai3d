@@ -123,7 +123,7 @@ class cPhantomDevice : public cGenericHapticDevice
     virtual bool getUserSwitches(unsigned int& a_userSwitches); 
 
     //! This method sends a force, torque, and gripper force to the haptic device.
-    virtual bool setForceAndTorqueAndGripperForce(const cVector3d& a_force, const cVector3d& a_torque, double a_gripperForce);
+    virtual bool setForceAndTorqueAndGripperForce(const cVector3d& a_force, const cVector3d& a_torque, const double a_gripperForce);
 
 
     //--------------------------------------------------------------------------
