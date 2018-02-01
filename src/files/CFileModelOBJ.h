@@ -171,8 +171,8 @@ typedef std::map<vertexIndexSet,unsigned int,ltVertexIndexSet> vertexIndexSet_ui
 #define C_OBJ_MTL_DIFFUSE_ID   "Kd"
 #define C_OBJ_MTL_SPECULAR_ID  "Ks"
 #define C_OBJ_MTL_SHININESS_ID "Ns"
-#define C_OBJ_MTL_ALPHA_ID     "Tr"
-#define C_OBJ_MTL_ALPHA_ID_ALT "d"
+#define C_OBJ_MTL_ALPHA_ID     "d"
+#define C_OBJ_MTL_ALPHA_ID_ALT "Tr"
 
 // Maximum size of a string that could be read out of the OBJ file
 #define C_OBJ_MAX_STR_SIZE 1024
