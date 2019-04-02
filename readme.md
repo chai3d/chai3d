@@ -1,5 +1,3 @@
-
-
 CHAI3D - The Open Source Haptic Framework
 -----------------------------------------
 
@@ -26,7 +24,13 @@ native haptic applications as well as for hybrid development where you
 can choose which components provide the best haptic and visual user 
 experience.
 
-
+Build Instructions
+==================
+```
+mkdir build
+cd build
+cmake .. && make -j4
+```
 
 Learning Resources
 ==================
