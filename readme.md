@@ -24,6 +24,13 @@ native haptic applications as well as for hybrid development where you
 can choose which components provide the best haptic and visual user 
 experience.
 
+Dependencies
+============
+On Ubuntu, the software depends on libasound2, libusb-1.0.0, freeglut3, xorg, libglew.
+```
+sudo apt-get install libasound2-dev libusb-1.0.0-dev freeglut3-dev xorg-dev libglew-dev
+```
+
 Build Instructions
 ==================
 ```
