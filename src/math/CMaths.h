@@ -1190,7 +1190,7 @@ inline cMatrix3d cRotEulerDeg(const double& a_angleDeg1,
     // create matrix
     cMatrix3d rot;
     if (a_useIntrinsicEulerModel)
-        rot.setExtrinsicEulerRotationDeg(a_angleDeg1, a_angleDeg2, a_angleDeg3, a_eulerOrder);
+        rot.setIntrinsicEulerRotationDeg(a_angleDeg1, a_angleDeg2, a_angleDeg3, a_eulerOrder);
     else
         rot.setExtrinsicEulerRotationDeg(a_angleDeg1, a_angleDeg2, a_angleDeg3, a_eulerOrder);
 
