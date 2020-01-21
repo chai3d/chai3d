@@ -475,7 +475,7 @@ bool cFileXML::setName(const string& a_name)
     // otherwise, assign name to current node
     else 
     {
-      ((XML*)(m_xml))->m_currentNode.set_value(a_name.c_str());
+      ((XML*)(m_xml))->m_currentNode.set_name(a_name.c_str());
 
       return true;
     }
