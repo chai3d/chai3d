@@ -356,6 +356,10 @@ typedef uLong FAR uLongf;
    typedef Byte       *voidp;
 #endif
 
+#if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+#  define HAVE_UNISTD_H 1
+# endif
+
 #ifdef HAVE_UNISTD_H    /* may be set to #if 1 by ./configure */
 #  define Z_HAVE_UNISTD_H
 #endif
