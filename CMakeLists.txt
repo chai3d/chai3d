@@ -76,6 +76,9 @@ if (NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Setting build mode to Release" FORCE)
 endif()
 
+# build examples and extras
+option(BUILD_EXAMPLES "Build examples" OFF)
+
 # output location
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY                ${PROJECT_SOURCE_DIR}/bin/${OS}-${ARCH})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG          ${PROJECT_SOURCE_DIR}/bin/${OS}-${ARCH})
@@ -84,6 +87,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE        ${PROJECT_SOURCE_DIR}/bin/${O
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PROJECT_SOURCE_DIR}/bin/${OS}-${ARCH})
 
 # OpenGL dependency
+set(OpenGL_GL_PREFERENCE "GLVND")
 find_package (OpenGL REQUIRED)
 include_directories (OPENGL_INCLUDE_DIR)
 
@@ -231,26 +235,28 @@ set (CHAI3D_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 # optional extras
 #
 
-# GLFW
-if (EXISTS ${PROJECT_SOURCE_DIR}/extras/GLFW)
-  add_subdirectory (${PROJECT_SOURCE_DIR}/extras/GLFW)
-endif ()
+if(BUILD_EXAMPLES)
 
+  # GLFW
+  if (EXISTS ${PROJECT_SOURCE_DIR}/extras/GLFW)
+    add_subdirectory (${PROJECT_SOURCE_DIR}/extras/GLFW)
+  endif ()
 
-#
-# executables
-#
+  #
+  # executables
+  #
 
-# examples
-if (EXISTS ${PROJECT_SOURCE_DIR}/examples)
-  add_subdirectory (${PROJECT_SOURCE_DIR}/examples)
-endif ()
+  # examples
+  if (EXISTS ${PROJECT_SOURCE_DIR}/examples)
+    add_subdirectory (${PROJECT_SOURCE_DIR}/examples)
+  endif ()
 
-# utilities
-if (EXISTS ${PROJECT_SOURCE_DIR}/utils)
-  add_subdirectory (${PROJECT_SOURCE_DIR}/utils)
-endif ()
+  # utilities
+  if (EXISTS ${PROJECT_SOURCE_DIR}/utils)
+    add_subdirectory (${PROJECT_SOURCE_DIR}/utils)
+  endif ()
 
+endif()
 
 #
 # export package

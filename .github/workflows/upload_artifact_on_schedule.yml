@@ -1,0 +1,23 @@
+name: Build master and upload artifact on a schedule
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"
+      branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  call-build-workflow:
+    uses: ./.github/workflows/build_and_test.yml
+
+  upload-artifact:
+    needs: call-build-workflow
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Archive chai3d Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: chai3d-artifact
+        path: build/libchai3d.a

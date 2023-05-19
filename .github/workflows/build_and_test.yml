@@ -1,0 +1,24 @@
+name: Build and Test
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies library and prepare dependency folder
+      run: sudo apt-get install libeigen3-dev libasound2-dev libusb-1.0.0-dev freeglut3-dev xorg-dev libglew-dev
+
+    - name: Build Chai3d
+      run: |
+        mkdir build && cd build
+        cmake .. && make -j8
+
+    - name: Check build status
+      run: |
+        cd build
+        make --always-make --dry-run

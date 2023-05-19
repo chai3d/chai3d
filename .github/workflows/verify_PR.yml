@@ -1,0 +1,11 @@
+name: Verify PR builds
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  call-build-workflow:
+    uses: ./.github/workflows/build_and_test.yml
