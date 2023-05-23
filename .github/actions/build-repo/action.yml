@@ -1,24 +1,21 @@
-name: Build and Test
+name: 'Build'
+description: 'Builds the repository'
 
-on:
-  workflow_call:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Install dependencies library and prepare dependency folder
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      shell: bash
       run: sudo apt-get install libeigen3-dev libasound2-dev libusb-1.0.0-dev freeglut3-dev xorg-dev libglew-dev
 
     - name: Build Chai3d
+      shell: bash
       run: |
         mkdir build && cd build
         cmake .. && make -j8
 
     - name: Check build status
+      shell: bash
       run: |
         cd build
         make --always-make --dry-run

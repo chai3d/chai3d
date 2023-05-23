@@ -1,11 +1,15 @@
 name: Verify PR builds
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
 jobs:
-  call-build-workflow:
-    uses: ./.github/workflows/build_and_test.yml
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout-repo
+        uses: actions/checkout@v3
+
+      - name: build-repo
+        uses: ./.github/actions/build-repo

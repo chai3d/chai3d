@@ -7,17 +7,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-build-workflow:
-    uses: ./.github/workflows/build_and_test.yml
-
-  upload-artifact:
-    needs: call-build-workflow
-
+  build-and-archive:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Archive chai3d Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: chai3d-artifact
-        path: build/libchai3d.a
+      - name: checkout-repo
+        uses: actions/checkout@v3
+
+      - name: build-repo
+        uses: ./.github/actions/build-repo
+
+      - name: Archive chai3d Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: chai3d-artifact
+          path: build/libchai3d.a
