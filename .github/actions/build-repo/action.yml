@@ -6,7 +6,9 @@ runs:
   steps:
     - name: Install dependencies
       shell: bash
-      run: sudo apt-get install libeigen3-dev libasound2-dev libusb-1.0.0-dev freeglut3-dev xorg-dev libglew-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libeigen3-dev libasound2-dev libusb-1.0.0-dev freeglut3-dev xorg-dev libglew-dev
 
     - name: Build Chai3d
       shell: bash
