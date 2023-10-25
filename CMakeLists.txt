@@ -41,11 +41,11 @@
 # configuration
 #
 
-cmake_minimum_required (VERSION 3.0.0)
+cmake_minimum_required (VERSION 3.10)
 project (CHAI3D)
 
 # version info
-file (READ ${PROJECT_SOURCE_DIR}/src/version VERSION)
+file (READ ${PROJECT_SOURCE_DIR}/version VERSION)
 STRING (REGEX REPLACE ".*MAJOR=([0-9]+).*" "\\1" MAJOR_VERSION "${VERSION}")
 STRING (REGEX REPLACE ".*MINOR=([0-9]+).*" "\\1" MINOR_VERSION "${VERSION}")
 STRING (REGEX REPLACE ".*RELEASE=([0-9]+).*" "\\1" RELEASE_VERSION "${VERSION}")
@@ -68,7 +68,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES Linux)
   endif ()
 elseif (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
   set (OS "mac")
-  set (ARCH "x86_64")
+  EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCH)
 endif ()
 
 # enforce build type
@@ -90,6 +90,10 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PROJECT_SOURCE_DIR}/bin/${O
 set(OpenGL_GL_PREFERENCE "GLVND")
 find_package (OpenGL REQUIRED)
 include_directories (OPENGL_INCLUDE_DIR)
+
+# OpenAL dependency
+find_package (OpenAL REQUIRED)
+include_directories (OPENAL_INCLUDE_DIR)
 
 # on non-Windows, DHD dependency
 if (NOT ${CMAKE_SYSTEM_NAME} MATCHES Windows)
@@ -133,7 +137,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES Linux)
 # Mac OS X global build options
 elseif (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
   add_definitions (-DMACOSX)
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments -Wno-deprecated -std=c++0x -stdlib=libc++")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments -Wno-deprecated -std=c++0x -stdlib=libc++ -I/opt/homebrew/opt/openal-soft/include")
   set (CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Qunused-arguments -Wno-deprecated")
 endif ()
 
@@ -143,30 +147,16 @@ endif ()
 #
 
 # find system Eigen 
-# - eigen3
-set(EIGEN3_INCLUDE_DIR $ENV{EIGEN3_INCLUDE_DIR})
-if(NOT EIGEN3_INCLUDE_DIR)
-  find_package(Eigen3 QUIET)
-  # TODO: Find automatic way to find for Ubuntu 14.04
-  if(NOT EIGEN3_INCLUDE_DIR)
-    set(EIGEN3_INCLUDE_DIR /usr/include/eigen3)
-  endif()
-endif()
+find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
-
 
 # header search path
 include_directories (${PROJECT_SOURCE_DIR}/src)
-include_directories (EIGEN3_INCLUDE_DIR)
-# include_directories (${PROJECT_SOURCE_DIR}/external/Eigen)
 include_directories (${PROJECT_SOURCE_DIR}/external/glew/include)
 include_directories (${PROJECT_SOURCE_DIR}/external/giflib/include)
 include_directories (${PROJECT_SOURCE_DIR}/external/lib3ds/include)
 include_directories (${PROJECT_SOURCE_DIR}/external/libjpeg/include)
 include_directories (${PROJECT_SOURCE_DIR}/external/libpng/include)
-include_directories (${PROJECT_SOURCE_DIR}/external/openal/include)
-include_directories (${PROJECT_SOURCE_DIR}/external/openal/OpenAL32/Include)
-include_directories (${PROJECT_SOURCE_DIR}/external/openal/Alc)
 include_directories (${PROJECT_SOURCE_DIR}/external/pugixml/include)
 include_directories (${PROJECT_SOURCE_DIR}/external/theoraplayer/include/theoraplayer)
 include_directories (${PROJECT_SOURCE_DIR}/external/theoraplayer/external/ogg/include)
@@ -180,14 +170,12 @@ file (GLOB_RECURSE source RELATIVE ${CHAI3D_SOURCE_DIR} ${CHAI3D_SOURCE_DIR}/src
 
 # static library external dependencies source files
 file (GLOB_RECURSE source_eigen     RELATIVE ${PROJECT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIR}/Eigen/*)
-# file (GLOB_RECURSE source_eigen     RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/Eigen/Eigen/*)
 file (GLOB_RECURSE source_gif       RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/giflib/*.c       ${PROJECT_SOURCE_DIR}/external/giflib/*.h)
 file (GLOB_RECURSE source_glew      RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/glew/*.c         ${PROJECT_SOURCE_DIR}/external/glew/*.h)
 file (GLOB_RECURSE source_3ds       RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/lib3ds/*.c       ${PROJECT_SOURCE_DIR}/external/lib3ds/*.h)
 file (GLOB_RECURSE source_jpeg      RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/libjpeg/*.c      ${PROJECT_SOURCE_DIR}/external/libjpeg/*.h)
 file (GLOB_RECURSE source_png       RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/libpng/*.c       ${PROJECT_SOURCE_DIR}/external/libpng/*.h)
 file (GLOB_RECURSE source_pugixml   RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/pugixml/*.c      ${PROJECT_SOURCE_DIR}/external/pugixml/*.h)
-file (GLOB_RECURSE source_openal    RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/openal/*.c       ${PROJECT_SOURCE_DIR}/external/openal/*.h)
 file (GLOB_RECURSE source_theora    RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/external/theoraplayer/*.c ${PROJECT_SOURCE_DIR}/external/theoraplayer/*.cpp ${PROJECT_SOURCE_DIR}/external/theoraplayer/*.h)
 
 # platform-specific source files adjustments
@@ -199,7 +187,7 @@ endif ()
 list (REMOVE_ITEM source_theora ${source_theora_exclude})
 
 # group source files (MSVC likes this)
-foreach (FILE ${source} ${source_eigen} ${source_gif} ${source_glew} ${source_3ds} ${source_jpeg} ${source_png} ${source_pugixml} ${source_openal} ${source_theora})
+foreach (FILE ${source} ${source_gif} ${source_glew} ${source_3ds} ${source_jpeg} ${source_png} ${source_pugixml} ${source_theora})
   get_filename_component (PARENT_DIR "${FILE}" PATH)
   string (REGEX REPLACE "(\\./)?(src|include)/?" "" GROUP "${PARENT_DIR}")
   string (REPLACE "/" "\\" GROUP "${GROUP}")
@@ -210,11 +198,11 @@ endforeach ()
 add_definitions (${PROJECT_DEFINITIONS} -DGLEW_STATIC -DAL_ALEXT_PROTOTYPES -DAL_BUILD_LIBRARY -DAL_LIBTYPE_STATIC -D__THEORA -D_LIB)
 
 # static library
-add_library (chai3d STATIC ${source} ${source_eigen} ${source_gif} ${source_glew} ${source_3ds} ${source_jpeg} ${source_png} ${source_pugixml} ${source_openal} ${source_theora})
+add_library (chai3d STATIC ${source} ${source_gif} ${source_glew} ${source_3ds} ${source_jpeg} ${source_png} ${source_pugixml} ${source_theora})
 
 # library exports
-set (CHAI3D_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src" "${EIGEN3_INCLUDE_DIR}" "${PROJECT_SOURCE_DIR}/external/glew/include" "${OPENGL_INCLUDE_DIR}")
-set (CHAI3D_LIBRARIES chai3d ${OPENGL_LIBRARIES})
+set (CHAI3D_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src" "${PROJECT_SOURCE_DIR}/external/glew/include" "${OPENGL_INCLUDE_DIR}" "${OPENAL_INCLUDE_DIR}")
+set (CHAI3D_LIBRARIES chai3d ${OPENGL_LIBRARIES} ${OPENAL_LIBRARY})
 set (CHAI3D_DEFINITIONS ${PROJECT_DEFINITIONS})
 if (NOT ${CMAKE_SYSTEM_NAME} MATCHES Windows)
   set (CHAI3D_LIBRARIES ${CHAI3D_LIBRARIES} drd)
