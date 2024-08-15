@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,33 +35,44 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-08-22 16:06:31 +0200 (Mon, 22 Aug 2016) $
-#  $Rev: 2093 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# compiler
+# Compiler
 CC      ?= gcc
 CXX     ?= g++
 COMPILER = $(CC)
 
-# common compiler flags
-CXXFLAGS += -DLINUX -Wno-deprecated -std=c++0x
-
-# set target architecture
+# Set target architecture.
 ifeq ($(ARCH), x86_64)
-CXXFLAGS += -m64
-endif
-ifeq ($(ARCH), i686)
-CXXFLAGS += -m32 -march=i686 -msse2 -mtune=generic
-endif
-ifeq ($(ARCH), native)
-CXXFLAGS += -march=native
+    CFLAGS   += -m64 -march=x86-64
+    CXXFLAGS += -m64 -march=x86-64
+else ifneq (,$(filter $(ARCH),i386 i486 i586 i686))
+    CFLAGS   += -m32 -march=$(ARCH) -msse2 -mtune=generic
+    CXXFLAGS += -m32 -march=$(ARCH) -msse2 -mtune=generic
+else ifneq (,$(filter $(ARCH),armv7 armv7l armv7h))
+    CFLAGS   += -march=armv7-a
+    CXXFLAGS += -march=armv7-a
+else ifneq (,$(filter $(ARCH),aarch64 amd64))
+    CFLAGS   += -march=armv8-a
+    CXXFLAGS += -march=armv8-a
+else
+    CFLAGS   += -march=$(ARCH)
+    CXXFLAGS += -march=$(ARCH)
 endif
 
-# common linker flags
-LDLIBS   += -lpthread -lrt -ldl -lGL -lGLU -lusb-1.0
+# Define shared library target if required.
+ifneq (0,$(BUILD_LIB))
+    LIB_SHARED_NAME = lib$(LIB_ROOT_NAME).so.$(MAJOR)
+    LIB_SHARED_OPT  = -shared -Wl,--no-undefined,-soname,$(LIB_SHARED_NAME)
+    LIB_SHARED      = $(LIB_DIR)/$(LIB_SHARED_NAME).$(MINOR).$(PATCH)$(PRERELEASE)
+endif
 
-# platform specific GLFW library and dependencies
-GLFW_DIR    = $(CHAI3D)/extras/GLFW
-LDLIBS_GLFW = -lglfw -lX11 -lXcursor -lXrandr -lXinerama
+# Common compiler flags
+CFLAGS   += -DLINUX -Wno-deprecated
+CXXFLAGS += -DLINUX -Wno-deprecated -std=c++17
+
+# Remove older gcc build warnings
+CXXFLAGS += -Wno-psabi

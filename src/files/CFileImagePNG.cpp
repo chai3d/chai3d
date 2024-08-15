@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 2153 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -110,7 +110,7 @@ static bool _decompressPNG(png_structp a_png_ptr, png_infop a_info_ptr, cImage* 
         bpp = 1;
 
     // if there is an alpha channel or some transparency, act accordingly
-    if (color_type & PNG_COLOR_MASK_ALPHA || png_get_valid(a_png_ptr, a_info_ptr, PNG_INFO_tRNS))
+    if ((color_type & PNG_COLOR_MASK_ALPHA) || png_get_valid(a_png_ptr, a_info_ptr, PNG_INFO_tRNS))
         bpp += 1;
 
     // allocate row buffers

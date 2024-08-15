@@ -138,6 +138,6 @@ For scientific publications, please reference CHAI3D:
 
 
 
-________________________
-(C) 2003-2016 by CHAI3D
+_______________________________
+Copyright (c) 2003-2024, CHAI3D
 All Rights Reserved.

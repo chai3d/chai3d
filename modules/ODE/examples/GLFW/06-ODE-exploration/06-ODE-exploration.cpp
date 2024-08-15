@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2007 $
+    \version   1.0.0
 */
 //===========================================================================
 
@@ -102,6 +102,9 @@ cDemo2* m_demo2;
 cDemo3* m_demo3;
 cDemo4* m_demo4;
 
+// a viewport to display the scene viewed by the camera
+cViewport* viewport = nullptr;
+
 
 //---------------------------------------------------------------------------
 // GENERAL VARIABLES
@@ -117,13 +120,15 @@ bool simulationFinished = true;
 cThread* hapticsThread;
 
 // a handle to window display context
-GLFWwindow* window = NULL;
+GLFWwindow* window = nullptr;
 
-// current width of window
-int width = 0;
+// current size of GLFW window
+int windowW = 0;
+int windowH = 0;
 
-// current height of window
-int height = 0;
+// current size of GLFW framebuffer
+int framebufferW = 0;
+int framebufferH = 0;
 
 // swap interval for the display context (vertical synchronization)
 int swapInterval = 1;
@@ -133,20 +138,26 @@ int swapInterval = 1;
 // DECLARED FUNCTIONS
 //---------------------------------------------------------------------------
 
-// callback when the window display is resized
-void windowSizeCallback(GLFWwindow* a_window, int a_width, int a_height);
+// callback when the window is resized
+void onWindowSizeCallback(GLFWwindow* a_window, int a_width, int a_height);
+
+// callback when the window framebuffer is resized
+void onFrameBufferSizeCallback(GLFWwindow* a_window, int a_width, int a_height);
 
 // callback when an error GLFW occurs
-void errorCallback(int error, const char* a_description);
+void onErrorCallback(int a_error, const char* a_description);
 
 // callback when a key is pressed
-void keyCallback(GLFWwindow* a_window, int a_key, int a_scancode, int a_action, int a_mods);
+void onKeyCallback(GLFWwindow* a_window, int a_key, int a_scancode, int a_action, int a_mods);
+
+// callback when window content scaling is modified
+void onWindowContentScaleCallback(GLFWwindow* a_window, float a_xscale, float a_yscale);
 
 // this function renders the scene
-void updateGraphics(void);
+void renderGraphics(void);
 
 // this function contains the main haptics simulation loop
-void updateHaptics(void);
+void renderHaptics(void);
 
 // this function closes the application
 void close(void);
@@ -177,7 +188,7 @@ int main(int argc, char* argv[])
     cout << "-----------------------------------" << endl;
     cout << "CHAI3D" << endl;
     cout << "Demo: 06-ODE-exploration" << endl;
-    cout << "Copyright 2003-2016" << endl;
+    cout << "Copyright 2003-2024" << endl;
     cout << "-----------------------------------" << endl << endl << endl;
     cout << "Keyboard Options:" << endl << endl;
     cout << "[1] - Select Demo 1" << endl;
@@ -186,9 +197,6 @@ int main(int argc, char* argv[])
     cout << "[4] - Select Demo 4" << endl;
     cout << "[q] - Exit application" << endl;
     cout << endl << endl;
-
-    // parse first arg to try and locate resources
-    string resourceRoot = string(argv[0]).substr(0,string(argv[0]).find_last_of("/\\")+1);
 
 
     //--------------------------------------------------------------------------
@@ -203,19 +211,28 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // set error callback
-    glfwSetErrorCallback(errorCallback);
+    // set GLFW error callback
+    glfwSetErrorCallback(onErrorCallback);
 
     // compute desired size of window
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    int w = 0.8 * mode->height;
-    int h = 0.5 * mode->height;
-    int x = 0.5 * (mode->width - w);
-    int y = 0.5 * (mode->height - h);
+    windowW = 0.8 * mode->height;
+    windowH = 0.5 * mode->height;
+    int x = 0.5 * (mode->width - windowW);
+    int y = 0.5 * (mode->height - windowH);
 
     // set OpenGL version
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+
+    // enable double buffering
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+
+    // set the desired number of samples to use for multisampling
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
+    // specify that window should be resized based on monitor content scale
+    glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 
     // set active stereo mode
     if (stereoMode == C_STEREO_ACTIVE)
@@ -228,7 +245,7 @@ int main(int argc, char* argv[])
     }
 
     // create display context
-    window = glfwCreateWindow(w, h, "CHAI3D", NULL, NULL);
+    window = glfwCreateWindow(windowW, windowH, "CHAI3D", NULL, NULL);
     if (!window)
     {
         cout << "failed to create window" << endl;
@@ -237,23 +254,33 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    // set GLFW key callback
+    glfwSetKeyCallback(window, onKeyCallback);
+
+    // set GLFW window size callback
+    glfwSetWindowSizeCallback(window, onWindowSizeCallback);
+
+    // set GLFW framebuffer size callback
+    glfwSetFramebufferSizeCallback(window, onFrameBufferSizeCallback);
+
+    // set GLFW window content scaling callback
+    glfwSetWindowContentScaleCallback(window, onWindowContentScaleCallback);
+
     // get width and height of window
-    glfwGetWindowSize(window, &width, &height);
+    glfwGetFramebufferSize(window, &framebufferW, &framebufferH);
 
     // set position of window
     glfwSetWindowPos(window, x, y);
 
-    // set key callback
-    glfwSetKeyCallback(window, keyCallback);
+    // set window size
+    glfwSetWindowSize(window, windowW, windowH);
 
-    // set resize callback
-    glfwSetWindowSizeCallback(window, windowSizeCallback);
-
-    // set current display context
+    // set GLFW current display context
     glfwMakeContextCurrent(window);
 
-    // sets the swap interval for the current display context
+    // set GLFW swap interval for the current display context
     glfwSwapInterval(swapInterval);
+
 
     // initialize GLEW library
 #ifdef GLEW_VERSION
@@ -297,11 +324,14 @@ int main(int argc, char* argv[])
     // DEMOS
     //-----------------------------------------------------------------------
 
+    // get current path
+    string currentpath = cGetCurrentPath();
+
     // setup demos
-    m_demo1 = new cDemo1(resourceRoot, numDevices, m_hapticDevice0, m_hapticDevice1);
-    m_demo2 = new cDemo2(resourceRoot, numDevices, m_hapticDevice0, m_hapticDevice1);
-    m_demo3 = new cDemo3(resourceRoot, numDevices, m_hapticDevice0, m_hapticDevice1);
-    m_demo4 = new cDemo4(resourceRoot, numDevices, m_hapticDevice0, m_hapticDevice1);
+    m_demo1 = new cDemo1(currentpath, numDevices, m_hapticDevice0, m_hapticDevice1);
+    m_demo2 = new cDemo2(currentpath, numDevices, m_hapticDevice0, m_hapticDevice1);
+    m_demo3 = new cDemo3(currentpath, numDevices, m_hapticDevice0, m_hapticDevice1);
+    m_demo4 = new cDemo4(currentpath, numDevices, m_hapticDevice0, m_hapticDevice1);
 
     // set stereo mode
     m_demo1->m_camera->setStereoMode(stereoMode);
@@ -315,17 +345,29 @@ int main(int argc, char* argv[])
     m_demo3->setStiffness(maxStiffness);
     m_demo4->setStiffness(maxStiffness);
 
+
+    //--------------------------------------------------------------------------
+    // VIEWPORT DISPLAY
+    //--------------------------------------------------------------------------
+
+    // get content scale factor
+    float contentScaleW, contentScaleH;
+    glfwGetWindowContentScale(window, &contentScaleW, &contentScaleH);
+
+    // create a viewport to display the scene.
+    viewport = new cViewport(nullptr, contentScaleW, contentScaleH);
+
+
+    //-----------------------------------------------------------------------
+    // START HAPTIC SIMULATION THREAD
+    //-----------------------------------------------------------------------
+
     // initialize demo 1
     initDemo1();
 
-
-    //-----------------------------------------------------------------------
-    // START SIMULATION
-    //-----------------------------------------------------------------------
-
     // create a thread which starts the main haptics rendering loop
     hapticsThread = new cThread();
-    hapticsThread->start(updateHaptics, CTHREAD_PRIORITY_HAPTICS);
+    hapticsThread->start(renderHaptics, CTHREAD_PRIORITY_HAPTICS);
 
     // setup callback when application exits
     atexit(close);
@@ -335,20 +377,11 @@ int main(int argc, char* argv[])
     // MAIN GRAPHIC LOOP
     //--------------------------------------------------------------------------
 
-    // call window size callback at initialization
-    windowSizeCallback(window, width, height);
-
     // main graphic loop
     while (!glfwWindowShouldClose(window))
     {
-        // get width and height of window
-        glfwGetWindowSize(window, &width, &height);
-
         // render graphics
-        updateGraphics();
-
-        // swap buffers
-        glfwSwapBuffers(window);
+        renderGraphics();
 
         // process events
         glfwPollEvents();
@@ -370,6 +403,7 @@ void initDemo1()
 {
     m_demo = m_demo1;
     m_demo->init();
+    viewport->setCamera(m_demo->m_camera);
 }
 
 //---------------------------------------------------------------------------
@@ -378,6 +412,7 @@ void initDemo2()
 {
     m_demo = m_demo2;
     m_demo->init();
+    viewport->setCamera(m_demo->m_camera);
 }
 
 //---------------------------------------------------------------------------
@@ -386,6 +421,7 @@ void initDemo3()
 {
     m_demo = m_demo3;
     m_demo->init();
+    viewport->setCamera(m_demo->m_camera);
 }
 
 //---------------------------------------------------------------------------
@@ -394,27 +430,48 @@ void initDemo4()
 {
     m_demo = m_demo4;
     m_demo->init();
-}
-
-//---------------------------------------------------------------------------
-
-void windowSizeCallback(GLFWwindow* a_window, int a_width, int a_height)
-{
-    // update window size
-    width  = a_width;
-    height = a_height;
+    viewport->setCamera(m_demo->m_camera);
 }
 
 //------------------------------------------------------------------------------
 
-void errorCallback(int a_error, const char* a_description)
+void onWindowSizeCallback(GLFWwindow* a_window, int a_width, int a_height)
+{
+    // update window size
+    windowW = a_width;
+    windowH = a_height;
+
+    // render scene
+    renderGraphics();
+}
+
+//------------------------------------------------------------------------------
+
+void onFrameBufferSizeCallback(GLFWwindow* a_window, int a_width, int a_height)
+{
+    // update frame buffer size
+    framebufferW = a_width;
+    framebufferH = a_height;
+}
+
+//------------------------------------------------------------------------------
+
+void onWindowContentScaleCallback(GLFWwindow* a_window, float a_xscale, float a_yscale)
+{
+    // update window content scale factor
+    viewport->setContentScale(a_xscale, a_yscale);
+}
+
+//------------------------------------------------------------------------------
+
+void onErrorCallback(int a_error, const char* a_description)
 {
     cout << "Error: " << a_description << endl;
 }
 
 //---------------------------------------------------------------------------
 
-void keyCallback(GLFWwindow* a_window, int a_key, int a_scancode, int a_action, int a_mods)
+void onKeyCallback(GLFWwindow* a_window, int a_key, int a_scancode, int a_action, int a_mods)
 {
     // filter calls that only include a key press
     if ((a_action != GLFW_PRESS) && (a_action != GLFW_REPEAT))
@@ -468,7 +525,6 @@ void keyCallback(GLFWwindow* a_window, int a_key, int a_scancode, int a_action, 
         if (fullscreen)
         {
             glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
-            glfwSwapInterval(swapInterval);
         }
         else
         {
@@ -477,8 +533,11 @@ void keyCallback(GLFWwindow* a_window, int a_key, int a_scancode, int a_action, 
             int x = 0.5 * (mode->width - w);
             int y = 0.5 * (mode->height - h);
             glfwSetWindowMonitor(window, NULL, x, y, w, h, mode->refreshRate);
-            glfwSwapInterval(swapInterval);
         }
+
+        // set the desired swap interval and number of samples to use for multisampling
+        glfwSwapInterval(swapInterval);
+        glfwWindowHint(GLFW_SAMPLES, 4);
     }
 
     // option - toggle vertical mirroring
@@ -517,22 +576,28 @@ void close(void)
 
 //---------------------------------------------------------------------------
 
-void updateGraphics(void)
+void renderGraphics(void)
 {
+    // sanity check
+    if (viewport == nullptr) { return; }
+
     // render world
-    m_demo->updateGraphics(width, height);
+    m_demo->renderGraphics(framebufferW, framebufferH);
 
     // wait until all GL commands are completed
     glFinish();
 
     // check for any OpenGL errors
-    GLenum err = glGetError();
-    if (err != GL_NO_ERROR) printf("Error:  %s\n", gluErrorString(err));
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) printf("Error:  %s\n", gluErrorString(error));
+
+    // swap buffers
+    glfwSwapBuffers(window);
 }
 
 //---------------------------------------------------------------------------
 
-void updateHaptics(void)
+void renderHaptics(void)
 {
     // simulation in now running
     simulationRunning = true;
@@ -541,7 +606,7 @@ void updateHaptics(void)
     // main haptic simulation loop
     while(simulationRunning)
     {
-        m_demo->updateHaptics();
+        m_demo->renderHaptics();
     }
 
     // shutdown haptic devices

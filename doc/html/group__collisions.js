@@ -1,6 +1,6 @@
 var group__collisions =
 [
-    [ "cCollisionAABB", "classchai3d_1_1c_collision_a_a_b_b.html", [
+    [ "chai3d::cCollisionAABB", "classchai3d_1_1c_collision_a_a_b_b.html", [
       [ "cCollisionAABB", "classchai3d_1_1c_collision_a_a_b_b.html#a37d1467ccce6c281e151eb82895bcde2", null ],
       [ "~cCollisionAABB", "classchai3d_1_1c_collision_a_a_b_b.html#a11df22e7fe898a5b06c544a7c904f78a", null ],
       [ "update", "classchai3d_1_1c_collision_a_a_b_b.html#acd68618ad93fcc179bd309272c0c63f0", null ],
@@ -15,36 +15,36 @@ var group__collisions =
       [ "m_rootIndex", "classchai3d_1_1c_collision_a_a_b_b.html#a99cec5132b141bb0e9ed927efca6c745", null ],
       [ "m_maxDepth", "classchai3d_1_1c_collision_a_a_b_b.html#a9e12004cd8b688ff472046326fca0aea", null ]
     ] ],
-    [ "cCollisionAABBBox", "structchai3d_1_1c_collision_a_a_b_b_box.html", [
+    [ "chai3d::cCollisionAABBBox", "structchai3d_1_1c_collision_a_a_b_b_box.html", [
       [ "cCollisionAABBBox", "structchai3d_1_1c_collision_a_a_b_b_box.html#aa0eccd4527e3a4d209bc251e502134b0", null ],
       [ "cCollisionAABBBox", "structchai3d_1_1c_collision_a_a_b_b_box.html#a841430580f795f74a43bc1cad5504366", null ],
       [ "~cCollisionAABBBox", "structchai3d_1_1c_collision_a_a_b_b_box.html#a27b5027801a942c1f8d87d132c10f9af", null ],
-      [ "getCenter", "structchai3d_1_1c_collision_a_a_b_b_box.html#af50238abbb639d5074a01fee78781728", null ],
-      [ "getExtent", "structchai3d_1_1c_collision_a_a_b_b_box.html#a281fdabf845d4142b23a8e63f98db751", null ],
+      [ "getCenter", "structchai3d_1_1c_collision_a_a_b_b_box.html#a26cef5a726d1ae88a286da155fd68722", null ],
+      [ "getExtent", "structchai3d_1_1c_collision_a_a_b_b_box.html#ac4cf04d1d7f2054319264fbb93f88874", null ],
       [ "setCenter", "structchai3d_1_1c_collision_a_a_b_b_box.html#a611f10197f0c0f1dbf0e694fe5c58046", null ],
       [ "setExtent", "structchai3d_1_1c_collision_a_a_b_b_box.html#ade193944712798eb44e9a539966df667", null ],
       [ "setValue", "structchai3d_1_1c_collision_a_a_b_b_box.html#a8c820dac44eed3710bf5ba1e4dc8fc84", null ],
-      [ "intersect", "structchai3d_1_1c_collision_a_a_b_b_box.html#a0a16c9d2eb7e9340f61e2af6c56e25c4", null ],
-      [ "intersect", "structchai3d_1_1c_collision_a_a_b_b_box.html#a6352ef6524432369de6a943c4721645f", null ],
-      [ "contains", "structchai3d_1_1c_collision_a_a_b_b_box.html#aeef78ca037bddfa4196f9d3bd7be2e43", null ],
+      [ "intersect", "structchai3d_1_1c_collision_a_a_b_b_box.html#ad72286ae67fa683f93ad2d70419e263f", null ],
+      [ "intersect", "structchai3d_1_1c_collision_a_a_b_b_box.html#a6b87e3cbfbf00dc2b547f8e37358b43e", null ],
+      [ "contains", "structchai3d_1_1c_collision_a_a_b_b_box.html#ac100c34c86520bd9eb59a6795709b069", null ],
       [ "enclose", "structchai3d_1_1c_collision_a_a_b_b_box.html#a03298d8a870416037dfd832df732e64f", null ],
       [ "enclose", "structchai3d_1_1c_collision_a_a_b_b_box.html#a486a668eb9faab81032f6a36252d028d", null ],
       [ "enclose", "structchai3d_1_1c_collision_a_a_b_b_box.html#a1e3c02917ddf6393e28237b39c2b7d07", null ],
       [ "setEmpty", "structchai3d_1_1c_collision_a_a_b_b_box.html#a743fb6883d519d13e125a2dd5c64ad48", null ],
-      [ "getLowerX", "structchai3d_1_1c_collision_a_a_b_b_box.html#a852952a3a64c85f0eb6865ea02d1af4c", null ],
-      [ "getUpperX", "structchai3d_1_1c_collision_a_a_b_b_box.html#a91755a46d543e216e9596b7eddcdabcc", null ],
-      [ "getLowerY", "structchai3d_1_1c_collision_a_a_b_b_box.html#ae166ee5ecacc2d83fcbb042cd9193d2c", null ],
-      [ "getUpperY", "structchai3d_1_1c_collision_a_a_b_b_box.html#aa7ffd63e3824d4a1a4125bf057fbad11", null ],
-      [ "getLowerZ", "structchai3d_1_1c_collision_a_a_b_b_box.html#a350b4af8e1e06003316939ac519e2d21", null ],
-      [ "getUpperZ", "structchai3d_1_1c_collision_a_a_b_b_box.html#acd56e636d613456a40eea57f1c54d7fb", null ],
-      [ "getLongestAxis", "structchai3d_1_1c_collision_a_a_b_b_box.html#af1d010d926fbd24006567e4312785b1b", null ],
+      [ "getLowerX", "structchai3d_1_1c_collision_a_a_b_b_box.html#ab8a996a79c0a44eba713dc6765434ab9", null ],
+      [ "getUpperX", "structchai3d_1_1c_collision_a_a_b_b_box.html#aa60bf18174fe19ad292f091d406c2fa3", null ],
+      [ "getLowerY", "structchai3d_1_1c_collision_a_a_b_b_box.html#a5f021be75db3c3ff3aa496445725dec8", null ],
+      [ "getUpperY", "structchai3d_1_1c_collision_a_a_b_b_box.html#a62a57c8d3ff786e0cc627b4e12ea2924", null ],
+      [ "getLowerZ", "structchai3d_1_1c_collision_a_a_b_b_box.html#a0a686fa1eb9daba177be94fd0966db4a", null ],
+      [ "getUpperZ", "structchai3d_1_1c_collision_a_a_b_b_box.html#a2372f5d61b60d31687647c12ae8a7b54", null ],
+      [ "getLongestAxis", "structchai3d_1_1c_collision_a_a_b_b_box.html#aacbae4c0ef8c38683b3ab8c6435a286f", null ],
       [ "render", "structchai3d_1_1c_collision_a_a_b_b_box.html#a592f7e3ebd82141cc4795be35717dee4", null ],
       [ "m_center", "structchai3d_1_1c_collision_a_a_b_b_box.html#a92389b2e10d1d81c8e0f3f0c5edff1a7", null ],
       [ "m_extent", "structchai3d_1_1c_collision_a_a_b_b_box.html#af73d1d6173fd9f2ec2a5fcea0e334a5d", null ],
       [ "m_min", "structchai3d_1_1c_collision_a_a_b_b_box.html#aa826d95754e52fe6091b99e0887951e3", null ],
       [ "m_max", "structchai3d_1_1c_collision_a_a_b_b_box.html#a60aca893c089fbe8eb238cae593bd7a7", null ]
     ] ],
-    [ "cCollisionAABBNode", "structchai3d_1_1c_collision_a_a_b_b_node.html", [
+    [ "chai3d::cCollisionAABBNode", "structchai3d_1_1c_collision_a_a_b_b_node.html", [
       [ "cCollisionAABBNode", "structchai3d_1_1c_collision_a_a_b_b_node.html#a09ec550d80ba5c57fba265f520324460", null ],
       [ "~cCollisionAABBNode", "structchai3d_1_1c_collision_a_a_b_b_node.html#a099ae5e3e8d868f27fd14885eaa88e73", null ],
       [ "fitBBox", "structchai3d_1_1c_collision_a_a_b_b_node.html#a84938384f109bbe4942477010e67e9ae", null ],
@@ -58,7 +58,7 @@ var group__collisions =
       [ "m_leftSubTree", "structchai3d_1_1c_collision_a_a_b_b_node.html#a2570cdcddf12b97699617c976687d6e7", null ],
       [ "m_rightSubTree", "structchai3d_1_1c_collision_a_a_b_b_node.html#adf0fcce6d724fc54021d39ab6dbd61a5", null ]
     ] ],
-    [ "cCollisionEvent", "structchai3d_1_1c_collision_event.html", [
+    [ "chai3d::cCollisionEvent", "structchai3d_1_1c_collision_event.html", [
       [ "clear", "structchai3d_1_1c_collision_event.html#a315536fd58a405f74e828767e1d081b4", null ],
       [ "m_type", "structchai3d_1_1c_collision_event.html#a37a3caf55813c379608e108ce06e578e", null ],
       [ "m_object", "structchai3d_1_1c_collision_event.html#a58f24c27eab47e307bb02d351ddfac3d", null ],
@@ -78,14 +78,14 @@ var group__collisions =
       [ "m_posV02", "structchai3d_1_1c_collision_event.html#a67b52232a4031d05d2cc1f978eb8ede0", null ],
       [ "m_adjustedSegmentAPoint", "structchai3d_1_1c_collision_event.html#a6d24116aebfe0537af049b4530b63a93", null ]
     ] ],
-    [ "cCollisionRecorder", "classchai3d_1_1c_collision_recorder.html", [
+    [ "chai3d::cCollisionRecorder", "classchai3d_1_1c_collision_recorder.html", [
       [ "cCollisionRecorder", "classchai3d_1_1c_collision_recorder.html#a76c9adf957d294dce0078f9cc5a75d4f", null ],
       [ "~cCollisionRecorder", "classchai3d_1_1c_collision_recorder.html#a1e5cb17b3ce5cba623976e5e52dd3f8c", null ],
       [ "clear", "classchai3d_1_1c_collision_recorder.html#a8740449ee2b59e16fe2463353e44ac66", null ],
       [ "m_nearestCollision", "classchai3d_1_1c_collision_recorder.html#a219c87b60359194ffb1fc77f7900f32f", null ],
       [ "m_collisions", "classchai3d_1_1c_collision_recorder.html#a01618e075265b0095fb94ad4fc4d9baa", null ]
     ] ],
-    [ "cCollisionSettings", "structchai3d_1_1c_collision_settings.html", [
+    [ "chai3d::cCollisionSettings", "structchai3d_1_1c_collision_settings.html", [
       [ "cCollisionSettings", "structchai3d_1_1c_collision_settings.html#a5a93aa5bd27fdf5faee24f222ed5f3d8", null ],
       [ "m_checkForNearestCollisionOnly", "structchai3d_1_1c_collision_settings.html#a106b5eb85998fb6346e12724a6810407", null ],
       [ "m_returnMinimalCollisionData", "structchai3d_1_1c_collision_settings.html#a012339c367e44c3928e693e94abd81b3", null ],
@@ -95,21 +95,21 @@ var group__collisions =
       [ "m_ignoreShapes", "structchai3d_1_1c_collision_settings.html#af7172e17785d376b7c75491980769a1e", null ],
       [ "m_collisionRadius", "structchai3d_1_1c_collision_settings.html#ac97ca136748ba77c72a95b290d5ab110", null ]
     ] ],
-    [ "cCollisionBrute", "classchai3d_1_1c_collision_brute.html", [
+    [ "chai3d::cCollisionBrute", "classchai3d_1_1c_collision_brute.html", [
       [ "cCollisionBrute", "classchai3d_1_1c_collision_brute.html#ae61485ddd0f65f0db3fe7be9c5158d7f", null ],
       [ "~cCollisionBrute", "classchai3d_1_1c_collision_brute.html#ad7916c2c09628fe873b9a0e696a5976a", null ],
       [ "computeCollision", "classchai3d_1_1c_collision_brute.html#a1b86a426d19cbe9989dd2ac881b41a23", null ],
       [ "m_elements", "classchai3d_1_1c_collision_brute.html#afab3f7115f085d6f5f0d361323267d87", null ]
     ] ],
-    [ "cGenericCollision", "classchai3d_1_1c_generic_collision.html", [
+    [ "chai3d::cGenericCollision", "classchai3d_1_1c_generic_collision.html", [
       [ "cGenericCollision", "classchai3d_1_1c_generic_collision.html#a63b3d8b7b36e54a7459c62e3e3df1567", null ],
       [ "~cGenericCollision", "classchai3d_1_1c_generic_collision.html#a3b361f873cd84019d7e73e308399a12f", null ],
       [ "update", "classchai3d_1_1c_generic_collision.html#a2c53d8935066358a946d68a6a0bb600d", null ],
       [ "computeCollision", "classchai3d_1_1c_generic_collision.html#aa78873f02966d622fcddb1a7de064ba7", null ],
       [ "render", "classchai3d_1_1c_generic_collision.html#a93a318c2e8959d423ad2d7553d1580c7", null ],
-      [ "getBoundaryRadius", "classchai3d_1_1c_generic_collision.html#aaaeff46f81ba7b8ef74819a79174f916", null ],
+      [ "getBoundaryRadius", "classchai3d_1_1c_generic_collision.html#ac1ff24568046ca7a181f36d97cfb4cc9", null ],
       [ "setDisplayDepth", "classchai3d_1_1c_generic_collision.html#a4394bce2a400d0095dedd5b5917d48aa", null ],
-      [ "getDisplayDepth", "classchai3d_1_1c_generic_collision.html#a14e2c5ae72ddaac586c73258c2b555ed", null ],
+      [ "getDisplayDepth", "classchai3d_1_1c_generic_collision.html#aa0b33497efdf9200c2d0f6cfa8394a10", null ],
       [ "m_color", "classchai3d_1_1c_generic_collision.html#a597b1a733b9354121080b2baf0e4d9d3", null ],
       [ "m_displayDepth", "classchai3d_1_1c_generic_collision.html#aa570897b1ba91f13e2a7c30b7af87495", null ],
       [ "m_radiusAroundElements", "classchai3d_1_1c_generic_collision.html#a8c02b013dd68178c7cadcff367654447", null ]

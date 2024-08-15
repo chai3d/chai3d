@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2167 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -53,7 +53,7 @@ namespace chai3d {
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-const int C_SCOPE_MAX_SAMPLES = 3000;
+const int C_SCOPE_MAX_SAMPLES = 6000;
 //------------------------------------------------------------------------------
 
 //==============================================================================
@@ -98,6 +98,9 @@ public:
 
 public:
 
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("Scope"); }
+
     //! This method creates a copy of itself.
     virtual cScope* copy(const bool a_duplicateMaterialData = false,
         const bool a_duplicateTextureData = false, 
@@ -114,10 +117,10 @@ public:
     inline double getLineWidth() const { return (m_lineWidth); }
 
     //! This method sets values for signals 0, 1, 2, and 3.
-    void setSignalValues(const double a_signalValue0 = 0,
-                         const double a_signalValue1 = 0,
-                         const double a_signalValue2 = 0,
-                         const double a_signalValue3 = 0);
+    void setSignalValues(const double a_signalValue0 = 0.0,
+                         const double a_signalValue1 = 0.0,
+                         const double a_signalValue2 = 0.0,
+                         const double a_signalValue3 = 0.0);
 
     //! This method enables or disables selected signals
     void setSignalEnabled(const bool a_signalEnabled0 = true,
@@ -171,7 +174,10 @@ protected:
     double m_maxValue;
 
     //! Data values for all signals.
-    int m_signals[4][C_SCOPE_MAX_SAMPLES];
+    double m_signalValues[4][C_SCOPE_MAX_SAMPLES];
+
+    //! Data points for all signals.
+    int m_signalPoints[4][C_SCOPE_MAX_SAMPLES];
 
     //! Status about all signals.
     bool m_signalEnabled[4];

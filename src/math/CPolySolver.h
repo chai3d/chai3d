@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2015 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -181,6 +181,12 @@ inline int cSolveCubic(double a_coefficient[4], double a_solution[3])
            sq_A, p, q,
            cb_p, D;
 
+    // make sure we have a d3 equation
+    if (cZero(a_coefficient[3]))
+    {
+        return cSolveQuadric(a_coefficient, a_solution);
+    }
+
     // normalize the equation:x ^ 3 + Ax ^ 2 + Bx  + C = 0
     A = a_coefficient[2] / a_coefficient[3];
     B = a_coefficient[1] / a_coefficient[3];
@@ -276,6 +282,12 @@ inline int cSolveQuartic(double a_coefficient[5], double a_solution[4])
             A, B, C, D,
             sq_A, p, q, r;
     int i, num;
+
+    // make sure we have a d4 equation
+    if (cZero(a_coefficient[4]))
+    {
+        return cSolveQuadric(a_coefficient, a_solution);
+    }
 
     // normalize the equation:x ^ 4 + Ax ^ 3 + Bx ^ 2 + Cx + D = 0
     A = a_coefficient[3] / a_coefficient[4];

@@ -1,4 +1,7 @@
 <map id="chai3d::cWorld" name="chai3d::cWorld">
-<area shape="rect" id="node2" href="$classchai3d_1_1c_generic_object.html" title="This class implements a base class for all 2D or 3D objects in CHAI3D. " alt="" coords="5,80,164,107"/>
-<area shape="rect" id="node3" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type. " alt="" coords="10,5,159,32"/>
+<area shape="rect" id="Node000001" title="This class implements a virtual world." alt="" coords="31,152,139,177"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_generic_object.html" title="This class implements a base class for all 2D or 3D objects in CHAI3D." alt="" coords="5,79,164,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,118,87,152,82,152,82,118"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type." alt="" coords="11,5,159,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,44,87,79,82,79,82,44"/>
 </map>

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['collision_20detection',['Collision Detection',['../group__collisions.html',1,'']]],
-  ['camera',['Camera',['../group__display.html',1,'']]]
+  ['collision_20detection_0',['Collision Detection',['../group__collisions.html',1,'']]]
 ];

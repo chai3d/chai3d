@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['materials_20and_20textures',['Materials and Textures',['../chapter15-material.html',1,'overview']]],
-  ['mouse_20selection',['Mouse Selection',['../chapter19-collision.html',1,'overview']]],
-  ['mesh_20objects',['Mesh Objects',['../chapter9-mesh.html',1,'overview']]]
+  ['license_0',['License',['../chapter21-license.html',1,'overview']]],
+  ['lights_20and_20shadows_1',['Lights and Shadows',['../chapter16-lighting.html',1,'overview']]],
+  ['line_20segments_2',['Line Segments',['../chapter11-segments.html',1,'overview']]]
 ];

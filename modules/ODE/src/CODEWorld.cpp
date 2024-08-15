@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   1.0.0
 */
 //===========================================================================
 
@@ -345,10 +345,10 @@ bool cODEWorld::computeCollisionDetection(const cVector3d& a_segmentPointA,
     ///////////////////////////////////////////////////////////////////////////
 
     // check each ODE body
-    list<cODEGenericBody*>::iterator i;
-    for(i = m_bodies.begin(); i != m_bodies.end(); ++i)
+    list<cODEGenericBody*>::iterator it;
+    for(it = m_bodies.begin(); it != m_bodies.end(); ++it)
     {
-        cODEGenericBody *nextItem = *i;
+        cODEGenericBody *nextItem = *it;
         bool hitBody = nextItem->computeCollisionDetection(localSegmentPointA, 
                                                            localSegmentPointB, 
                                                            a_recorder,

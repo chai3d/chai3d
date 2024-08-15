@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1928 $
+    \version   1.0.0
 */
 //===========================================================================
 
@@ -47,13 +47,6 @@ using namespace std;
 //---------------------------------------------------------------------------
 #include "CODE.h"
 //---------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// DECLARED MACROS
-//------------------------------------------------------------------------------
-// convert to resource path
-#define RESOURCE_PATH(p)    (char*)((a_resourceRoot+string(p)).c_str())
-
 
 //===========================================================================
 /*!
@@ -113,7 +106,7 @@ cGenericDemo::cGenericDemo(const string a_resourceRoot,
     m_light0->m_shadowMap->setQualityVeryHigh();
   
     // create a directional light
-    cDirectionalLight* m_light1 = new cDirectionalLight(m_world);
+    m_light1 = new cDirectionalLight(m_world);
     m_world->addChild(m_light1);                   // attach light to camera
     m_light1->setEnabled(true);                    // enable light source
     m_light1->setDir(-1.0, 0.0, -1.0);             // define the direction of the light beam
@@ -146,12 +139,12 @@ cGenericDemo::cGenericDemo(const string a_resourceRoot,
     // create a base
     m_base = new cMultiMesh();
     m_world->addChild(m_base);
-    
-    bool fileload = m_base->loadFromFile(RESOURCE_PATH("../resources/models/base/base.obj"));
-    if (!fileload)
-    {
-        fileload = m_base->loadFromFile("../../../bin/resources/models/base/base.obj");
-    }
+
+    // get current path
+    bool fileload;
+    string currentpath = cGetCurrentPath();
+
+    fileload = m_base->loadFromFile(currentpath + "../resources/models/base/base.obj");
     if (!fileload)
     {
         printf("Error - 3D Model failed to load correctly.\n");
@@ -255,7 +248,7 @@ cGenericDemo::cGenericDemo(const string a_resourceRoot,
     \param  a_height  Height of viewport.
 */
 //===========================================================================
-void cGenericDemo::updateGraphics(int a_width, int a_height) 
+void cGenericDemo::renderGraphics(int a_width, int a_height) 
 { 
     // update shadow maps (if any)
     m_world->updateShadowMaps(false, m_mirroredDisplay);
@@ -270,7 +263,7 @@ void cGenericDemo::updateGraphics(int a_width, int a_height)
     Update haptics.
 */
 //===========================================================================
-void cGenericDemo::updateHaptics() 
+void cGenericDemo::renderHaptics() 
 { 
     // compute global reference frames for each object
     m_world->computeGlobalPositions(true);

@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,44 +35,27 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2014-05-01 18:49:45 +1200 (Thu, 01 May 2014) $
-#  $Rev: 1316 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# chai3d location
+# Default targets
+SUBDIRS = $(patsubst %/,%,$(sort $(dir $(wildcard */Makefile))))
+all: $(SUBDIRS)
+
+# Project-specific rules
 TOP_DIR = ../..
-
-# chai3d global configuration
-include $(TOP_DIR)/Makefile.common
-
-# platform specific flags
-ifeq ($(OS), mac)
-  QFLAGS = -spec macx-g++ CONFIG-=app_bundle
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common))
+    include $(TOP_DIR)/Makefile.common
+endif
+ifneq (,$(wildcard ./Makefile.project))
+    include ./Makefile.project
 endif
 
-# configuration specific flags
-ifeq ($(CFG),debug)
-QFLAGS += CONFIG+=debug
-else
-QFLAGS += -Wnone
-endif
+.PHONY: $(SUBDIRS)
+$(SUBDIRS):
+	$(MAKE) -C $@
 
-# definitions
-NAME   = application-QT
-TARGET = $(BIN_DIR)/$(NAME)
-
-# rules
-all: $(TARGET)
-
-$(TARGET): Makefile.$(OS).$(ARCH).$(COMPILER) $(EXTERNAL)
-	$(MAKE) -f Makefile.$(OS).$(ARCH).$(COMPILER)
-
-Makefile.$(OS).$(ARCH).$(COMPILER):
-	qmake $(QFLAGS) QMAKE_CXX=$(CXX) QMAKE_CC=$(CC) QMAKE_LINK=$(CXX) ARCH=$(ARCH) COMPILER=$(COMPILER) CFG=$(CFG) -o Makefile.$(OS).$(ARCH).$(COMPILER)
-
-.PHONY: Makefile.$(OS).$(ARCH).$(COMPILER) $(EXTERNAL)
-
-clean: Makefile.$(OS).$(ARCH).$(COMPILER)
-	make -f Makefile.$(OS).$(ARCH).$(COMPILER) clean
-	-rm -rf $(TARGET).app $(TARGET) Makefile.$(OS).$(ARCH).$(COMPILER)
+clean:
+	@for T in $(SUBDIRS); do make -C $$T $@; done

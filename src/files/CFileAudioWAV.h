@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2015 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -74,10 +74,11 @@ namespace chai3d {
     //! This function loads a WAV audio file.
     bool cLoadFileWAV(const std::string& a_filename,
         unsigned char*& a_data,
-        int* a_size,
-        int* a_frequency,
-        bool* a_stereo,
-        unsigned short* a_bitsPerSample);
+        unsigned int* a_sizeInBytes,
+        unsigned short* a_bitsPerSample,
+        double* a_samplingRate,
+        unsigned int* a_numSamples,
+        bool* a_stereo);
 
 //@}
 

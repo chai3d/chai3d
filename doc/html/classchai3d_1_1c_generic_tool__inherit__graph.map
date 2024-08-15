@@ -1,6 +1,11 @@
 <map id="chai3d::cGenericTool" name="chai3d::cGenericTool">
-<area shape="rect" id="node4" href="$classchai3d_1_1c_tool_cursor.html" title="This class implements a cursor using a single haptic point. " alt="" coords="5,229,144,256"/>
-<area shape="rect" id="node5" href="$classchai3d_1_1c_tool_gripper.html" title="This class implements a gripper using a two haptic points. " alt="" coords="169,229,311,256"/>
-<area shape="rect" id="node2" href="$classchai3d_1_1c_generic_object.html" title="This class implements a base class for all 2D or 3D objects in CHAI3D. " alt="" coords="78,80,237,107"/>
-<area shape="rect" id="node3" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type. " alt="" coords="83,5,232,32"/>
+<area shape="rect" id="Node000001" title="This class implements a base class for modeling haptic tools." alt="" coords="84,152,228,177"/>
+<area shape="rect" id="Node000004" href="$classchai3d_1_1c_tool_cursor.html" title="This class implements a cursor using a single haptic point." alt="" coords="5,225,144,251"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="134,188,90,227,86,223,131,184"/>
+<area shape="rect" id="Node000005" href="$classchai3d_1_1c_tool_gripper.html" title="This class implements a gripper using a two haptic points." alt="" coords="168,225,309,251"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="181,184,227,223,223,227,178,188"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_generic_object.html" title="This class implements a base class for all 2D or 3D objects in CHAI3D." alt="" coords="77,79,235,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,118,159,152,153,152,153,118"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type." alt="" coords="82,5,230,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="159,44,159,79,153,79,153,44"/>
 </map>

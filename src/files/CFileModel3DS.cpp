@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Lev Povalahev
     \author    Dan Morris
-    \version   3.2.0 $Rev: 2181 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -236,7 +236,7 @@ bool cLoadFile3DS(cMultiMesh* a_object, const std::string& a_filename)
             /////////////////////////////////////////////////////////////////////////
             // COMPUTE NORMALS
             /////////////////////////////////////////////////////////////////////////
-        
+
             // allocate table for normals
             float (*f_normals)[3] = (float(*)[3])malloc(3*3*sizeof(float)*f_mesh->nfaces);
 
@@ -250,11 +250,21 @@ bool cLoadFile3DS(cMultiMesh* a_object, const std::string& a_filename)
             std::map<int, cMesh*> map;
 
             int f_ntriangles = f_mesh->nfaces;
-        
+
             for (int j=0; j<f_ntriangles; j++)
             {
                 int index0, index1, index2;
                 Lib3dsFace* f_face = &(f_mesh->faces[j]);
+
+                // get transformation
+                
+                /*
+                cTransform T;
+                T.set(f_mesh->matrix[0][0], f_mesh->matrix[0][1], f_mesh->matrix[0][2], f_mesh->matrix[0][3],
+                      f_mesh->matrix[1][0], f_mesh->matrix[1][1], f_mesh->matrix[1][2], f_mesh->matrix[1][3],
+                      f_mesh->matrix[2][0], f_mesh->matrix[2][1], f_mesh->matrix[2][2], f_mesh->matrix[2][3],
+                      f_mesh->matrix[3][0], f_mesh->matrix[3][1], f_mesh->matrix[3][2], f_mesh->matrix[3][3]);
+                */
 
                 // get material 
                 int f_material = f_face->material;
@@ -280,6 +290,19 @@ bool cLoadFile3DS(cMultiMesh* a_object, const std::string& a_filename)
                     v2.set((double)(f_mesh->vertices[f_vertex2][0]),
                            (double)(f_mesh->vertices[f_vertex2][1]),
                            (double)(f_mesh->vertices[f_vertex2][2]));
+
+
+                    /*
+                    v0 = 0.001 * T.getLocalPos() + v0;
+                    v1 = 0.001 * T.getLocalPos() + v1;
+                    v2 = 0.001 * T.getLocalPos() + v2;
+                    */
+                    /*
+                    v0 = T.getLocalPos() + T.getLocalRot() * v0;
+                    v1 = T.getLocalPos() + T.getLocalRot() * v1;
+                    v2 = T.getLocalPos() + T.getLocalRot() * v2;
+                    */
+
                 }
                 else
                 {

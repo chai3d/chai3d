@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti, Sonny Chan
-    \version   3.2.0 $Rev: 2187 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -78,8 +78,8 @@ cShaderProgram::cShaderProgram()
 /*!
     Constructor of cShaderProgram.
 
-    \param  a_vertexShader  Vertex shader code.
-    \param  a_vertexShader  Fragment shader code.
+    \param  a_vertexShader    Vertex shader code.
+    \param  a_fragmentShader  Fragment shader code.
 */
 //==============================================================================
 cShaderProgram::cShaderProgram(const std::string& a_vertexShader, const std::string& a_fragmentShader)

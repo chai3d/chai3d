@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,9 +35,6 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-08-22 16:06:31 +0200 (Mon, 22 Aug 2016) $
-#  $Rev: 2093 $
-
+################################################################################
 
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/GLFW)

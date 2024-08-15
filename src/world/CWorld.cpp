@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2159 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -250,6 +250,12 @@ cGenericLight* cWorld::getLightSource(int a_index)
 bool cWorld::updateShadowMaps(const bool a_mirrorX,
                               const bool a_mirrorY)
 {
+#ifdef C_USE_OPENGL
+
+    // get ID to current buffer
+    GLint bufferId = -1;
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &bufferId);
+
     // clear current list of shadow maps
     m_shadowMaps.clear();
 
@@ -298,7 +304,16 @@ bool cWorld::updateShadowMaps(const bool a_mirrorX,
         }
     }
 
+    // restore current framebuffer ID
+    glBindFramebuffer(GL_FRAMEBUFFER, bufferId);
+
     return (mapsUpdated);
+
+#else
+
+    return (false);
+
+#endif
 }
 
 
@@ -384,48 +399,6 @@ void cWorld::render(cRenderOptions& a_options)
     m_fog->render(a_options);
 
 #endif
-}
-
-
-//==============================================================================
-/*!
-    This method determines whether a given segment intersects any object in
-    this world. \n
-    The segment is described by a start point \p a_segmentPointA and end 
-    point \p a_segmentPointB. \n
-    All detected collisions are reported in the collision recorder passed 
-    by argument \p a_recorder. \n
-    Specifications about the type of collisions reported are specified by 
-    argument \p a_settings.
-
-    \param  a_segmentPointA  Start point of segment.
-    \param  a_segmentPointB  End point of segment.
-    \param  a_recorder       Recorder which stores all collision events.
-    \param  a_settings       Collision settings information.
-
-    \return __true__ if a collision has occurred, __false__ otherwise.
-*/
-//==============================================================================
-bool cWorld::computeCollisionDetection(const cVector3d& a_segmentPointA,
-                                       const cVector3d& a_segmentPointB,
-                                       cCollisionRecorder& a_recorder,
-                                       cCollisionSettings& a_settings)
-{
-    // temp variable
-    bool hit = false;
-
-    // check for collisions with all children of this world
-    unsigned int nChildren = (int)(m_children.size());
-    for (unsigned int i=0; i<nChildren; i++)
-    {
-        hit = hit | m_children[i]->computeCollisionDetection(a_segmentPointA,
-                                                       a_segmentPointB,
-                                                       a_recorder,
-                                                       a_settings);
-    }
-
-    // return whether there was a collision between the segment and this world
-    return (hit);
 }
 
 

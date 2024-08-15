@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2185 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -56,14 +56,14 @@ namespace chai3d {
 //==============================================================================
 cFrameBuffer::cFrameBuffer()
 {
-    m_width             = -1;
-    m_height            = -1;
-    m_prevWidth         = -1;
-    m_prevHeight        = -1;
+    m_width             = 0;
+    m_height            = 0;
+    m_prevWidth         = 0;
+    m_prevHeight        = 0;
     m_useImageBuffer    = false;
     m_useDepthBuffer    = false;
     m_camera            = NULL;
-    m_fbo               = -1;
+    m_fbo               = 0;
 }
 
 
@@ -79,7 +79,7 @@ cFrameBuffer::~cFrameBuffer()
     if ((int)m_fbo >= 0 && glIsFramebuffer(m_fbo))
     {
         glDeleteFramebuffers(1, &m_fbo);
-        m_fbo = -1;
+        m_fbo = 0;
     }
 
     #endif
@@ -146,6 +146,12 @@ void cFrameBuffer::setup(cCamera* a_camera,
 //==============================================================================
 void cFrameBuffer::setSize(const unsigned int a_width, const unsigned int a_height)
 {
+    // check values
+    if ((a_width == m_width) && (a_height == m_height))
+    {
+        return;
+    }
+
     // store dimensions in pixels
     m_width = a_width;
     m_height = a_height;

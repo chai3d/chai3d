@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2015 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -96,17 +96,20 @@ public:
 
 public:
 
+    //! This method creates a copy of itself.
+    virtual cViewPanel* copy(const bool a_duplicateMaterialData = false,
+        const bool a_duplicateTextureData = false,
+        const bool a_duplicateMeshData = false,
+        const bool a_buildCollisionDetector = false);
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("ViewPanel"); }
+
     //! This method assigns a framebuffer to this object.
     void setFrameBuffer(cFrameBufferPtr a_frameBuffer);
 
     //! This method returns a pointer to the current framebuffer.
     cFrameBufferPtr getFrameBuffer() { return (m_frameBuffer); }
-
-    //! This method creates a copy of itself.
-    virtual cViewPanel* copy(const bool a_duplicateMaterialData = false,
-        const bool a_duplicateTextureData = false, 
-        const bool a_duplicateMeshData = false,
-        const bool a_buildCollisionDetector = false);
 
 
     //--------------------------------------------------------------------------

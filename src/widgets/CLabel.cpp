@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2153 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -154,6 +154,10 @@ void cLabel::setText(const string a_text)
     // set size of panel
     setSize(w, h);
 
+    // update widget size
+    m_width = w;
+    m_height = h;
+
     // adjust size of boundary box
     updateBoundaryBox();
 }
@@ -170,6 +174,10 @@ void cLabel::setFontScale(const double a_scale)
 { 
     // update scale factor
     m_fontScale = fabs(a_scale);
+
+    // get width and height of current string
+    m_width = getTextWidth();
+    m_height = getTextHeight();
 
     // adjust size of boundary box
     updateBoundaryBox();

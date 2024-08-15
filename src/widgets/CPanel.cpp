@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2178 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -117,6 +117,17 @@ void cPanel::set(const double& a_width,
     const double& a_radiusBottomLeft,
     const double& a_radiusBottomRight)
 {
+    // check values
+    if ((m_width == a_width) &&
+        (m_height == a_height) &&
+        (m_panelRadiusTopLeft == a_radiusTopLeft) &&
+        (m_panelRadiusTopRight == a_radiusTopRight) &&
+        (m_panelRadiusBottomLeft == a_radiusBottomLeft) &&
+        (m_panelRadiusBottomRight == a_radiusBottomRight))
+    {
+        return;
+    }
+
     // set new values for each corner
     m_panelRadiusTopLeft = fabs(a_radiusTopLeft);
     m_panelRadiusTopRight = fabs(a_radiusTopRight);
@@ -131,7 +142,7 @@ void cPanel::set(const double& a_width,
     double h = cMax(a_radiusTopLeft, a_radiusTopRight) + 
                cMax(a_radiusBottomLeft, a_radiusBottomRight);
     m_height = cMax(a_height, h);
-    
+
     // update model of panel
     updatePanelMesh();
 }
@@ -148,6 +159,12 @@ void cPanel::set(const double& a_width,
 void cPanel::setSize(const double& a_width, 
                      const double& a_height)
 {
+    // check values
+    if ((a_width == m_width) && (a_height == m_height))
+    {
+        return;
+    }
+
     // set new values for width and height.
     double w = cMax(m_panelRadiusTopLeft, m_panelRadiusBottomLeft) + 
                cMax(m_panelRadiusTopRight, m_panelRadiusBottomRight);
@@ -177,11 +194,19 @@ void cPanel::setCornerRadius(const double& a_radiusTopLeft,
     const double& a_radiusBottomLeft,
     const double& a_radiusBottomRight)
 {
+    // check values
+    if ((m_panelRadiusTopLeft == a_radiusTopLeft) &&
+        (m_panelRadiusTopRight == a_radiusTopRight) &&
+        (m_panelRadiusBottomLeft == a_radiusBottomLeft) &&
+        (m_panelRadiusBottomRight == a_radiusBottomRight))
+    {
+        return;
+    }
+
     // set new values
     m_panelRadiusTopLeft = fabs(a_radiusTopLeft);
     m_panelRadiusTopRight = fabs(a_radiusTopRight);
     m_panelRadiusBottomLeft = fabs(a_radiusBottomLeft);
-    m_panelRadiusBottomRight = fabs(a_radiusBottomLeft);
     m_panelRadiusBottomRight = fabs(a_radiusBottomRight);
 
     // check dimension for width and height. adjust accordingly
@@ -207,6 +232,15 @@ void cPanel::setCornerRadius(const double& a_radiusTopLeft,
 //==============================================================================
 void cPanel::setColor(const cColorf& a_panelColor)
 {
+    // check values
+    if ((m_panelColorTopLeft == a_panelColor) &&
+        (m_panelColorTopRight == a_panelColor) &&
+        (m_panelColorBottomLeft == a_panelColor) &&
+        (m_panelColorBottomRight == a_panelColor))
+    {
+        return;
+    }
+
     // assign new color
     m_panelColorTopLeft     = a_panelColor;
     m_panelColorTopRight    = a_panelColor;
@@ -233,6 +267,15 @@ void cPanel::setCornerColors(const cColorf& a_panelColorTopLeft,
     const cColorf& a_panelColorBottomLeft, 
     const cColorf& a_panelColorBottomRight)
 {
+    // check values
+    if ((m_panelColorTopLeft == a_panelColorTopLeft) &&
+        (m_panelColorTopRight == a_panelColorTopRight) &&
+        (m_panelColorBottomLeft == a_panelColorBottomLeft) &&
+        (m_panelColorBottomRight == a_panelColorBottomRight))
+    {
+        return;
+    }
+
     // assign new colors
     m_panelColorTopLeft     = a_panelColorTopLeft;
     m_panelColorTopRight    = a_panelColorTopRight;
@@ -255,6 +298,15 @@ void cPanel::setCornerColors(const cColorf& a_panelColorTopLeft,
 //==============================================================================
 void cPanel::setPanelColorVerticalGradient(cColorf a_topColor, cColorf a_bottomColor)
 {
+    // check values
+    if ((m_panelColorTopLeft == a_topColor) &&
+        (m_panelColorTopRight == a_topColor) &&
+        (m_panelColorBottomLeft == a_bottomColor) &&
+        (m_panelColorBottomRight == a_bottomColor))
+    {
+        return;
+    }
+
     // assign new colors
     m_panelColorTopLeft     = a_topColor;
     m_panelColorTopRight    = a_topColor;
@@ -296,39 +348,21 @@ void cPanel::setHorizontalLinearGradient(cColorf a_leftColor, cColorf a_rightCol
     \param  a_applyToVertices  If __true__, then apply changes to vertex colors.
     \param  a_applyToTextures  If __true__, then apply changes to texture.
     \param  a_affectChildren   If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cPanel::setTransparencyLevel(const float a_level,
     const bool a_applyToVertices,
     const bool a_applyToTextures,
-    const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
-    // if the transparency level is equal to 1.0, then do not apply transparency
-    // otherwise enable it.
-    if (a_level < 1.0)
-    {
-        setUseTransparency(true);
-    }
-    else
-    {
-        setUseTransparency(false);
-    }
-
-    // apply new value to material
-    if (m_material != nullptr)
-    {
-        m_material->setTransparencyLevel(a_level);
-    }
-
-    // apply new value to texture
-    if (m_texture != nullptr)
-    {
-        if (m_texture->m_image != nullptr)
-        {
-            unsigned char level = (unsigned char)(255.0 * a_level);
-            m_texture->m_image->setTransparency(level);
-        }
-    }
+    // apply change to children and components
+    cMesh::setTransparencyLevel(a_level,
+        a_applyToVertices,
+        a_applyToTextures,
+        a_affectChildren,
+        a_affectComponents);
 
     // assign transparency level to vertex colors
     m_panelColorTopLeft.setA(a_level);
@@ -338,19 +372,6 @@ void cPanel::setTransparencyLevel(const float a_level,
 
     // update panel.
     updatePanelMesh();
-
-    // apply change to children
-    if (a_affectChildren)
-    {
-        vector<cGenericObject*>::iterator it;
-        for (it = m_children.begin(); it < m_children.end(); it++)
-        {
-            (*it)->setTransparencyLevel(a_level,
-                                        a_applyToVertices,
-                                        a_applyToTextures,
-                                        true);
-        }
-    }
 }
 
 //==============================================================================
@@ -472,7 +493,7 @@ void cPanel::updatePanelMesh()
     }
 
     // mark for update
-    markForUpdate(false);
+    markForUpdate(false, false);
 }
 
 
@@ -538,13 +559,8 @@ void cPanel::copyPanelProperties(cPanel* a_obj,
     a_obj->m_panelColorBottomLeft = m_panelColorBottomLeft;
     a_obj->m_panelColorBottomRight = m_panelColorBottomRight;
 
-    // copy properties of cPanel
-    a_obj->set(m_width, 
-        m_height,
-        m_panelRadiusTopLeft,
-        m_panelRadiusTopRight,
-        m_panelRadiusBottomLeft,
-        m_panelRadiusBottomRight);
+    // update panel
+    a_obj->updatePanelMesh();
 }
 
 

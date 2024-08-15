@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Tim Schroeder
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2187 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -62,7 +62,9 @@ namespace chai3d {
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-bool g_objLoaderShouldGenerateExtraVertices = false;
+bool g_objLoaderUnifyVerticesWithSamePosition = false;
+bool g_objLoaderShouldGenerateExtraVertices   = false;
+bool g_objLoaderMinimizeNumberOfMeshes        = true;
 //------------------------------------------------------------------------------
 
 //==============================================================================
@@ -80,6 +82,8 @@ bool g_objLoaderShouldGenerateExtraVertices = false;
 //==============================================================================
 bool cLoadFileOBJ(cMultiMesh* a_object, const std::string& a_filename)
 {
+    bool flagCreateOneMeshPerMaterial = true;
+
     try
     {
         cOBJModel fileObj;
@@ -93,108 +97,144 @@ bool cLoadFileOBJ(cMultiMesh* a_object, const std::string& a_filename)
         // get information about file
         int numMaterials = fileObj.m_OBJInfo.m_materialCount;
 
-        // extract materials
-        vector<cMaterial> materials;
+        // get number of groups
+        int numGroups = (int)(fileObj.m_groupNames.size());
 
-        // object has no material properties
-        if (numMaterials == 0)
+        // check option
+        if (numMaterials > numGroups)
         {
-            // create a new child
-            cMesh *newMesh = a_object->newMesh();
-            newMesh->setUseMaterial(true);
-            newMesh->setUseTransparency(false);
+            flagCreateOneMeshPerMaterial = true;
         }
-
-        // object has material properties. Create a child for each material
-        // property.
         else
         {
-            int i = 0;
-            bool found_transparent_material = false;
-
-            while (i < numMaterials)
+            if (g_objLoaderMinimizeNumberOfMeshes)
             {
-                // create a new child
-                cMesh *newMesh = a_object->newMesh();
+                flagCreateOneMeshPerMaterial = true;
+            }
+            else
+            {
+                flagCreateOneMeshPerMaterial = false;
+            }
+        }
 
-                // use materials
-                newMesh->setUseMaterial(true);
+        // table of materials and textures
+        vector<cMaterialPtr> materials;
+        vector<bool> useTransparency;
+        vector<cTexture2dPtr> textures;
+        vector<bool> useTexture;
+
+        // allocated first material and texture
+        if (numMaterials == 0)
+        {
+            materials.push_back(cMaterial::create());
+            useTransparency.push_back(false);
+            textures.push_back(cTexture2d::create());
+            useTexture.push_back(false);
+        }
+        else
+        {
+            for (int i = 0; i < numMaterials; i++)
+            {
+                // create data structures
+                materials.push_back(cMaterial::create());
+                useTransparency.push_back(false);
+                textures.push_back(cTexture2d::create());
+                useTexture.push_back(false);
 
                 // get next material
                 cMaterialInfo material = fileObj.m_pMaterials[i];
 
+                // get texture id
                 int textureId = material.m_textureID;
                 if (textureId >= 1)
                 {
-                    cTexture2dPtr newTexture = cTexture2d::create();
-                    bool result = newTexture->loadFromFile(material.m_texture);
+                    bool result = textures[i]->loadFromFile(material.m_texture);
 
-                    // If this didn't work out, try again in the obj file's path
-                    if (result == false) 
+                    // if this didn't work out, try again in the obj file's path
+                    if (result == false)
                     {
                         string model_dir = cGetDirectory(a_filename);
 
                         char new_texture_path[1024];
-                        sprintf(new_texture_path,"%s/%s",model_dir.c_str(),material.m_texture);
+                        snprintf(new_texture_path, 1024, "%s/%s", model_dir.c_str(), material.m_texture);
 
-                        result = newTexture->loadFromFile(new_texture_path);
+                        result = textures[i]->loadFromFile(new_texture_path);
                     }
 
                     if (result)
                     {
-                        newMesh->setTexture(newTexture);
-                        newMesh->setUseTexture(true);
+                        useTexture[i] = true;
                     }
                 }
 
+                // check for transparency
                 float alpha = material.m_alpha;
-                if (alpha < 1.0) 
+                if (alpha < 1.0)
                 {
-                    newMesh->setUseTransparency(true, false);
-                    found_transparent_material = true;
+                    useTransparency[i] = true;
                 }
 
                 // get ambient component:
-                newMesh->m_material->m_ambient.setR(material.m_ambient[0]);
-                newMesh->m_material->m_ambient.setG(material.m_ambient[1]);
-                newMesh->m_material->m_ambient.setB(material.m_ambient[2]);
-                newMesh->m_material->m_ambient.setA(alpha);
+                materials[i]->m_ambient.setR(material.m_ambient[0]);
+                materials[i]->m_ambient.setG(material.m_ambient[1]);
+                materials[i]->m_ambient.setB(material.m_ambient[2]);
+                materials[i]->m_ambient.setA(alpha);
 
                 // get diffuse component:
-                newMesh->m_material->m_diffuse.setR(material.m_diffuse[0]);
-                newMesh->m_material->m_diffuse.setG(material.m_diffuse[1]);
-                newMesh->m_material->m_diffuse.setB(material.m_diffuse[2]);
-                newMesh->m_material->m_diffuse.setA(alpha);
+                materials[i]->m_diffuse.setR(material.m_diffuse[0]);
+                materials[i]->m_diffuse.setG(material.m_diffuse[1]);
+                materials[i]->m_diffuse.setB(material.m_diffuse[2]);
+                materials[i]->m_diffuse.setA(alpha);
 
                 // get specular component:
-                newMesh->m_material->m_specular.setR(material.m_specular[0]);
-                newMesh->m_material->m_specular.setG(material.m_specular[1]);
-                newMesh->m_material->m_specular.setB(material.m_specular[2]);
-                newMesh->m_material->m_specular.setA(alpha);
+                materials[i]->m_specular.setR(material.m_specular[0]);
+                materials[i]->m_specular.setG(material.m_specular[1]);
+                materials[i]->m_specular.setB(material.m_specular[2]);
+                materials[i]->m_specular.setA(alpha);
 
                 // get emissive component:
-                newMesh->m_material->m_emission.setR(material.m_emmissive[0]);
-                newMesh->m_material->m_emission.setG(material.m_emmissive[1]);
-                newMesh->m_material->m_emission.setB(material.m_emmissive[2]);
-                newMesh->m_material->m_emission.setA(alpha);
+                materials[i]->m_emission.setR(material.m_emmissive[0]);
+                materials[i]->m_emission.setG(material.m_emmissive[1]);
+                materials[i]->m_emission.setB(material.m_emmissive[2]);
+                materials[i]->m_emission.setA(alpha);
 
                 // get shininess
-                newMesh->m_material->setShininess((GLuint)(1.28 * material.m_shininess));
-
-                i++;
+                materials[i]->setShininess((GLuint)(1.28 * material.m_shininess));
             }
-
-            // Enable material property rendering
-            a_object->setUseVertexColors(false, true);
-            a_object->setUseMaterial(true, true);
-
-            // Mark the presence of transparency in the root mesh; don't
-            // modify the value stored in children...
-            a_object->setUseTransparency(found_transparent_material, false);
         }
 
-        // Keep track of vertex mapping in each mesh; maps "old" vertices
-        // to new vertices
+        vector<cMesh*> meshes;
+        vector<bool> ready;
+        if (flagCreateOneMeshPerMaterial)
+        {
+            if (numMaterials == 0)
+            {
+                cMesh* mesh = a_object->newMesh();
+                meshes.push_back(mesh);
+                ready.push_back(false);
+            }
+            else
+            {
+                for (int j = 0; j < numMaterials; j++)
+                {
+                    cMesh* mesh = a_object->newMesh();
+                    meshes.push_back(mesh);
+                    ready.push_back(false);
+                }
+            }
+        }
+        else
+        {
+            int numMeshes = (int)(fileObj.m_groupNames.size());
+            for (int j = 0; j < numMeshes; j++)
+            {
+                cMesh* mesh = a_object->newMesh();
+                meshes.push_back(mesh);
+                ready.push_back(false);
+            }
+        }
+
+        // keep track of vertex mapping in each mesh; maps "old" vertices to new vertices
         int nMeshes = a_object->getNumMeshes();
         vertexIndexSet_uint_map* vertexMaps = new vertexIndexSet_uint_map[nMeshes];
         vertexIndexSet_uint_map::iterator vertexMapIter;
@@ -205,19 +245,48 @@ bool cLoadFileOBJ(cMultiMesh* a_object, const std::string& a_filename)
 
             // get triangles
             int numTriangles = fileObj.m_OBJInfo.m_faceCount;
-            int j = 0;
             if (numTriangles > 0)
             {
+                int j = 0;
                 while (j < numTriangles)
                 {
                     // get next face
                     cFace face = fileObj.m_pFaces[j];
 
                     // get material index attributed to the face
-                    int objIndex = face.m_materialIndex;
+                    int objIndex;
+                    if (flagCreateOneMeshPerMaterial)
+                    {
+                        objIndex = face.m_materialIndex;
+                    }
+                    else
+                    {
+                        objIndex = face.m_groupIndex;
+                    }
 
                     // the mesh that we're reading this triangle into
                     cMesh* curMesh = a_object->getMesh(objIndex);
+
+                    // check if texture and material properties has yet been assigned
+                    if (!ready[objIndex])
+                    {
+                        // set material
+                        curMesh->setMaterial(materials[face.m_materialIndex]);
+                        curMesh->setUseMaterial(true);
+
+                        // apply transparency
+                        curMesh->setUseTransparency(useTransparency[face.m_materialIndex]);
+
+                        // set texture
+                        if (useTexture[face.m_materialIndex])
+                        {
+                            curMesh->setTexture(textures[face.m_materialIndex]);
+                            curMesh->setUseTexture(true);
+                        }
+
+                        // mark properties as ready
+                        ready[objIndex] = true;
+                    }
 
                     // create a name for this mesh if necessary (over-writing a previous
                     // name if one has been written)
@@ -242,7 +311,7 @@ bool cLoadFileOBJ(cMultiMesh* a_object, const std::string& a_filename)
                             if (face.m_pNormals != NULL) vis.nIndex = face.m_pNormalIndices[0];
                             if (face.m_pTexCoords != NULL) vis.tIndex = face.m_pTextureIndices[0];
                             indexV1 = getVertexIndex(curMesh, &fileObj, curVertexMap, vis);
-                        }                
+                        }
 
                         for (int triangleVert = 2; triangleVert < vertCount; triangleVert++)
                         {
@@ -1101,19 +1170,21 @@ bool cOBJModel::loadMaterialLib(const char a_fileName[],
             strcpy(m_pMaterials[*a_curMaterialIndex].m_name, str);
         }
 
-        // transparency
+        // opacity
         if (!strncmp(str, C_OBJ_MTL_ALPHA_ID_ALT, sizeof(C_OBJ_MTL_ALPHA_ID_ALT)))
         {
             // read into current material
             if (fscanf(hFile, "%f", &m_pMaterials[*a_curMaterialIndex].m_alpha) < 0) return(false);
-            m_pMaterials[*a_curMaterialIndex].m_alpha = 1.0 - m_pMaterials[*a_curMaterialIndex].m_alpha;
         }
 
-        // opacity
+        // transparency
         if (!strncmp(str, C_OBJ_MTL_ALPHA_ID, sizeof(C_OBJ_MTL_ALPHA_ID)))
         {
             // read into current material
             if (fscanf(hFile, "%f", &m_pMaterials[*a_curMaterialIndex].m_alpha) < 0) return(false);
+
+            // convert value from transparency to opacity
+            m_pMaterials[*a_curMaterialIndex].m_alpha = 1.0 - m_pMaterials[*a_curMaterialIndex].m_alpha;
         }
 
         // ambient material properties
@@ -1249,7 +1320,7 @@ void cOBJModel::getFileInfo(FILE *a_hStream, cOBJFileInfo *a_info, const char a_
                 while (!feof(hMaterialLib))
                 {
                     // read next string
-                    if (fscanf(hMaterialLib, "%1024s" ,str) > 0)
+                    if (fscanf(hMaterialLib, "%1023s", str) > 0)
                     {
 
                         // is it a "new material" identifier ?

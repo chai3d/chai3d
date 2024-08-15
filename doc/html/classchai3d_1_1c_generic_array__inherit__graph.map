@@ -1,5 +1,9 @@
 <map id="chai3d::cGenericArray" name="chai3d::cGenericArray">
-<area shape="rect" id="node2" href="$classchai3d_1_1c_point_array.html" title="This class implements an array of 3D points. " alt="" coords="5,80,141,107"/>
-<area shape="rect" id="node3" href="$classchai3d_1_1c_segment_array.html" title="This class implements an array of 3D segments. " alt="" coords="166,80,325,107"/>
-<area shape="rect" id="node4" href="$classchai3d_1_1c_triangle_array.html" title="This class implements an array of 3D triangles. " alt="" coords="349,80,501,107"/>
+<area shape="rect" id="Node000001" title="This class implements an abstract class for describing geometrical elements composed of vertices." alt="" coords="170,5,321,31"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_point_array.html" title="This class implements an array of 3D points." alt="" coords="5,79,141,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,38,102,81,100,76,204,33"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_segment_array.html" title="This class implements an array of 3D segments." alt="" coords="166,79,325,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="248,44,248,79,243,79,243,44"/>
+<area shape="rect" id="Node000004" href="$classchai3d_1_1c_triangle_array.html" title="This class implements an array of 3D triangles." alt="" coords="349,79,501,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="288,33,397,76,395,81,286,38"/>
 </map>

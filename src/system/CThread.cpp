@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Francois Conti
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 2182 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -111,7 +111,7 @@ void cThread::start(void(*a_function)(void), CThreadPriority a_level)
     pthread_create(
           &m_handle,
           0,
-          (void * (*)(void*)) a_function,
+          reinterpret_cast<void*(*)(void*)>(a_function),
           0
     );
 #endif
@@ -150,7 +150,7 @@ void cThread::start(void(*a_function)(void*), CThreadPriority a_level, void *a_a
     pthread_create(
           &m_handle,
           0,
-          (void * (*)(void*)) a_function,
+          reinterpret_cast<void*(*)(void*)>(a_function),
           a_arg
     );
 #endif
@@ -200,7 +200,7 @@ void cThread::setPriority(CThreadPriority a_level)
     }
 
     // adjust the thread priority within the process
-    int priority;
+    int priority = THREAD_PRIORITY_NORMAL;
 
     switch (m_priorityLevel)
     {

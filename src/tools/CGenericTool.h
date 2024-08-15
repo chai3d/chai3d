@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2188 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -95,6 +95,16 @@ public:
 
     //! Destructor of cGenericTool.
     virtual ~cGenericTool();
+
+
+    //--------------------------------------------------------------------------
+    // PUBLIC METHODS - GENERAL:
+    //--------------------------------------------------------------------------
+
+public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("GenericTool"); }
 
 
     //--------------------------------------------------------------------------
@@ -488,9 +498,6 @@ public:
 
     //! This method renders the tool graphically using OpenGL.
     virtual void render(cRenderOptions& a_options) {};
-
-    //! This method assigns a shader program to this object, optionally propagating the operation to its children..
-    virtual void setShaderProgram(cShaderProgramPtr a_shaderProgram, const bool a_affectChildren = false);
 
 
     //--------------------------------------------------------------------------

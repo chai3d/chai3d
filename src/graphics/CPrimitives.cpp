@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2173 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -367,8 +367,7 @@ void cCreatePanel(cMesh* a_mesh,
     \param  a_cornerTopLeftRadius      Radius of top left corner.
     \param  a_cornerTopRightRadius     Radius of top right corner.
     \param  a_cornerBottomLeftRadius   Radius of bottom left corner.
-    \param  a_cornerTopLeftRadius      Radius of bottom right corner.
-    \param  a_cornerBottomRightRadius  Number of segments per rounded corner.
+    \param  a_cornerBottomRightRadius  Radius of bottom right corner.
     \param  a_numSegmentsPerCorner     Number of segments composing the circular corners.
     \param  a_pos                      Position where to build the new primitive.
     \param  a_rot                      Orientation of the new primitive.

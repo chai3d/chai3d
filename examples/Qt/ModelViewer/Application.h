@@ -27,7 +27,7 @@ void _hapticThread (void *arg);
 
 //------------------------------------------------------------------------------
 
-class ApplicationWidget : public QGLWidget
+class ApplicationWidget : public QOpenGLWidget
 {
 
     //--------------------------------------------------------------------------
@@ -70,7 +70,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-    void timerEvent(QTimerEvent *event) { updateGL(); }
+    void timerEvent(QTimerEvent *event) { update(); }
 
 
     //--------------------------------------------------------------------------

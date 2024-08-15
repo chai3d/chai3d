@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2162 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -328,79 +328,79 @@ void cAlgorithmFingerProxy::computeNextBestProxyPosition(const cVector3d& a_goal
 
 void cAlgorithmFingerProxy::adjustDynamicProxy(const cVector3d& a_goal)
 {
-        // set collision settings for dynamic proxy
-        cCollisionSettings collisionSettings;
-        collisionSettings.m_checkForNearestCollisionOnly  = false;
-        collisionSettings.m_returnMinimalCollisionData    = false;
-        collisionSettings.m_checkVisibleObjects           = false;
-        collisionSettings.m_checkHapticObjects            = true;
-        collisionSettings.m_ignoreShapes                  = true;
-        collisionSettings.m_adjustObjectMotion            = true;
-        collisionSettings.m_collisionRadius = m_radius;
+    // set collision settings for dynamic proxy
+    cCollisionSettings collisionSettings;
+    collisionSettings.m_checkForNearestCollisionOnly  = false;
+    collisionSettings.m_returnMinimalCollisionData    = false;
+    collisionSettings.m_checkVisibleObjects           = false;
+    collisionSettings.m_checkHapticObjects            = true;
+    collisionSettings.m_ignoreShapes                  = true;
+    collisionSettings.m_adjustObjectMotion            = true;
+    collisionSettings.m_collisionRadius = m_radius;
 
-        // setup recorder
-        cCollisionRecorder collisionRecorder;
-        collisionRecorder.clear();
+    // setup recorder
+    cCollisionRecorder collisionRecorder;
+    collisionRecorder.clear();
 
-        cVector3d nextProxyOffset(0.0, 0.0, 0.0);
+    cVector3d nextProxyOffset(0.0, 0.0, 0.0);
 
-        // check if any moving objects have hit the proxy
-        bool hit = m_world->computeCollisionDetection(m_proxyGlobalPos,
-                                                        m_proxyGlobalPos,
-                                                        collisionRecorder,
-                                                        collisionSettings);
+    // check if any moving objects have hit the proxy
+    bool hit = m_world->computeCollisionDetection(m_proxyGlobalPos,
+                                                    m_proxyGlobalPos,
+                                                    collisionRecorder,
+                                                    collisionSettings);
 
-        // one or more collisions have occured
-        if (hit)
+    // one or more collisions have occured
+    if (hit)
+    {
+        int numCollisions = (int)(collisionRecorder.m_collisions.size());
+
+        for (int i=0; i<numCollisions; i++)
         {
-            int numCollisions = (int)(collisionRecorder.m_collisions.size());
+            // retrieve new position of proxy
+            cVector3d posLocal = collisionRecorder.m_collisions[i].m_adjustedSegmentAPoint;
+            cGenericObject* obj = collisionRecorder.m_collisions[i].m_object;
+            cVector3d posGlobal = cAdd(obj->getGlobalPos(), cMul( obj->getGlobalRot(), posLocal ));
+            cVector3d offset = posGlobal - m_proxyGlobalPos;
 
-            for (int i=0; i<numCollisions; i++)
+            if (offset.length() > C_SMALL)
             {
-                // retrieve new position of proxy
-                cVector3d posLocal = collisionRecorder.m_collisions[i].m_adjustedSegmentAPoint;
-                cGenericObject* obj = collisionRecorder.m_collisions[i].m_object;
-                cVector3d posGlobal = cAdd(obj->getGlobalPos(), cMul( obj->getGlobalRot(), posLocal ));
-                cVector3d offset = posGlobal - m_proxyGlobalPos;
-
-                if (offset.length() > C_SMALL)
+                cVector3d projection = cProject(nextProxyOffset, offset);
+                double diff = offset.length() - projection.length();
+                if (diff > 0.0)
                 {
-                    cVector3d projection = cProject(nextProxyOffset, offset);
-                    double diff = offset.length() - projection.length();
-                    if (diff > 0.0)
-                    {
-                        nextProxyOffset = nextProxyOffset + diff * cNormalize(offset); 
-                    }
+                    nextProxyOffset = nextProxyOffset + diff * cNormalize(offset); 
                 }
             }
         }
+    }
 
-        // compute new proxy position to stay away from collision with objects moving
-        m_proxyGlobalPos = m_proxyGlobalPos + nextProxyOffset;
+    // compute new proxy position to stay away from collision with objects moving
+    m_proxyGlobalPos = m_proxyGlobalPos + nextProxyOffset;
         
-        // if possible maintain proxy on surface of objects in contact
-        if (m_numCollisionEvents == 1)
+    // if possible maintain proxy on surface of objects in contact
+    if (m_numCollisionEvents == 1)
+    {
+        collisionRecorder.clear();
+        collisionSettings.m_checkForNearestCollisionOnly = true;
+
+        // computed new desired position of proxy on consytraint 0
+        cVector3d globalPos = m_collisionRecorderConstraint0.m_nearestCollision.m_object->getGlobalPos();
+        cMatrix3d globalRot = m_collisionRecorderConstraint0.m_nearestCollision.m_object->getGlobalRot();
+        cVector3d proxyDesiredGlobalPos = globalPos + globalRot * m_contactPointLocalPos0;
+
+        // check if any objects are in the way
+        hit = m_world->computeCollisionDetection(m_proxyGlobalPos,
+                                                 proxyDesiredGlobalPos,
+                                                 collisionRecorder,
+                                                 collisionSettings);
+
+        // no collision has occured, therfore proxy can move with object
+        if (!hit)
         {
-            collisionRecorder.clear();
-            collisionSettings.m_checkForNearestCollisionOnly = true;
-
-            // computed new desired position of proxy on consytraint 0
-            cVector3d globalPos = m_collisionRecorderConstraint0.m_nearestCollision.m_object->getGlobalPos();
-            cMatrix3d globalRot = m_collisionRecorderConstraint0.m_nearestCollision.m_object->getGlobalRot();
-            cVector3d proxyDesiredGlobalPos = globalPos + globalRot * m_contactPointLocalPos0;
-
-            // check if any objects are in the way
-            bool hit = m_world->computeCollisionDetection(m_proxyGlobalPos,
-                                                          proxyDesiredGlobalPos,
-                                                          collisionRecorder,
-                                                          collisionSettings);
-
-            // no collision has occured, therfore proxy can move with object
-            if (!hit)
-            {
-                m_proxyGlobalPos = proxyDesiredGlobalPos;
-            }
+            m_proxyGlobalPos = proxyDesiredGlobalPos;
         }
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -1157,9 +1157,9 @@ void cAlgorithmFingerProxy::updateForce()
                 force.subr(normalForce, tangentialForce);
 
                 // get vertices of contact triangles
-                unsigned int index0 =  m_collisionEvents[i]->m_triangles->getVertexIndex0(m_collisionEvents[i]->m_index);
-                unsigned int index1 =  m_collisionEvents[i]->m_triangles->getVertexIndex1(m_collisionEvents[i]->m_index);
-                unsigned int index2 =  m_collisionEvents[i]->m_triangles->getVertexIndex2(m_collisionEvents[i]->m_index);
+                unsigned int index0 = m_collisionEvents[i]->m_triangles->getVertexIndex0(m_collisionEvents[i]->m_index);
+                unsigned int index1 = m_collisionEvents[i]->m_triangles->getVertexIndex1(m_collisionEvents[i]->m_index);
+                unsigned int index2 = m_collisionEvents[i]->m_triangles->getVertexIndex2(m_collisionEvents[i]->m_index);
 
                 cVector3d vertex0 = cAdd(m_collisionEvents[i]->m_object->getGlobalPos(), cMul(m_collisionEvents[i]->m_object->getGlobalRot(), m_collisionEvents[i]->m_triangles->m_vertices->getLocalPos(index0)));
                 cVector3d vertex1 = cAdd(m_collisionEvents[i]->m_object->getGlobalPos(), cMul(m_collisionEvents[i]->m_object->getGlobalRot(), m_collisionEvents[i]->m_triangles->m_vertices->getLocalPos(index1)));
@@ -1175,7 +1175,6 @@ void cAlgorithmFingerProxy::updateForce()
                     cTexture1dPtr texture = m_collisionEvents[i]->m_object->m_texture;
 
                     // retrieve the texture coordinate for each triangle vertex
-             
                     cVector3d texCoord0 = m_collisionEvents[i]->m_triangles->m_vertices->getTexCoord(index0);
                     cVector3d texCoord1 = m_collisionEvents[i]->m_triangles->m_vertices->getTexCoord(index1);
                     cVector3d texCoord2 = m_collisionEvents[i]->m_triangles->m_vertices->getTexCoord(index2);
@@ -1221,16 +1220,16 @@ void cAlgorithmFingerProxy::updateForce()
 
                     const double SCALE = (1.0/255.0);
                     double fX00 = SCALE * (color00.getR() - 128);
-                    double fY00 =-SCALE * (color00.getG() - 128);
+                    double fY00 = SCALE * (color00.getG() - 128);
                     double fZ00 = SCALE * (color00.getB() - 128);
                     double fX01 = SCALE * (color01.getR() - 128);
-                    double fY01 =-SCALE * (color01.getG() - 128);
+                    double fY01 = SCALE * (color01.getG() - 128);
                     double fZ01 = SCALE * (color01.getB() - 128);
                     double fX10 = SCALE * (color10.getR() - 128);
-                    double fY10 =-SCALE * (color10.getG() - 128);
+                    double fY10 = SCALE * (color10.getG() - 128);
                     double fZ10 = SCALE * (color10.getB() - 128);
                     double fX11 = SCALE * (color11.getR() - 128);
-                    double fY11 =-SCALE * (color11.getG() - 128);
+                    double fY11 = SCALE * (color11.getG() - 128);
                     double fZ11 = SCALE * (color11.getB() - 128);
 
                     // bilinear interpolation
@@ -1238,8 +1237,8 @@ void cAlgorithmFingerProxy::updateForce()
                     double fY = fY00 * (1-x)*(1-y) + fY10*x*(1-y) + fY01*(1-x)*y + fY11*x*y;
                     double fZ = fZ00 * (1-x)*(1-y) + fZ10*x*(1-y) + fZ01*(1-x)*y + fZ11*x*y;
 
-                    // assign gradient (negate fy!)
-                    gradientTexture.set(fX,-fY, fZ);
+                    // assign gradient
+                    gradientTexture.set(fX, fY, fZ);
 
                     // boolean used to inform us if the projection succeeds
                     bool success = false;
@@ -1293,8 +1292,8 @@ void cAlgorithmFingerProxy::updateForce()
                         }
                     }
 
-                    // if the operation succeeds, we compute a new surface normal that will
-                    // be used to reorient the previously computed reaction force
+                    // if the operation succeeds, we compute a new surface normal that takes
+                    // into account the texture normal
                     if (success)
                     {
                         cVector3d newNormal = gradientSurface * m_collisionEvents[i]->m_object->m_material->getTextureLevel();

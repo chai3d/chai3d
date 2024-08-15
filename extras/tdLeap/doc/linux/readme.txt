@@ -22,5 +22,5 @@ The libtdLeap.so shared library acts as an interface betwen CHAI3D and the Leap 
 
 
 ________________________
-(C) 2003-2016 by CHAI3D
+(C) 2003-2017 by CHAI3D
 All Rights Reserved.

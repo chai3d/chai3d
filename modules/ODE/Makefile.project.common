@@ -1,0 +1,84 @@
+################################################################################
+#
+#  Software License Agreement (BSD License)
+#  Copyright (c) 2003-2024, CHAI3D
+#  (www.chai3d.org)
+#
+#  All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#  * Redistributions of source code must retain the above copyright
+#  notice, this list of conditions and the following disclaimer.
+#
+#  * Redistributions in binary form must reproduce the above
+#  copyright notice, this list of conditions and the following
+#  disclaimer in the documentation and/or other materials provided
+#  with the distribution.
+#
+#  * Neither the name of CHAI3D nor the names of its contributors may
+#  be used to endorse or promote products derived from this software
+#  without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+#  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+#  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+#  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+#  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+#  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+#  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+#  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+#  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#  POSSIBILITY OF SUCH DAMAGE.
+#
+################################################################################
+
+# Update default common paths
+BIN_DIR = $(TOP_DIR)/bin/$(OS)-$(ARCH)
+INC_DIR = $(TOP_DIR)/src
+
+# ODE dependency
+ODE       = $(TOP_DIR)/externals/ODE
+CXXFLAGS += -I$(ODE)/include
+
+# CHAI3D dependency
+CHAI3D     = $(TOP_DIR)/../..
+CXXFLAGS  += -I$(CHAI3D)/src -I$(CHAI3D)/externals/Eigen -I$(CHAI3D)/externals/glew/include
+CHAI3D_LIB = $(CHAI3D)/lib/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)/libchai3d.a
+LDFLAGS   += -L$(CHAI3D)/lib/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)
+LDLIBS    += -lchai3d
+
+# DHD dependency
+DHD_EXT  ?= $(TOP_DIR)/../../externals/DHD
+DHD_LIB  ?= $(DHD_EXT)/lib/$(OS)-$(ARCH)
+CXXFLAGS += -I$(DHD_EXT)/include
+LDFLAGS  += -L$(DHD_LIB)
+LDLIBS   += -ldrd
+
+# Optional dependencies (see Makefile.config)
+include $(CHAI3D)/Makefile.config
+ifeq ($(CHAI3D_USE_EXTERNAL_GIFLIB), yes)
+    LDLIBS += -lgif
+endif
+ifeq ($(CHAI3D_USE_EXTERNAL_LIB3DS), yes)
+    LDLIBS += -l3ds
+endif
+ifeq ($(CHAI3D_USE_EXTERNAL_LIBJPEG), yes)
+    LDLIBS += -ljpeg
+endif
+ifeq ($(CHAI3D_USE_EXTERNAL_LIBPNG), yes)
+    LDLIBS += -lpng -lz
+endif
+ifeq ($(CHAI3D_USE_EXTERNAL_OPENAL), yes)
+    LDLIBS += -lopenal
+endif
+ifeq ($(USE_EXTERNAL_RTMIDI), yes)
+    LDLIBS += -lrtmidi
+endif
+ifeq ($(CHAI3D_USE_EXTERNAL_THEORAPLAYER), yes)
+    LDLIBS += -ltheoraplayer
+endif

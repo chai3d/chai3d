@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 2199 $
+    \version   3.3.0
 */
 //===========================================================================
 
@@ -286,7 +286,7 @@ int main(int argc, char* argv[])
     cout << "-----------------------------------" << endl;
     cout << "CHAI3D" << endl;
     cout << "Shader Converter" << endl;
-    cout << "Copyright 2003-2016" << endl;
+    cout << "Copyright 2003-2017" << endl;
     cout << "-----------------------------------" << endl;
     cout << endl;
 

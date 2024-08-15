@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,17 +35,14 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-08-16 23:22:03 +0200 (Tue, 16 Aug 2016) $
-#  $Rev: 2089 $
+################################################################################
 
-
-# compute paths
+# Compute paths.
 get_filename_component(GLFW_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 set(GLFW_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
 set(GLFW_LIBRARIES "@CONF_LIBRARIES@")
  
-# library dependencies (contains definitions for IMPORTED targets)
+# Library dependencies (contains definitions for IMPORTED targets)
 if(NOT TARGET glfw AND NOT GLFW_BINARY_DIR)
   include("${GLFW_CMAKE_DIR}/GLFWTargets.cmake")
 endif()

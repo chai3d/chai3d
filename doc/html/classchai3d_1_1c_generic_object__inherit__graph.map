@@ -1,32 +1,68 @@
 <map id="chai3d::cGenericObject" name="chai3d::cGenericObject">
-<area shape="rect" id="node3" href="$classchai3d_1_1c_camera.html" title="This class implements a virtual camera. " alt="" coords="429,17,551,44"/>
-<area shape="rect" id="node4" href="$classchai3d_1_1c_generic_light.html" title="This class implements a base class for modeling light sources. " alt="" coords="416,68,564,95"/>
-<area shape="rect" id="node8" href="$classchai3d_1_1c_generic_tool.html" title="This class implements a base class for modeling haptic tools. " alt="" coords="417,144,563,171"/>
-<area shape="rect" id="node11" href="$classchai3d_1_1c_mesh.html" title="This class implements a 3D polygonal mesh. " alt="" coords="437,195,543,221"/>
-<area shape="rect" id="node22" href="$classchai3d_1_1c_multi_mesh.html" title="This class implements a 3D multi&#45;mesh object. " alt="" coords="423,245,557,272"/>
-<area shape="rect" id="node23" href="$classchai3d_1_1c_multi_point.html" title="This class implements 3D point cloud object. " alt="" coords="423,296,557,323"/>
-<area shape="rect" id="node24" href="$classchai3d_1_1c_multi_segment.html" title="This class implements a collection 3D segments. " alt="" coords="413,347,567,373"/>
-<area shape="rect" id="node25" href="$classchai3d_1_1c_shape_box.html" title="This class implements a 3D shape box. " alt="" coords="423,397,557,424"/>
-<area shape="rect" id="node26" href="$classchai3d_1_1c_shape_cylinder.html" title="This class implements a 3D shape cylinder. " alt="" coords="410,448,570,475"/>
-<area shape="rect" id="node27" href="$classchai3d_1_1c_shape_ellipsoid.html" title="This class implements a 3D shape ellipsoid. " alt="" coords="409,499,571,525"/>
-<area shape="rect" id="node28" href="$classchai3d_1_1c_shape_line.html" title="This class implements a 3D line. " alt="" coords="422,549,558,576"/>
-<area shape="rect" id="node29" href="$classchai3d_1_1c_shape_sphere.html" title="This class implements a 3D shape sphere. " alt="" coords="413,600,567,627"/>
-<area shape="rect" id="node30" href="$classchai3d_1_1c_shape_torus.html" title="This class implements a 3D shape torus. " alt="" coords="417,651,563,677"/>
-<area shape="rect" id="node31" href="$classchai3d_1_1c_world.html" title="This class implements a virtual world. " alt="" coords="435,701,545,728"/>
-<area shape="rect" id="node2" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type. " alt="" coords="5,372,155,399"/>
-<area shape="rect" id="node5" href="$classchai3d_1_1c_directional_light.html" title="This class implements a directional light source. " alt="" coords="619,5,784,32"/>
-<area shape="rect" id="node7" href="$classchai3d_1_1c_positional_light.html" title="This class implements a positional light source. " alt="" coords="621,56,781,83"/>
-<area shape="rect" id="node6" href="$classchai3d_1_1c_spot_light.html" title="This class implements a spot light source. " alt="" coords="832,31,963,57"/>
-<area shape="rect" id="node9" href="$classchai3d_1_1c_tool_cursor.html" title="This class implements a cursor using a single haptic point. " alt="" coords="632,107,771,133"/>
-<area shape="rect" id="node10" href="$classchai3d_1_1c_tool_gripper.html" title="This class implements a gripper using a two haptic points. " alt="" coords="630,157,773,184"/>
-<area shape="rect" id="node12" href="$classchai3d_1_1c_generic_widget.html" title="This class implements a base class for widgets. " alt="" coords="621,208,782,235"/>
-<area shape="rect" id="node21" href="$classchai3d_1_1c_voxel_object.html" title="This class implements a 3D volumetric object composed of voxels. " alt="" coords="628,259,775,285"/>
-<area shape="rect" id="node13" href="$classchai3d_1_1c_dial.html" title="This class implements a 2D dial widget. " alt="" coords="848,157,947,184"/>
-<area shape="rect" id="node14" href="$classchai3d_1_1c_level.html" title="This class implements a 2D level display widget. " alt="" coords="844,208,951,235"/>
-<area shape="rect" id="node15" href="$classchai3d_1_1c_panel.html" title="This class implements a 2D panel widget. " alt="" coords="843,259,951,285"/>
-<area shape="rect" id="node16" href="$classchai3d_1_1c_bitmap.html" title="This class implements a 2D bitmap widget. " alt="" coords="1021,183,1137,209"/>
-<area shape="rect" id="node18" href="$classchai3d_1_1c_label.html" title="This class implements a 2D label widget to display one line of text. " alt="" coords="1026,233,1133,260"/>
-<area shape="rect" id="node19" href="$classchai3d_1_1c_scope.html" title="This class implements a 2D scope to display signals. " alt="" coords="1023,284,1135,311"/>
-<area shape="rect" id="node20" href="$classchai3d_1_1c_view_panel.html" title="This class implements a 2D display panel associated with a framebuffer. " alt="" coords="1011,335,1148,361"/>
-<area shape="rect" id="node17" href="$classchai3d_1_1c_background.html" title="This class implements a 2D background widget. " alt="" coords="1196,183,1340,209"/>
+<area shape="rect" id="Node000001" title="This class implements a base class for all 2D or 3D objects in CHAI3D." alt="" coords="201,387,360,412"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_camera.html" title="This class implements a virtual camera." alt="" coords="428,17,549,43"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="281,373,290,308,311,223,327,177,348,132,374,90,406,53,426,40,429,45,410,57,378,94,352,135,332,179,316,224,295,309,287,373"/>
+<area shape="rect" id="Node000004" href="$classchai3d_1_1c_generic_light.html" title="This class implements a base class for modeling light sources." alt="" coords="415,67,563,92"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="286,372,301,323,326,259,361,190,406,127,431,106,457,90,460,94,434,110,410,130,365,193,331,261,306,325,291,374"/>
+<area shape="rect" id="Node000008" href="$classchai3d_1_1c_generic_tool.html" title="This class implements a base class for modeling haptic tools." alt="" coords="417,140,561,165"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="287,373,303,330,328,277,362,223,383,198,406,176,428,163,431,168,410,180,387,202,366,226,332,280,308,332,292,375"/>
+<area shape="rect" id="Node000011" href="$classchai3d_1_1c_mesh.html" title="This class implements a 3D polygonal mesh." alt="" coords="435,189,542,215"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="292,373,335,300,368,260,406,225,434,211,436,216,410,230,372,263,340,303,296,376"/>
+<area shape="rect" id="Node000023" href="$classchai3d_1_1c_multi_mesh.html" title="This class implements a 3D multi&#45;mesh object." alt="" coords="421,239,556,264"/>
+<area shape="poly" id="edge23_Node000001_Node000023" title=" " alt="" coords="298,374,344,324,374,297,407,274,434,262,437,266,409,279,377,302,348,328,302,378"/>
+<area shape="rect" id="Node000024" href="$classchai3d_1_1c_multi_point.html" title="This class implements 3D point cloud object." alt="" coords="422,288,555,313"/>
+<area shape="poly" id="edge24_Node000001_Node000024" title=" " alt="" coords="311,377,355,350,407,324,440,311,442,316,409,328,358,355,314,382"/>
+<area shape="rect" id="Node000025" href="$classchai3d_1_1c_multi_segment.html" title="This class implements a collection 3D segments." alt="" coords="411,337,566,363"/>
+<area shape="poly" id="edge25_Node000001_Node000025" title=" " alt="" coords="348,381,434,360,435,365,349,386"/>
+<area shape="rect" id="Node000026" href="$classchai3d_1_1c_shape_box.html" title="This class implements a 3D shape box." alt="" coords="421,387,556,412"/>
+<area shape="poly" id="edge26_Node000001_Node000026" title=" " alt="" coords="374,397,421,397,421,402,374,402"/>
+<area shape="rect" id="Node000027" href="$classchai3d_1_1c_shape_cylinder.html" title="This class implements a 3D shape cylinder." alt="" coords="409,436,569,461"/>
+<area shape="poly" id="edge27_Node000001_Node000027" title=" " alt="" coords="349,413,435,433,434,439,348,418"/>
+<area shape="rect" id="Node000028" href="$classchai3d_1_1c_shape_ellipsoid.html" title="This class implements a 3D shape ellipsoid." alt="" coords="408,485,569,511"/>
+<area shape="poly" id="edge28_Node000001_Node000028" title=" " alt="" coords="313,417,357,445,409,472,439,483,437,488,407,476,355,450,310,422"/>
+<area shape="rect" id="Node000029" href="$classchai3d_1_1c_shape_line.html" title="This class implements a 3D line." alt="" coords="421,535,557,560"/>
+<area shape="poly" id="edge29_Node000001_Node000029" title=" " alt="" coords="302,421,347,472,377,498,409,521,434,532,431,537,407,526,374,502,344,476,298,425"/>
+<area shape="rect" id="Node000030" href="$classchai3d_1_1c_shape_sphere.html" title="This class implements a 3D shape sphere." alt="" coords="412,584,565,609"/>
+<area shape="poly" id="edge30_Node000001_Node000030" title=" " alt="" coords="296,424,314,457,339,497,371,537,410,570,431,582,428,586,406,575,368,540,335,500,309,460,291,426"/>
+<area shape="rect" id="Node000031" href="$classchai3d_1_1c_shape_torus.html" title="This class implements a 3D shape torus." alt="" coords="417,633,561,659"/>
+<area shape="poly" id="edge31_Node000001_Node000031" title=" " alt="" coords="292,424,308,467,332,520,366,574,386,598,410,620,429,631,426,636,406,624,383,602,362,577,327,523,303,469,287,426"/>
+<area shape="rect" id="Node000032" href="$classchai3d_1_1c_viewport.html" title="This class implements a viewport." alt="" coords="425,683,552,708"/>
+<area shape="poly" id="edge32_Node000001_Node000032" title=" " alt="" coords="289,425,302,477,325,543,360,611,383,642,410,669,427,680,424,685,406,673,379,645,356,614,320,545,297,478,284,426"/>
+<area shape="rect" id="Node000033" href="$classchai3d_1_1c_world.html" title="This class implements a virtual world." alt="" coords="435,732,543,757"/>
+<area shape="poly" id="edge33_Node000001_Node000033" title=" " alt="" coords="287,426,297,486,319,565,335,607,355,647,380,685,410,719,436,734,433,738,406,723,375,689,350,650,330,609,313,567,292,487,282,427"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type." alt="" coords="5,387,153,412"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,397,201,397,201,402,167,402"/>
+<area shape="rect" id="Node000005" href="$classchai3d_1_1c_directional_light.html" title="This class implements a directional light source." alt="" coords="617,5,783,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="546,60,655,28,656,33,547,65"/>
+<area shape="rect" id="Node000007" href="$classchai3d_1_1c_positional_light.html" title="This class implements a positional light source." alt="" coords="620,55,780,80"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="576,72,620,69,620,75,577,77"/>
+<area shape="rect" id="Node000006" href="$classchai3d_1_1c_spot_light.html" title="This class implements a spot light source." alt="" coords="831,31,961,56"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="797,28,831,32,830,38,796,33"/>
+<area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="794,53,830,49,831,54,794,58"/>
+<area shape="rect" id="Node000009" href="$classchai3d_1_1c_tool_cursor.html" title="This class implements a cursor using a single haptic point." alt="" coords="631,104,769,129"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="574,135,630,126,631,131,575,141"/>
+<area shape="rect" id="Node000010" href="$classchai3d_1_1c_tool_gripper.html" title="This class implements a gripper using a two haptic points." alt="" coords="629,153,771,179"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="575,155,629,159,629,164,575,161"/>
+<area shape="rect" id="Node000012" href="$classchai3d_1_1c_generic_widget.html" title="This class implements a base class for widgets." alt="" coords="619,203,781,228"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="556,204,619,208,619,213,556,209"/>
+<area shape="rect" id="Node000022" href="$classchai3d_1_1c_voxel_object.html" title="This class implements a 3D volumetric object composed of voxels." alt="" coords="627,252,773,277"/>
+<area shape="poly" id="edge22_Node000011_Node000022" title=" " alt="" coords="545,216,618,238,656,249,654,254,617,243,544,221"/>
+<area shape="rect" id="Node000013" href="$classchai3d_1_1c_dial.html" title="This class implements a 2D dial widget." alt="" coords="847,153,945,179"/>
+<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="764,197,846,176,847,181,765,202"/>
+<area shape="rect" id="Node000014" href="$classchai3d_1_1c_level.html" title="This class implements a 2D level display widget." alt="" coords="843,203,949,228"/>
+<area shape="poly" id="edge14_Node000012_Node000014" title=" " alt="" coords="795,213,842,213,842,218,795,218"/>
+<area shape="rect" id="Node000015" href="$classchai3d_1_1c_panel.html" title="This class implements a 2D panel widget." alt="" coords="842,252,950,277"/>
+<area shape="poly" id="edge15_Node000012_Node000015" title=" " alt="" coords="765,229,845,249,844,255,764,234"/>
+<area shape="rect" id="Node000016" href="$classchai3d_1_1c_bitmap.html" title="This class implements a 2D bitmap widget." alt="" coords="1020,153,1136,179"/>
+<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="950,244,960,238,974,226,983,214,993,202,1008,189,1033,176,1036,181,1011,194,997,206,987,218,978,230,963,243,953,249"/>
+<area shape="rect" id="Node000018" href="$classchai3d_1_1c_histogram.html" title="This class implements a 2D histogram to display an array of data value." alt="" coords="1011,203,1145,228"/>
+<area shape="poly" id="edge18_Node000015_Node000018" title=" " alt="" coords="956,246,1029,226,1031,231,957,251"/>
+<area shape="rect" id="Node000019" href="$classchai3d_1_1c_label.html" title="This class implements a 2D label widget to display one line of text." alt="" coords="1025,252,1131,277"/>
+<area shape="poly" id="edge19_Node000015_Node000019" title=" " alt="" coords="964,262,1024,262,1024,267,964,267"/>
+<area shape="rect" id="Node000020" href="$classchai3d_1_1c_scope.html" title="This class implements a 2D scope to display signals." alt="" coords="1022,301,1134,327"/>
+<area shape="poly" id="edge20_Node000015_Node000020" title=" " alt="" coords="957,278,1031,299,1029,304,956,283"/>
+<area shape="rect" id="Node000021" href="$classchai3d_1_1c_view_panel.html" title="This class implements a 2D display panel associated with a framebuffer." alt="" coords="1009,351,1147,376"/>
+<area shape="poly" id="edge21_Node000015_Node000021" title=" " alt="" coords="926,284,965,311,1011,337,1037,348,1035,353,1008,342,962,315,923,288"/>
+<area shape="rect" id="Node000017" href="$classchai3d_1_1c_background.html" title="This class implements a 2D background widget." alt="" coords="1195,153,1339,179"/>
+<area shape="poly" id="edge17_Node000016_Node000017" title=" " alt="" coords="1150,163,1194,163,1194,169,1150,169"/>
 </map>

@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['testfrictionandmoveproxy',['testFrictionAndMoveProxy',['../classchai3d_1_1c_algorithm_finger_proxy.html#a5bc05df76e190fd6468c24f45c8ec404',1,'chai3d::cAlgorithmFingerProxy']]],
-  ['timeoutoccurred',['timeoutOccurred',['../classchai3d_1_1c_precision_clock.html#a5d887fff6479118c0b4f1777b9bd4cdf',1,'chai3d::cPrecisionClock']]],
-  ['toaxisangle',['toAxisAngle',['../structchai3d_1_1c_matrix3d.html#ac16a0c7ede937bc5860d32582cba4f56',1,'chai3d::cMatrix3d::toAxisAngle()'],['../structchai3d_1_1c_quaternion.html#af8af877d3c44b505232533c289818ad3',1,'chai3d::cQuaternion::toAxisAngle()']]],
-  ['torotmat',['toRotMat',['../structchai3d_1_1c_quaternion.html#ab8177942560600d52b39afcd1e75f2c2',1,'chai3d::cQuaternion']]],
-  ['trans',['trans',['../structchai3d_1_1c_matrix3d.html#a9b5445363778390573c28173b2ac8b38',1,'chai3d::cMatrix3d::trans()'],['../structchai3d_1_1c_transform.html#aba824785647912655da17b3aafc64b02',1,'chai3d::cTransform::trans()']]],
-  ['translate',['translate',['../classchai3d_1_1c_vertex_array.html#aecc2c87fcf9cb0196b35bed40fdf07c6',1,'chai3d::cVertexArray::translate()'],['../classchai3d_1_1c_generic_object.html#abe5feaf1b24faaf05fe0e922cf9628f5',1,'chai3d::cGenericObject::translate(const cVector3d &amp;a_translation)'],['../classchai3d_1_1c_generic_object.html#a2748959ae8e30897bde66c81058cda9e',1,'chai3d::cGenericObject::translate(const double a_x, const double a_y, const double a_z=0.0)']]],
-  ['transr',['transr',['../structchai3d_1_1c_matrix3d.html#a5b5ef3140890a22c9c39edec0a589c99',1,'chai3d::cMatrix3d::transr()'],['../structchai3d_1_1c_transform.html#a8d64abf9e69ae967e01e08f367720b49',1,'chai3d::cTransform::transr()']]],
-  ['tryacquire',['tryAcquire',['../classchai3d_1_1c_mutex.html#ad87468b69d18889b9154b9116df8c486',1,'chai3d::cMutex']]]
+  ['testfrictionandmoveproxy_0',['testFrictionAndMoveProxy',['../classchai3d_1_1c_algorithm_finger_proxy.html#a5bc05df76e190fd6468c24f45c8ec404',1,'chai3d::cAlgorithmFingerProxy']]],
+  ['timeoutoccurred_1',['timeoutOccurred',['../classchai3d_1_1c_precision_clock.html#aa18de67f4356f195211361db23719a3b',1,'chai3d::cPrecisionClock']]],
+  ['toaxisangle_2',['toaxisangle',['../structchai3d_1_1c_matrix3d.html#adf311d6cf757bf6f41d8b1eca45ed073',1,'chai3d::cMatrix3d::toAxisAngle()'],['../structchai3d_1_1c_quaternion.html#a39fedf505f34578648f2ff86734c08df',1,'chai3d::cQuaternion::toAxisAngle(cVector3d &amp;a_axis, double &amp;a_angleRad) const']]],
+  ['torotmat_3',['toRotMat',['../structchai3d_1_1c_quaternion.html#a6bc404386363423e4f0dacdc312276c3',1,'chai3d::cQuaternion']]],
+  ['trans_4',['trans',['../structchai3d_1_1c_matrix3d.html#a9b5445363778390573c28173b2ac8b38',1,'chai3d::cMatrix3d::trans()'],['../structchai3d_1_1c_transform.html#aba824785647912655da17b3aafc64b02',1,'chai3d::cTransform::trans()']]],
+  ['translate_5',['translate',['../classchai3d_1_1c_vertex_array.html#aecc2c87fcf9cb0196b35bed40fdf07c6',1,'chai3d::cVertexArray::translate()'],['../classchai3d_1_1c_generic_object.html#abe5feaf1b24faaf05fe0e922cf9628f5',1,'chai3d::cGenericObject::translate(const cVector3d &amp;a_translation)'],['../classchai3d_1_1c_generic_object.html#a2748959ae8e30897bde66c81058cda9e',1,'chai3d::cGenericObject::translate(const double a_x, const double a_y, const double a_z=0.0)']]],
+  ['transr_6',['transr',['../structchai3d_1_1c_matrix3d.html#ac2fb3afa9ffd3e9a904fdad31bc80db1',1,'chai3d::cMatrix3d::transr()'],['../structchai3d_1_1c_transform.html#abe3e3cdcfd76a2de9fc64fb2bb5bcd14',1,'chai3d::cTransform::transr()']]],
+  ['tryacquire_7',['tryAcquire',['../classchai3d_1_1c_mutex.html#ad87468b69d18889b9154b9116df8c486',1,'chai3d::cMutex']]]
 ];

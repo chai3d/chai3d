@@ -17,7 +17,7 @@
 #include "chai3d.h"
 //------------------------------------------------------------------------------
 #include <QFileSystemModel>
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QLabel>
 #include <QMainWindow>
 #include <QMessageBox>
@@ -44,7 +44,7 @@ class Interface : public QMainWindow
 
 public:
 
-    Interface (QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    Interface (QWidget *parent = 0);
     ~Interface ();
 
 

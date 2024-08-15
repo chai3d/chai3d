@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   1.0.0
 */
 //===========================================================================
 
@@ -97,12 +97,16 @@ public:
     //-----------------------------------------------------------------------
     inline void render()
     {
+#ifdef C_USE_OPENGL
+
         // render link
         glColor4fv( (const float *)&m_color);
         glBegin(GL_LINES);
           glVertex3dv( (const double *)&m_node0->m_pos);
           glVertex3dv( (const double *)&m_node1->m_pos);
         glEnd();
+
+#endif
     }
 
 

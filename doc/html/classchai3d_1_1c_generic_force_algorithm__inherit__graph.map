@@ -1,4 +1,7 @@
 <map id="chai3d::cGenericForceAlgorithm" name="chai3d::cGenericForceAlgorithm">
-<area shape="rect" id="node2" href="$classchai3d_1_1c_algorithm_finger_proxy.html" title="This class implements a finger&#45;proxy force rendering algorithm. " alt="" coords="5,80,172,121"/>
-<area shape="rect" id="node3" href="$classchai3d_1_1c_algorithm_potential_field.html" title="This class implements a force algorithms for handling all haptic effects associated with objects..." alt="" coords="197,80,378,121"/>
+<area shape="rect" id="Node000001" title="This class implements a base class for modeling force rendering algorithms." alt="" coords="83,5,291,31"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_algorithm_finger_proxy.html" title="This class implements a finger&#45;proxy force rendering algorithm." alt="" coords="5,79,172,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,41,114,81,111,76,160,37"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_algorithm_potential_field.html" title="This class implements a force algorithms for handling all haptic effects associated with objects." alt="" coords="197,79,378,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="215,37,265,76,262,81,211,41"/>
 </map>

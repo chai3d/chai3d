@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2153 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -92,6 +92,22 @@ public:
     virtual ~cLabel();
 
 
+    //--------------------------------------------------------------------------
+    // PUBLIC METHODS:
+    //--------------------------------------------------------------------------
+
+public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("Label"); }
+
+    //! This method creates a copy of this object.
+    cLabel* copy(const bool a_duplicateMaterialData = false,
+        const bool a_duplicateTextureData = false,
+        const bool a_duplicateMeshData = false,
+        const bool a_buildCollisionDetector = false);
+
+
     //-----------------------------------------------------------------------
     // PUBLIC MEMBERS:
     //--------------------------------------------------------------------------
@@ -110,6 +126,12 @@ public:
     //--------------------------------------------------------------------------
 
 public:
+
+    //! This method returns the width of the text in pixels.
+    virtual double getTextWidth() const;
+
+    //! This method returns the height of the text in pixels.
+    virtual double getTextHeight() const;
 
     //! This method assign a string text to this label.
     void setText(const std::string a_text);
@@ -166,25 +188,6 @@ protected:
 
     //! Text to be displayed.
     std::string m_text;
-
-
-    //--------------------------------------------------------------------------
-    // PUBLIC METHODS:
-    //--------------------------------------------------------------------------
-
-public:
-
-    //! This method creates a copy of this object.
-    cLabel* copy(const bool a_duplicateMaterialData = false,
-                 const bool a_duplicateTextureData = false, 
-                 const bool a_duplicateMeshData = false,
-                 const bool a_buildCollisionDetector = false);
-
-    //! This method returns the width of the text in pixels.
-    virtual double getTextWidth() const;
-
-    //! This method returns the height of the text in pixels.
-    virtual double getTextHeight() const;
 
 
     //--------------------------------------------------------------------------

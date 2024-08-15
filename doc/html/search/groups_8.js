@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['program_20shaders',['Program Shaders',['../group__shaders.html',1,'']]]
+  ['material_20properties_0',['Material Properties',['../group__materials.html',1,'']]],
+  ['math_1',['Math',['../group__math.html',1,'']]]
 ];

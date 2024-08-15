@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2159 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -98,6 +98,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <string>
 #include <memory>
 
 
@@ -105,9 +106,17 @@
 // COMPILING OPTIONS
 //------------------------------------------------------------------------------
 
+// OPENAL SUPPORT
+// Enable or disable OpenAL.
+#define C_USE_OPENAL
+
 // OPENGL SUPPORT
 // Enable or disable OpenGL and GLEW libraries.
 #define C_USE_OPENGL
+
+// OPENGL SUPPORT DOUBLES
+// Enable or disable support doubles in OpenGL.
+#define C_USE_OPENGL_DOUBLES
 
 // EIGEN SUPPORT
 // Enable or disable external Eigen math library.
@@ -202,6 +211,8 @@
     #include <ctime>
     #include <pthread.h>
     #include <dlfcn.h>
+    #include <limits.h>
+    #include <unistd.h>
 
     // printf
     #define cPrint printf
@@ -228,10 +239,12 @@
     //--------------------------------------------------------------------
 
     // OS specific
+    #include <CoreFoundation/CoreFoundation.h>
     #include <mach/mach_time.h>
     #include <pthread.h>
     #include <dlfcn.h>
-
+    #include <limits.h>
+    
     // printf
     #define cPrint printf
 
@@ -243,6 +256,14 @@
     #define C_ENABLE_LEAP_DEVICE_SUPPORT
     // #define C_ENABLE_SIXENSE_DEVICE_SUPPORT
 
+#endif
+
+
+//------------------------------------------------------------------------------
+// QNX
+//------------------------------------------------------------------------------
+#if defined(QNX)
+#undef C_USE_OPENGL
 #endif
 
 
@@ -261,6 +282,15 @@ namespace chai3d {
 
 //! This function suspends the execution of the current thread for a specified interval.
 void cSleepMs(const unsigned int a_interval);
+
+//! This function retrieves the absolute path of the current executable
+std::string cGetCurrentPath();
+
+//! This function returns a string containing the CHAI3D library version.
+const std::string cGetVersion();
+
+//! This retrieves the CHAI3D library version numbers.
+void cGetVersion(int& a_major, int& a_minor, int& a_patch);
 
 
 //------------------------------------------------------------------------------
@@ -318,8 +348,15 @@ typedef double                      GLclampd;
 #define GL_TEXTURE3                 0x84C3
 #define GL_TEXTURE4                 0x84C4
 #define GL_POINT                    0x1B00
-#define GL_LINE                     0x1B01
+#define GL_POINTS                   0x0000
+#define GL_LINES                    0x0001
+#define GL_LINE_LOOP                0x0002
+#define GL_LINE_STRIP               0x0003
+#define GL_TRIANGLES                0x0004
+#define GL_TRIANGLE_STRIP           0x0005
+#define GL_TRIANGLE_FAN             0x0006
 #define GL_FILL                     0x1B02
+
 #define GL_MODULATE                 0x2100
 #define GL_DECAL                    0x2101
 #define GL_LINEAR                   0x2601

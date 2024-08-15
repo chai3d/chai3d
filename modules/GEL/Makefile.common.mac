@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,23 +35,30 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-08-22 16:06:31 +0200 (Mon, 22 Aug 2016) $
-#  $Rev: 2093 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# compiler
+# Compiler
 CC      ?= clang
 CXX     ?= clang++
 COMPILER = $(CC)
 
-# common compiler flags
-CXXFLAGS += -DMACOSX -arch $(ARCH) -Qunused-arguments -Wno-deprecated -std=c++0x -stdlib=libc++
+# Adjust target architecture to include universal (fat) binaries
+ifeq ($(ARCH),universal)
+    ARCHFLAGS := -arch x86_64 -arch arm64
+else
+    ARCHFLAGS := -arch $(ARCH)
+endif
 
-# common linker flags
-LDFLAGS  += -L/usr/lib
-LDLIBS   += -lpthread -framework CoreFoundation -framework IOKit -framework OpenGL -framework CoreServices -framework CoreAudio -framework AudioToolbox -framework AudioUnit
+# Define shared library target if required
+ifneq (0,$(BUILD_LIB))
+    LIB_SHARED_NAME = lib$(LIB_ROOT_NAME).$(MAJOR).$(MINOR).$(PATCH)$(PRERELEASE).dylib
+    LIB_SHARED_OPT  = -dynamiclib -Wl,-dylib_install_name -Wl,$(LIB_SHARED_NAME)
+    LIB_SHARED      = $(LIB_DIR)/$(LIB_SHARED_NAME)
+endif
 
-# platform specific GLFW library and dependencies
-GLFW_DIR    = $(TOP_DIR)/../../extras/GLFW
-LDLIBS_GLFW = -lglfw -framework Cocoa -framework CoreVideo
+# Common compiler flags
+CFLAGS   += -DMACOSX $(ARCHFLAGS) 
+CXXFLAGS += -DMACOSX $(ARCHFLAGS) -std=c++17

@@ -1,7 +1,14 @@
 <map id="chai3d::cSpotLight" name="chai3d::cSpotLight">
-<area shape="rect" id="node2" href="$classchai3d_1_1c_positional_light.html" title="This class implements a positional light source. " alt="" coords="5,229,165,256"/>
-<area shape="rect" id="node3" href="$classchai3d_1_1c_generic_light.html" title="This class implements a base class for modeling light sources. " alt="" coords="105,155,253,181"/>
-<area shape="rect" id="node6" href="$classchai3d_1_1c_directional_light.html" title="This class implements a directional light source. " alt="" coords="189,229,355,256"/>
-<area shape="rect" id="node4" href="$classchai3d_1_1c_generic_object.html" title="This class implements a base class for all 2D or 3D objects in CHAI3D. " alt="" coords="99,80,258,107"/>
-<area shape="rect" id="node5" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type. " alt="" coords="104,5,253,32"/>
+<area shape="rect" id="Node000001" title="This class implements a spot light source." alt="" coords="113,299,244,324"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_positional_light.html" title="This class implements a positional light source." alt="" coords="5,225,165,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,257,165,296,162,301,109,261"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_generic_light.html" title="This class implements a base class for modeling light sources." alt="" coords="105,152,253,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="155,188,102,227,99,223,151,183"/>
+<area shape="rect" id="Node000006" href="$classchai3d_1_1c_directional_light.html" title="This class implements a directional light source." alt="" coords="189,225,355,251"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="206,183,258,223,255,227,203,188"/>
+<area shape="rect" id="Node000004" href="$classchai3d_1_1c_generic_object.html" title="This class implements a base class for all 2D or 3D objects in CHAI3D." alt="" coords="99,79,258,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="181,118,181,152,176,152,176,118"/>
+<area shape="rect" id="Node000005" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type." alt="" coords="105,5,253,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="181,44,181,79,176,79,176,44"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="248,261,196,301,192,296,245,257"/>
 </map>

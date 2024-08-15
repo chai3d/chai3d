@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2181 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -102,6 +102,7 @@ cAudioDevice::~cAudioDevice()
 //==============================================================================
 bool cAudioDevice::open()
 {
+#ifdef C_USE_OPENAL
     // open device
     if (m_device == NULL)
     {
@@ -131,6 +132,9 @@ bool cAudioDevice::open()
 
     // success
     return (m_active);
+#else
+    return false;
+#endif
 }
 
 
@@ -143,6 +147,7 @@ bool cAudioDevice::open()
 //==============================================================================
 bool cAudioDevice::close()
 {
+#ifdef C_USE_OPENAL
     // sanity check
     if (!m_active) { return (C_ERROR); }
 
@@ -166,6 +171,9 @@ bool cAudioDevice::close()
 
     // check for errors
     return (checkError());
+#else
+    return C_ERROR;
+#endif
 }
 
 
@@ -180,6 +188,7 @@ bool cAudioDevice::close()
 //==============================================================================
 bool cAudioDevice::setListenerPos(const cVector3d& a_listenerPos)
 {
+#ifdef C_USE_OPENAL
     // sanity check
     if (!m_active) { return (C_ERROR); }
 
@@ -195,6 +204,9 @@ bool cAudioDevice::setListenerPos(const cVector3d& a_listenerPos)
 
     // check for errors
     return (checkError());
+#else
+    return C_ERROR;
+#endif
 }
 
 
@@ -209,9 +221,13 @@ bool cAudioDevice::setListenerPos(const cVector3d& a_listenerPos)
 //==============================================================================
 bool cAudioDevice::setListenerRot(const cMatrix3d& a_listenerRot)
 {
+#ifdef C_USE_OPENAL
     cVector3d lookAt = m_listenerPos - a_listenerRot.getCol0();
     cVector3d up = a_listenerRot.getCol2();
     return (setListenerRot(lookAt, up));
+#else
+    return C_ERROR;
+#endif
 }
 
 
@@ -227,6 +243,7 @@ bool cAudioDevice::setListenerRot(const cMatrix3d& a_listenerRot)
 //==============================================================================
 bool cAudioDevice::setListenerRot(const cVector3d& a_lookAt, const cVector3d& a_up)
 {
+#ifdef C_USE_OPENAL
     // sanity check
     if (!m_active) { return (C_ERROR); }
 
@@ -247,6 +264,9 @@ bool cAudioDevice::setListenerRot(const cVector3d& a_lookAt, const cVector3d& a_
     
     // check for errors
     return (checkError());
+#else
+    return C_ERROR;
+#endif
 }
 
 
@@ -261,6 +281,7 @@ bool cAudioDevice::setListenerRot(const cVector3d& a_lookAt, const cVector3d& a_
 //==============================================================================
 bool cAudioDevice::setListenerVel(const cVector3d& a_listenerVel)
 {
+#ifdef C_USE_OPENAL
     // sanity check
     if (!m_active) { return (C_ERROR); }
 
@@ -276,6 +297,9 @@ bool cAudioDevice::setListenerVel(const cVector3d& a_listenerVel)
 
     // check for errors
     return (checkError());
+#else
+    return C_ERROR;
+#endif
 }
 
 
@@ -288,6 +312,7 @@ bool cAudioDevice::setListenerVel(const cVector3d& a_listenerVel)
 //==============================================================================
 bool cAudioDevice::checkError()
 {
+#ifdef C_USE_OPENAL
     if(alGetError() == AL_NO_ERROR)
     {
         return (C_SUCCESS);
@@ -296,6 +321,9 @@ bool cAudioDevice::checkError()
     {
         return (C_ERROR);
     }
+#else
+    return C_ERROR;
+#endif
 }
 
 

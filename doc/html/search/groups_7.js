@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['material_20properties',['Material Properties',['../group__materials.html',1,'']]],
-  ['math',['Math',['../group__math.html',1,'']]]
+  ['lighting_20properties_0',['Lighting Properties',['../group__lighting.html',1,'']]]
 ];

@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2174 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -472,6 +472,9 @@ bool cShapeLine::computeOtherCollisionDetection(cVector3d& a_segmentPointA,
                                                 cCollisionRecorder& a_recorder,
                                                 cCollisionSettings& a_settings)
 {
+    // update local line points
+    updateLinePoints();
+
     ////////////////////////////////////////////////////////////////////////////
     // COMPUTE COLLISION
     ////////////////////////////////////////////////////////////////////////////
@@ -493,7 +496,7 @@ bool cShapeLine::computeOtherCollisionDetection(cVector3d& a_segmentPointA,
                                    a_segmentPointB,
                                    m_linePointA,
                                    m_linePointB,
-                                   0.005 * cDistance(m_linePointB, m_linePointB),
+                                   0.005 * cDistance(m_linePointA, m_linePointB),
                                    collisionPoint0,
                                    collisionNormal0,
                                    c0,

@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2097 $
+    \version   1.0.0
 */
 //===========================================================================
 
@@ -47,10 +47,12 @@ using namespace chai3d;
 //---------------------------------------------------------------------------
 #include "CODEWorld.h"
 //---------------------------------------------------------------------------
+#ifdef C_USE_OPENGL
 #ifdef MACOSX
 #include "OpenGL/glu.h"
 #else
 #include "GL/glu.h"
+#endif
 #endif
 //---------------------------------------------------------------------------
 
@@ -1086,6 +1088,8 @@ void cODEGenericBody::disableDynamics()
 //===========================================================================
 void cODEGenericBody::render(cRenderOptions& a_options)
 {
+#ifdef C_USE_OPENGL
+
     if (m_imageModel != NULL)
     {
         m_imageModel->renderSceneGraph(a_options);
@@ -1103,10 +1107,10 @@ void cODEGenericBody::render(cRenderOptions& a_options)
             glLineWidth(1.0);
             glColor4fv(m_colorDynamicCollisionModel.getData());
 
-            cTransform m_frameGL;
-            m_frameGL.set(m_posOffsetDynColModel, m_rotOffsetDynColModel);
+            cTransform frameGL;
+            frameGL.set(m_posOffsetDynColModel, m_rotOffsetDynColModel);
             glPushMatrix();
-            glMultMatrixd( (const double *)m_frameGL.getData() );
+            glMultMatrixd( (const double *)frameGL.getData() );
 
             if (m_typeDynamicCollisionModel == ODE_MODEL_BOX)
             {
@@ -1159,6 +1163,8 @@ void cODEGenericBody::render(cRenderOptions& a_options)
             glPopMatrix();
         }
     }
+
+#endif
 }
 
 

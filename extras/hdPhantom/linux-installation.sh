@@ -1,7 +1,9 @@
 #! /bin/bash
 
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -35,19 +37,16 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: conti $
-#  $Date: 2015-12-17 06:26:05 +0100 (Thu, 17 Dec 2015) $
-#  $Rev: 1869 $
+################################################################################
 
-
-# make sure we have the rights to install a shared library
+# Make sure we have the rights to install a shared library.
 if [ $(id -u) != 0 ]; then
   echo "This script requires su privileges"
   sudo "$0"
   exit
 fi
 
-# determine output location
+# Determine output location.
 ARCH=`uname -m`
 CMPNAME='gcc'
 COMPILER=$CMPNAME
@@ -57,7 +56,7 @@ echo
 echo "Installing libhdPhantom.so on $HOSTNAME ($ARCH)"
 echo
 
-# build
+# Build.
 echo -n "building libhdPhantom.so shared library... "
 make CC=gcc CXX=g++ > log.txt 2>&1
 if [ $? -ne 0 ]; then
@@ -66,7 +65,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "ok"
 
-# copy
+# Copy.
 file=`basename $LIB_DIR/libhdPhantom.so*`
 echo -n "copying $file to /usr/local/lib... "
 cp $LIB_DIR/$file /usr/local/lib >> log.txt 2>&1
@@ -76,7 +75,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "ok"
 
-# configure
+# Configure.
 echo -n "configuring dynamic linker bindings... "
 ldconfig >> log.txt 2>&1
 if [ $? -ne 0 ]; then
@@ -85,7 +84,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "ok"
 
-# create symlink
+# Create symlink.
 echo -n "setting symlink to libhdPhantom.so library... "
 rm /usr/local/lib/libhdPhantom.so >> log.txt 2>&1
 ln -s /usr/local/lib/$file /usr/local/lib/libhdPhantom.so >> log.txt 2>&1
@@ -95,7 +94,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "ok"
 
-# configure dynamic linker run-time bindings
+# Configure dynamic linker run-time bindings.
 sudo ldconfig
 
 echo

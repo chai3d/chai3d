@@ -1,0 +1,13 @@
+<map id="chai3d::cBulletBox" name="chai3d::cBulletBox">
+<area shape="rect" id="Node000001" title="This class implements a Bullet dynamic box." alt="" coords="106,299,237,324"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_bullet_mesh.html" title="This class implements a Bullet dynamic mesh." alt="" coords="101,225,241,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,264,174,299,169,299,169,264"/>
+<area shape="rect" id="Node000003" href="/home/seb/workspace/chai3d-3/doc/doxygen/chai3d.tag$classchai3d_1_1c_mesh.html" title=" " alt="" coords="31,152,138,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,184,159,223,155,227,107,188"/>
+<area shape="rect" id="Node000004" href="/home/seb/workspace/chai3d-3/doc/doxygen/chai3d.tag$classchai3d_1_1c_generic_object.html" title=" " alt="" coords="5,79,164,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,118,87,152,82,152,82,118"/>
+<area shape="rect" id="Node000005" href="/home/seb/workspace/chai3d-3/doc/doxygen/chai3d.tag$classchai3d_1_1c_generic_type.html" title=" " alt="" coords="11,5,159,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="87,44,87,79,82,79,82,44"/>
+<area shape="rect" id="Node000006" href="$classchai3d_1_1c_bullet_generic_object.html" title=" " alt="" coords="163,152,353,177"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="235,188,187,227,184,223,232,184"/>
+</map>

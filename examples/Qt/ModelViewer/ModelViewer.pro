@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,59 +35,70 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-02-26 22:57:37 +0100 (Fri, 26 Feb 2016) $
-#  $Rev: 1996 $
+################################################################################
 
-
-# shared settings headers
-QT          += core gui widgets opengl
+# Shared settings headers
+QT          += core gui widgets
 MOC_DIR     += ./moc
 UI_DIR      += ./ui
 RCC_DIR     += ./rcc
 INCLUDEPATH += ../../../src
-INCLUDEPATH += ../../../external/Eigen
-INCLUDEPATH += ../../../external/glew/include
+INCLUDEPATH += ../../../externals/Eigen
+INCLUDEPATH += ../../../externals/glew/include
 DEPENDPATH  += .
 
-# platform-specific settings
-unix {
-  SYSTEM = $$system(uname -s)
-  contains (SYSTEM, Linux) {
-    OS = lin
-  }
-  contains (SYSTEM, Darwin) {
-    OS = mac
-  }
-
-  TEMPLATE        = app
-  TARGET          =   ../../../bin/$$OS-$$ARCH/ModelViewer
-  PRE_TARGETDEPS +=   ../../../lib/$$CFG/$$OS-$$ARCH-$$COMPILER/libchai3d.a
-  LIBS           += -L../../../lib/$$CFG/$$OS-$$ARCH-$$COMPILER -lchai3d
-  LIBS           += -L../../../external/DHD/lib/$$OS-$$ARCH -ldrd  
-  OBJECTS_DIR    += ./obj/$$CFG/$$OS-$$ARCH-$$COMPILER
-
-  contains (SYSTEM, Linux) {
-    DEFINES        += LINUX
-    QMAKE_CXXFLAGS += -std=c++0x -Wno-deprecated -Wno-unused-parameter -Wno-uninitialized -Wno-unused-local-typedefs
-    LIBS           += -lusb-1.0 -lrt -ldl -lpng -lGLU -lX11
-    ICON            = chai3d.ico  
-  }
-  contains (SYSTEM, Darwin) {
-    DEFINES        += MACOSX
-    QMAKE_CXXFLAGS += -std=c++0x -stdlib=libc++
-    QMAKE_LFLAGS   += -stdlib=libc++    
-    LIBS           += -framework CoreFoundation -framework IOKit -framework CoreServices -framework CoreAudio -framework AudioToolbox -framework AudioUnit
-    CONFIG         += app_bundle
-    ICON            = chai3d.icns
-    OSXVER = $$system('sw_vers -productVersion | cut -d . -f 1,2')
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = $$OSXVER
-    QMAKE_MAC_SDK                  = macosx$$OSXVER
-  }
+# Qt 6 support
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += openglwidgets
 }
 
-# sources
+# Platform-specific settings
+unix 
+{
+    SYSTEM = $$system(uname -s)
+    
+    contains (SYSTEM, Linux) {
+        OS = lin
+    }
+    contains (SYSTEM, Darwin) {
+        OS = mac
+    }
+    
+    TEMPLATE        = app
+    TARGET          =   ../../../bin/$$OS-$$ARCH/ModelViewer
+    PRE_TARGETDEPS +=   ../../../lib/$$CFG/$$OS-$$ARCH-$$COMPILER/libchai3d.a
+    LIBS           += -L../../../lib/$$CFG/$$OS-$$ARCH-$$COMPILER -lchai3d
+    LIBS           += -L../../../externals/DHD/lib/$$OS-$$ARCH -ldrd  
+    OBJECTS_DIR    += ./obj/$$CFG/$$OS-$$ARCH-$$COMPILER
+    
+    contains (SYSTEM, Linux) {
+        DEFINES        += LINUX
+        QMAKE_CXXFLAGS += -std=c++17 -Wno-deprecated -Wno-unused-parameter -Wno-uninitialized -Wno-unused-local-typedefs
+        LIBS           += -lusb-1.0 -lrt -ldl -lpng -lGLU -lX11
+        ICON            = chai3d.ico  
+    }
+    
+    contains (SYSTEM, Darwin) {
+        DEFINES        += MACOSX
+        QMAKE_CXXFLAGS += -std=c++17 -stdlib=libc++
+        QMAKE_LFLAGS   += -stdlib=libc++    
+        LIBS           += -framework CoreFoundation -framework IOKit -framework CoreServices -framework CoreAudio -framework AudioToolbox -framework AudioUnit
+        CONFIG         += app_bundle
+        CONFIG         += sdk_no_version_check
+        ICON            = chai3d.icns
+        QMAKE_MACOSX_DEPLOYMENT_TARGET = $$OSXVER
+        QMAKE_MAC_SDK                  = macosx$$OSXVER
+        equals(ARCH,universal) {
+            QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+        }
+        else {
+            QMAKE_APPLE_DEVICE_ARCHS = $$ARCH
+        }
+    }
+}
+
+# Sources
 SOURCES   += main.cpp Application.cpp Interface.cpp
 HEADERS   += Application.h Interface.h
 FORMS     += Interface.ui
-RESOURCES += Application.qrc
+RESOURCES += resources.qrc

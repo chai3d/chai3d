@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2158 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -126,19 +126,13 @@ cHapticPoint::~cHapticPoint()
     // delete audio sources for impact
     for (int i = 0; i<3; i++)
     {
-        if (m_audioSourceImpact[i] != NULL)
-        {
-            delete m_audioSourceImpact[i];
-        }
+        delete m_audioSourceImpact[i];
     }
 
     // delete audio sources for friction
     for (int i = 0; i<3; i++)
     {
-        if (m_audioSourceFriction[i] != NULL)
-        {
-            delete m_audioSourceFriction[i];
-        }
+        delete m_audioSourceFriction[i];
     }
 }
 
@@ -373,6 +367,8 @@ bool cHapticPoint::createAudioSource(cAudioDevice* a_audioDevice)
     // sanity check
     if (a_audioDevice == NULL) { return (C_ERROR); }
 
+#ifndef CHAI3D_OPENAL_DISABLED
+
     // create three audio sources for impact
     for (int i=0; i<3; i++)
     {
@@ -387,6 +383,8 @@ bool cHapticPoint::createAudioSource(cAudioDevice* a_audioDevice)
 
     // audio sources have been created and are now enabled
     m_useAudioSources = true;
+
+#endif
 
     // success
     return (C_SUCCESS);
@@ -492,6 +490,8 @@ cVector3d cHapticPoint::computeInteractionForces(cVector3d& a_globalPos,
     // velocity of tool
     double velocity = m_parentTool->getDeviceGlobalLinVel().length();
 
+#ifndef CHAI3D_OPENAL_DISABLED
+
     // friction sound
     if (m_useAudioSources)
     {
@@ -562,9 +562,9 @@ cVector3d cHapticPoint::computeInteractionForces(cVector3d& a_globalPos,
             // update contact list
             m_audioProxyContacts[i] = m_meshProxyContacts[i];
         }
-
-
     }
+
+#endif
 
     // return result
     return (m_lastComputedGlobalForce);
@@ -673,10 +673,10 @@ void cHapticPoint::render(cRenderOptions& a_options)
     /////////////////////////////////////////////////////////////////////////
 
     // render proxy sphere
-    m_sphereProxy->renderSceneGraph(a_options);
+    //m_sphereProxy->renderSceneGraph(a_options);
 
     // render goal sphere
-    m_sphereGoal->renderSceneGraph(a_options);
+    //m_sphereGoal->renderSceneGraph(a_options);
 
     // render proxy algorithm (debug purposes)
     //m_algorithmFingerProxy->render(a_options);
@@ -699,21 +699,21 @@ void cHapticPoint::updateSpherePositions()
     // sanity check
     if (m_parentTool == NULL) { return; }
 
-    // position and orientation of tool in world global coordinates
-    cMatrix3d toolGlobalRot = m_parentTool->getGlobalRot();
+    // get orientation of haptic device
+    cMatrix3d rot = m_parentTool->getDeviceLocalRot();
 
-    // temp variables
+    // temp variable
     cVector3d pos;
-    cMatrix3d rot;
-    toolGlobalRot.transr(rot);
     
-    // update position of proxy sphere
+    // update position and orientation of proxy sphere
     pos = getLocalPosProxy();
     m_sphereProxy->setLocalPos(pos);
+    m_sphereProxy->setLocalRot(rot);
 
-    // update position of goal sphere
+    // update position and orientation of goal sphere
     pos = getLocalPosGoal();
     m_sphereGoal->setLocalPos(pos);
+    m_sphereGoal->setLocalRot(rot);
 }
 
 

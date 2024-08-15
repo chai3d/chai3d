@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2149 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -49,6 +49,7 @@
 #include "files/CFileImagePNG.h"
 #include "files/CFileImagePPM.h"
 #include "files/CFileImageRAW.h"
+#include "files/CFileImageSTB.h"
 #include "math/CMaths.h"
 //------------------------------------------------------------------------------
 using namespace std;
@@ -903,7 +904,7 @@ void cImage::clear(const cColorb& a_color)
     else if (m_format == GL_RGBA)
     {
         int* data = (int*)m_data;
-        int* color = (int*)a_color.getData();
+        const int* color = reinterpret_cast<const int*>(a_color.getData());
         unsigned int i;
         for (i=0; i<size; i++)
         {
@@ -1020,7 +1021,7 @@ bool cImage::getPixelColor(const unsigned int a_x,
         else if (m_format == GL_RGBA)
         {
             unsigned int index = 4 * (a_x + a_y * m_width);
-            int* color = (int*)a_color.getData();
+            int* color = reinterpret_cast<int*>(const_cast<GLubyte*>(a_color.getData()));
             int* data = (int*)&(m_data[index]);
             *color = *data;
             return (true);
@@ -1213,7 +1214,7 @@ void cImage::setPixelColor(const unsigned int a_x,
         {
             unsigned int index = (a_x + a_y * m_width);
             int* data   = (int*)m_data;
-            int* color  = (int*)a_color.getData();
+            const int* color = reinterpret_cast<const int*>(a_color.getData());
             data[index] = *color;
         }
 
@@ -1449,6 +1450,8 @@ bool cImage::loadFromFile(const string& a_filename)
         result = cLoadFileBMP(this, a_filename);
     }
 
+#ifndef CHAI3D_GIFLIB_DISABLED
+
     //--------------------------------------------------------------------
     // .GIF FORMAT
     //--------------------------------------------------------------------
@@ -1456,6 +1459,10 @@ bool cImage::loadFromFile(const string& a_filename)
     {
         result = cLoadFileGIF(this, a_filename);
     }
+
+#endif
+
+#ifndef CHAI3D_LIBJPEG_DISABLED
 
     //--------------------------------------------------------------------
     // .JPG FORMAT
@@ -1465,6 +1472,10 @@ bool cImage::loadFromFile(const string& a_filename)
         result = cLoadFileJPG(this, a_filename);
     }
 
+#endif
+
+#ifndef CHAI3D_LIBPNG_DISABLED
+
     //--------------------------------------------------------------------
     // .PNG FORMAT
     //--------------------------------------------------------------------
@@ -1472,6 +1483,8 @@ bool cImage::loadFromFile(const string& a_filename)
     {
         result = cLoadFilePNG(this, a_filename);
     }
+
+#endif
 
     //--------------------------------------------------------------------
     // .PPM FORMAT
@@ -1487,6 +1500,14 @@ bool cImage::loadFromFile(const string& a_filename)
     else if (fileType == "raw")
     {
         result = cLoadFileRAW(this, a_filename);
+    }
+
+    //--------------------------------------------------------------------
+    // as a last resort, try generic STB loader
+    //--------------------------------------------------------------------
+    else
+    {
+        result = cLoadFileSTB(this, a_filename);
     }
 
     return (result);
@@ -1529,6 +1550,8 @@ bool cImage::saveToFile(const string& a_filename)
         result = cSaveFileBMP(image, a_filename);
     }
 
+#ifndef CHAI3D_GIFLIB_DISABLED
+
     //--------------------------------------------------------------------
     // .GIF FORMAT
     //--------------------------------------------------------------------
@@ -1536,6 +1559,10 @@ bool cImage::saveToFile(const string& a_filename)
     {
         result = cSaveFileGIF(image, a_filename);
     }
+
+#endif
+
+#ifndef CHAI3D_LIBJPEG_DISABLED
 
     //--------------------------------------------------------------------
     // .JPG FORMAT
@@ -1545,6 +1572,10 @@ bool cImage::saveToFile(const string& a_filename)
         result = cSaveFileJPG(image, a_filename);
     }
 
+#endif
+
+#ifndef CHAI3D_LIBPNG_DISABLED
+
     //--------------------------------------------------------------------
     // .PNG FORMAT
     //--------------------------------------------------------------------
@@ -1552,6 +1583,8 @@ bool cImage::saveToFile(const string& a_filename)
     {
         result = cSaveFilePNG(image, a_filename);
     }
+
+#endif
 
     //--------------------------------------------------------------------
     // .PPM FORMAT

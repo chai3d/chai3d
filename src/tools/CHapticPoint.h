@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -107,6 +107,16 @@ public:
 
     //! Destructor of cHapticPoint.
     virtual ~cHapticPoint();
+
+
+    //--------------------------------------------------------------------------
+    // PUBLIC METHODS - GENERAL:
+    //--------------------------------------------------------------------------
+
+public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("HapticPoint"); }
 
 
     //--------------------------------------------------------------------------
@@ -304,6 +314,7 @@ protected:
 
     //! Pointers to mesh objects for which the proxy was last in contact with.
     cGenericObject* m_audioProxyContacts[3];
+
 };
 
 //------------------------------------------------------------------------------

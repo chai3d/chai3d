@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,25 +35,22 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-05-12 16:00:10 +0200 (Thu, 12 May 2016) $
-#  $Rev: 2019 $
+################################################################################
 
-
-# common settings required to build examples
+# Common settings required to build examples
 find_package (GLFW REQUIRED)
 include_directories (${GLFW_INCLUDE_DIRS})
 
-# build all targets
+# Build all targets.
 foreach (example 01-ODE-cube 02-ODE-pool 03-ODE-mesh 04-ODE-tool 05-ODE-dental 06-ODE-exploration 07-ODE-articulations)
 
-  file (GLOB source ${example}/*.cpp)
-  add_executable (${example} ${source})
-  target_link_libraries (${example} ${CHAI3D-ODE_LIBRARIES} ${CHAI3D_LIBRARIES} ${GLFW_LIBRARIES})
+    file (GLOB source ${example}/*.cpp)
+    add_executable (${example} ${source})
+    target_link_libraries (${example} ${CHAI3D-ODE_LIBRARIES} ${CHAI3D_LIBRARIES} ${GLFW_LIBRARIES})
 
-  # OS specific adjustments
-  if (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
-    add_custom_command (TARGET ${example} POST_BUILD COMMAND Rez -append ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../resources/icons/chai3d.rsrc -o ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${example} COMMAND SetFile -a C ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${example} VERBATIM)
-  endif ()
+    # OS specific adjustments
+    if (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
+        add_custom_command (TARGET ${example} POST_BUILD COMMAND Rez -append ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../resources/icons/chai3d.rsrc -o ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${example} COMMAND SetFile -a C ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${example} VERBATIM)
+    endif ()
   
 endforeach ()

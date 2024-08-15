@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 2015 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -98,20 +98,22 @@ struct C_WAVE_Data
 
     \param  a_filename       Filename.
     \param  a_data           Returned pointer to audio data.
-    \param  a_size           Returned number of samples contained in WAV file.
-    \param  a_frequency      Returned sample frequency of WAV file.
-    \param  a_stereo         Returns __true__ if stereo, __false__ otherwise.
+    \param  a_sizeInBytes    Returned size in bytes of the audio data.
     \param  a_bitsPerSample  Returned number of bits per sample (8 or 16).
+    \param  a_samplingRate   Returned sampling wait of audio date.
+    \param  a_numSamples     Returned number of audio samples.
+    \param  a_stereo         Returns __true__ if stereo, __false__ otherwise.
 
     \return __true__ in case of success, __false__ otherwise.
 */
 //==============================================================================
 bool cLoadFileWAV(const std::string& a_filename, 
     unsigned char*& a_data,
-    int* a_size,
-    int* a_frequency,
-    bool* a_stereo,
-    unsigned short* a_bitsPerSample)
+    unsigned int* a_sizeInBytes,
+    unsigned short* a_bitsPerSample,
+    double* a_samplingRate,
+    unsigned int* a_numSamples,
+    bool* a_stereo)
 {
     FILE* soundFile = NULL;
     C_WAVE_Format wave_format;
@@ -199,8 +201,8 @@ bool cLoadFileWAV(const std::string& a_filename,
 
     // now we set the variables that we passed in with the
     // data from the structs
-    *a_size = wave_data.subChunk2Size;
-    *a_frequency = wave_format.sampleRate;
+    *a_sizeInBytes = wave_data.subChunk2Size;
+    *a_samplingRate = wave_format.sampleRate;
 
     // the format is worked out by looking at the number of
     // channels and the bits per sample.
@@ -208,10 +210,26 @@ bool cLoadFileWAV(const std::string& a_filename,
     if (wave_format.numChannels == 1) 
     {
         *a_stereo = false;
+        if (wave_format.bitsPerSample == 8)
+        {
+            *a_numSamples = wave_data.subChunk2Size;
+        }
+        else if (wave_format.bitsPerSample == 16)
+        {
+            *a_numSamples = wave_data.subChunk2Size / 2;
+        }
     }
-    else if (wave_format.numChannels == 2) 
+    else if (wave_format.numChannels == 2)
     {
         *a_stereo = true;
+        if (wave_format.bitsPerSample == 8)
+        {
+            *a_numSamples = wave_data.subChunk2Size / 2;
+        }
+        else if (wave_format.bitsPerSample == 16)
+        {
+            *a_numSamples = wave_data.subChunk2Size / 4;
+        }
     }
 
     // close file

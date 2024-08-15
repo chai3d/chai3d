@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -48,6 +48,7 @@
 #include "audio/CAudioBuffer.h"
 #include "graphics/CColor.h"
 #include "graphics/CRenderOptions.h"
+#include "system/CGenericType.h"
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -97,7 +98,7 @@ typedef std::shared_ptr<cMaterial> cMaterialPtr;
       to the original color once the selection has been completed.
 */
 //==============================================================================
-struct cMaterial
+struct cMaterial : public cGenericType
 {
     //--------------------------------------------------------------------------
     // CONSTRUCTOR & DESTRUCTOR:
@@ -120,6 +121,9 @@ public:
     //--------------------------------------------------------------------------
 
 public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("Material"); }
 
     //! This method creates a copy itself.
     cMaterialPtr copy();
@@ -960,6 +964,17 @@ protected:
     //--------------------------------------------------------------------------
 
 protected:
+
+    ////////////////////////////////////////////////////////////////////////////
+    // NAMES
+    ////////////////////////////////////////////////////////////////////////////
+
+    //! Material name
+    std::string m_name;
+
+    //! Material filename
+    std::string m_filename;
+
 
     ////////////////////////////////////////////////////////////////////////////
     // SURFACE STIFFNESS

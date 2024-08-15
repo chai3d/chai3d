@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,9 +35,6 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: conti $
-#  $Date: 2015-12-17 06:26:05 +0100 (Thu, 17 Dec 2015) $
-#  $Rev: 1869 $
-
+################################################################################
 
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/CLI)

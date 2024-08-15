@@ -1,0 +1,17 @@
+<map id="chai3d::cBulletGenericObject" name="chai3d::cBulletGenericObject">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,128,196,153"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_bullet_mesh.html" title="This class implements a Bullet dynamic mesh." alt="" coords="258,79,398,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,122,268,101,269,107,174,128"/>
+<area shape="rect" id="Node000007" href="$classchai3d_1_1c_bullet_multi_mesh.html" title="This class implements a Bullet dynamic multi&#45;mesh." alt="" coords="244,128,412,153"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="210,138,244,138,244,143,210,143"/>
+<area shape="rect" id="Node000008" href="$classchai3d_1_1c_bullet_vehicle.html" title="This class implements a Bullet vehicle." alt="" coords="253,177,403,203"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="174,154,269,175,268,180,173,159"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_bullet_box.html" title="This class implements a Bullet dynamic box." alt="" coords="482,5,613,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="372,71,459,39,497,28,498,33,461,45,374,76"/>
+<area shape="rect" id="Node000004" href="$classchai3d_1_1c_bullet_cylinder.html" title="This class implements a Bullet dynamic cylinder." alt="" coords="469,55,625,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="412,80,469,73,470,78,412,85"/>
+<area shape="rect" id="Node000005" href="$classchai3d_1_1c_bullet_sphere.html" title="This class implements a Bullet dynamic sphere." alt="" coords="473,104,622,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="412,98,473,105,472,111,412,104"/>
+<area shape="rect" id="Node000006" href="$classchai3d_1_1c_bullet_static_plane.html" title="This class implements a Bullet static plane." alt="" coords="460,153,635,179"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="393,106,413,113,461,138,498,151,496,156,459,143,411,118,391,111"/>
+</map>

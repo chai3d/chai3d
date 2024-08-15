@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2173 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -230,22 +230,28 @@ void cFont::parseFont(std::istream& a_stream,
                 Converter << Value;
                 if( Key == "id" )
                     Converter >> CharID;
-                else if( Key == "x" )
-                    Converter >> a_charsetDesc.m_chars[CharID].m_x;
-                else if( Key == "y" )
-                    Converter >> a_charsetDesc.m_chars[CharID].m_y;
-                else if( Key == "width" )
-                    Converter >> a_charsetDesc.m_chars[CharID].m_width;
-                else if( Key == "height" )
-                    Converter >> a_charsetDesc.m_chars[CharID].m_height;
-                else if( Key == "xoffset" )
-                    Converter >> a_charsetDesc.m_chars[CharID].m_xOffset;
-                else if( Key == "yoffset" )
-                    Converter >> a_charsetDesc.m_chars[CharID].m_yOffset;
-                else if( Key == "xadvance" )
-                    Converter >> a_charsetDesc.m_chars[CharID].m_xAdvance;
-                else if( Key == "page" )
-                    Converter >> a_charsetDesc.m_chars[CharID].m_page;
+
+                // make sure that charID ranges between 0 and 256. Larger ID numbers are possible (See BfontBM Application)
+                // but would need to be implemented accordingly.
+                if (CharID < 256)
+                {
+                    if( Key == "x" )
+                        Converter >> a_charsetDesc.m_chars[CharID].m_x;
+                    else if( Key == "y" )
+                        Converter >> a_charsetDesc.m_chars[CharID].m_y;
+                    else if( Key == "width" )
+                        Converter >> a_charsetDesc.m_chars[CharID].m_width;
+                    else if( Key == "height" )
+                        Converter >> a_charsetDesc.m_chars[CharID].m_height;
+                    else if( Key == "xoffset" )
+                        Converter >> a_charsetDesc.m_chars[CharID].m_xOffset;
+                    else if( Key == "yoffset" )
+                        Converter >> a_charsetDesc.m_chars[CharID].m_yOffset;
+                    else if( Key == "xadvance" )
+                        Converter >> a_charsetDesc.m_chars[CharID].m_xAdvance;
+                    else if( Key == "page" )
+                        Converter >> a_charsetDesc.m_chars[CharID].m_page;
+                }
             }
         }
     }

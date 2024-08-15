@@ -35,6 +35,28 @@ ApplicationWidget::ApplicationWidget (QWidget *parent)
 
 
     //--------------------------------------------------------------------------
+    // OPENGL - WIDGET DISPLAY
+    //--------------------------------------------------------------------------
+
+    QSurfaceFormat fmt;
+
+    // set OpenGL version
+    fmt.setVersion(2,1);
+
+    // enable double buffering
+    fmt.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+
+    // sets the swap interval for the current display context
+    fmt.setSwapInterval(1);
+
+    // set the desired number of samples to use for multisampling
+    fmt.setSamples(4);
+
+    // apply format to Qt OpenGL rendering widget
+    setFormat(fmt);
+
+
+    //--------------------------------------------------------------------------
     // WORLD - CAMERA - LIGHTING
     //--------------------------------------------------------------------------
 
@@ -154,7 +176,7 @@ ApplicationWidget::loadModel (string filename)
     m_worldLock.release();
 
     // reset object
-    m_mesh->clear();
+    m_mesh->deleteAllMeshes();
     m_point->clear();
 
     // reset camera and tool
@@ -326,9 +348,6 @@ void ApplicationWidget::initializeGL ()
 #ifdef GLEW_VERSION
     glewInit ();
 #endif
-
-    // enable anti-aliasing
-    QGLWidget::setFormat(QGLFormat(QGL::SampleBuffers));
 }
 
 //------------------------------------------------------------------------------
@@ -397,7 +416,7 @@ int ApplicationWidget::stop ()
 
 void ApplicationWidget::wheelEvent (QWheelEvent *event)
 {
-    double radius = m_camera->getSphericalRadius() + (double)(event->delta())*5e-4;
+    double radius = m_camera->getSphericalRadius() + (double)(event->angleDelta().y())*5e-4;
     m_camera->setSphericalRadius(radius);
 }
 

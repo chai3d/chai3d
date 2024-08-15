@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -96,6 +96,7 @@
 //------------------------------------------------------------------------------
 #include "graphics/CColor.h"
 #include "graphics/CRenderOptions.h"
+#include "system/CGenericType.h"
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -128,7 +129,7 @@ typedef std::shared_ptr<cGenericTexture> cGenericTexturePtr;
     cGenericTexture implements a base class for OpenGL textures.
 */
 //==============================================================================
-class cGenericTexture
+class cGenericTexture : public cGenericType
 {
     //--------------------------------------------------------------------------
     // CONSTRUCTOR & DESTRUCTOR:
@@ -151,6 +152,9 @@ public:
     //--------------------------------------------------------------------------
 
 public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("GenericTexture"); }
 
     //! This method loads a texture image file.
     virtual bool loadFromFile(const std::string& a_fileName) { return (false); }
@@ -185,6 +189,12 @@ protected:
 
     //! If __true__, this texture is enabled, __false__ otherwise.
     bool m_enabled;
+
+    //! Texture name
+    std::string m_name;
+
+    //! Texture filename
+    std::string m_filename;
 };
 
 //------------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['line_20segments',['Line Segments',['../../../../../doc/html/chapter11-segments.html',1,'']]],
-  ['lights_20and_20shadows',['Lights and Shadows',['../../../../../doc/html/chapter16-lighting.html',1,'']]],
-  ['license',['License',['../../../../../doc/html/chapter21-license.html',1,'']]]
+  ['installation_0',['Installation',['../../../../../doc/html/chapter2-installation.html',1,'overview']]],
+  ['introduction_1',['introduction',['../../../../../doc/html/chapter1-introduction.html',1,'Introduction'],['../index.html',1,'Introduction']]]
 ];

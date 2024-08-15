@@ -1,0 +1,25 @@
+var structchai3d_1_1c_haptic_device_info =
+[
+    [ "m_model", "structchai3d_1_1c_haptic_device_info.html#a41317c7fe5c36575201fd318c6a9a44a", null ],
+    [ "m_modelName", "structchai3d_1_1c_haptic_device_info.html#ac2793bf5501a492ed0ae6a4509ed9a3e", null ],
+    [ "m_manufacturerName", "structchai3d_1_1c_haptic_device_info.html#a9caf5cce98dd6509d393632801bb0989", null ],
+    [ "m_maxLinearForce", "structchai3d_1_1c_haptic_device_info.html#a037118617d050d6e041a8ded82991f44", null ],
+    [ "m_maxAngularTorque", "structchai3d_1_1c_haptic_device_info.html#afe18c2e71cbf71c4cc9f6b40c2e4cb04", null ],
+    [ "m_maxGripperForce", "structchai3d_1_1c_haptic_device_info.html#afafba66991282d81b42d04a6877828ec", null ],
+    [ "m_maxLinearStiffness", "structchai3d_1_1c_haptic_device_info.html#a932eaf915ec4d703b067e167bf95262e", null ],
+    [ "m_maxAngularStiffness", "structchai3d_1_1c_haptic_device_info.html#a166b93d650bd5fb1cf6d2b0d58b7e4bc", null ],
+    [ "m_maxGripperLinearStiffness", "structchai3d_1_1c_haptic_device_info.html#afedc56c1a5935bcb7cf578cbcfec2c2b", null ],
+    [ "m_maxLinearDamping", "structchai3d_1_1c_haptic_device_info.html#a70519b134d8a6cb0014cf8b46ffdd4d7", null ],
+    [ "m_maxAngularDamping", "structchai3d_1_1c_haptic_device_info.html#a62059f26f8b5cdd89e00d56396c97bca", null ],
+    [ "m_maxGripperAngularDamping", "structchai3d_1_1c_haptic_device_info.html#ad683382fc1f10ca5402fd9998e5aeb57", null ],
+    [ "m_workspaceRadius", "structchai3d_1_1c_haptic_device_info.html#ab58e03ea1f0931f09b4154a1ce9ee58f", null ],
+    [ "m_gripperMaxAngleRad", "structchai3d_1_1c_haptic_device_info.html#a4d01e97664cc3764f90e92f866626d86", null ],
+    [ "m_sensedPosition", "structchai3d_1_1c_haptic_device_info.html#aae3c20de54e47129dbee5e459879d92d", null ],
+    [ "m_sensedRotation", "structchai3d_1_1c_haptic_device_info.html#a8673ac9540c861b0565798d142b2e497", null ],
+    [ "m_sensedGripper", "structchai3d_1_1c_haptic_device_info.html#a937f4130b0b11702546657bb3b112ebf", null ],
+    [ "m_actuatedPosition", "structchai3d_1_1c_haptic_device_info.html#a5d25f773a804e4071f29e5a15442de8a", null ],
+    [ "m_actuatedRotation", "structchai3d_1_1c_haptic_device_info.html#a82abc1a98be0cb891351a52406cd52e6", null ],
+    [ "m_actuatedGripper", "structchai3d_1_1c_haptic_device_info.html#a55c057c2b2e77a94f9f9f67cbbe04478", null ],
+    [ "m_leftHand", "structchai3d_1_1c_haptic_device_info.html#a8391d0388ec9f0ed555663d0676d09eb", null ],
+    [ "m_rightHand", "structchai3d_1_1c_haptic_device_info.html#a06d6c520ad8201c3d7047004a1a54478", null ]
+];

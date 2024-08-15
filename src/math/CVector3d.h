@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Francois Conti
     \author    Dan Morris
-    \version   3.2.0 $Rev: 1890 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -120,26 +120,6 @@ public:
         (*this)(0) = a_x;
         (*this)(1) = a_y;
         (*this)(2) = a_z;
-    }
-
-
-    //--------------------------------------------------------------------------
-    /*!
-        \brief
-        Constructor of cVector3d.
-
-        \details
-        This constructor initializes a vector by passing a vector by
-        argument.
-
-        \param  a_vector  Vector.
-    */
-    //--------------------------------------------------------------------------
-    cVector3d (const cVector3d &a_vector)
-    {
-        (*this)(0) = a_vector(0);
-        (*this)(1) = a_vector(1);
-        (*this)(2) = a_vector(2);
     }
 
 

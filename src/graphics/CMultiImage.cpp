@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 2149 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -601,7 +601,7 @@ bool cMultiImage::getVoxelColor(const unsigned int a_x,
         else if (m_format == GL_RGBA)
         {
             unsigned int index = 4 * (a_x + a_y * m_width + a_z * m_width * m_height);
-            int* color = (int*)a_color.getData();
+            int* color = reinterpret_cast<int*>(const_cast<GLubyte*>(a_color.getData()));
             int* data = (int*)&(m_array[index]);
             *color = *data;
             return (true);
@@ -850,7 +850,7 @@ void cMultiImage::setVoxelColor(const unsigned int a_x,
         {
             unsigned int index = (a_x + a_y * m_width + a_z * m_width * m_height);
             int* data = (int*)m_array;
-            int* color  = (int*)a_color.getData();
+            const int* color = reinterpret_cast<const int*>(a_color.getData());
             data[index] = *color;
         }
 

@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   1.0.0
 */
 //===========================================================================
 
@@ -215,6 +215,8 @@ void cGELMesh::applyNextPose()
 //===========================================================================
 void cGELMesh::render(cRenderOptions& a_options)
 {
+#ifdef C_USE_OPENGL
+
     // render mesh
     cMultiMesh::render(a_options);
 
@@ -261,6 +263,8 @@ void cGELMesh::render(cRenderOptions& a_options)
             glEnable(GL_LIGHTING);
         }
     }
+
+#endif
 }
 
 

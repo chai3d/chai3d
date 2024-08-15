@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -76,7 +76,7 @@ namespace chai3d {
     bool cLoadFileJPG(cImage* a_image, const std::string& a_filename);
 
     //! This function loads a PNG image buffer.
-    bool cLoadJPG (cImage *a_image, const unsigned char *a_buffer, unsigned int a_len);
+    bool cLoadJPG (cImage *a_image, const void* a_buffer, unsigned int a_len);
 
     //! This function saves a JPG image file.
     bool cSaveFileJPG(cImage* a_image, const std::string& a_filename);

@@ -1,0 +1,853 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>chai3d</ProjectName>
+    <ProjectGuid>{A9F01342-5463-4634-B1F9-BF98CD5591B0}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)/Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)/Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">lib/$(Configuration)/$(Platform)/</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj/$(Configuration)/$(Platform)/</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">lib/$(Configuration)/$(Platform)/</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">obj/$(Configuration)/$(Platform)/</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">lib/$(Configuration)/$(Platform)/</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj/$(Configuration)/$(Platform)/</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">lib/$(Configuration)/$(Platform)/</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">obj/$(Configuration)/$(Platform)/</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">chai3d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">chai3d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">chai3d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">chai3d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <CustomBuildBeforeTargets>BuildGenerateSources</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <CustomBuildBeforeTargets>BuildGenerateSources</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CustomBuildBeforeTargets>BuildGenerateSources</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <CustomBuildBeforeTargets>BuildGenerateSources</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>src;externals/Eigen;externals/glew/include;externals/minimp3/include;externals/STB/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__WINDOWS_MM__;GLEW_STATIC;AL_ALEXT_PROTOTYPES;AL_BUILD_LIBRARY;AL_LIBTYPE_STATIC;__THEORA;WIN32;NDEBUG;_MSVC;_LIB;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(IntDir)chai3d.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>
+      </ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4267;4244;4800;4996;4101;4013;4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <AdditionalOptions>/NODEFAULTLIB:libmmd.lib  /ignore:4006,4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Lib>
+    <CustomBuildStep>
+      <Command>if EXIST .\toolchains\scripts\version.bat (call .\toolchains\scripts\version.bat .\project .\src\version.h)</Command>
+      <Outputs>null</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>src;externals/Eigen;externals/glew/include;externals/minimp3/include;externals/STB/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__WINDOWS_MM__;GLEW_STATIC;AL_ALEXT_PROTOTYPES;AL_BUILD_LIBRARY;AL_LIBTYPE_STATIC;__THEORA;WIN64;NDEBUG;_MSVC;_LIB;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(IntDir)chai3d.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>
+      </ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4267;4244;4800;4996;4101;4013;4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <AdditionalOptions>/NODEFAULTLIB:libmmd.lib  /ignore:4006,4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Lib>
+    <CustomBuildStep>
+      <Command>if EXIST .\toolchains\scripts\version.bat (call .\toolchains\scripts\version.bat .\project .\src\version.h)</Command>
+      <Outputs>null</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>src;externals/Eigen;externals/glew/include;externals/minimp3/include;externals/STB/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__WINDOWS_MM__;GLEW_STATIC;AL_ALEXT_PROTOTYPES;AL_BUILD_LIBRARY;AL_LIBTYPE_STATIC;__THEORA;WIN32;_DEBUG;_MSVC;_LIB;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(IntDir)chai3d.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4267;4244;4800;4996;4101;4013;4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalOptions>/NODEFAULTLIB:libmmd.lib  /ignore:4006,4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <CustomBuildStep>
+      <Command>if EXIST .\toolchains\scripts\version.bat (call .\toolchains\scripts\version.bat .\project .\src\version.h)</Command>
+      <Outputs>null</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>src;externals/Eigen;externals/glew/include;externals/minimp3/include;externals/STB/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__WINDOWS_MM__;GLEW_STATIC;AL_ALEXT_PROTOTYPES;AL_BUILD_LIBRARY;AL_LIBTYPE_STATIC;__THEORA;WIN64;_DEBUG;_MSVC;_LIB;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(IntDir)chai3d.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4267;4244;4800;4996;4101;4013;4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalOptions>/NODEFAULTLIB:libmmd.lib  /ignore:4006,4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <CustomBuildStep>
+      <Command>if EXIST .\toolchains\scripts\version.bat (call .\toolchains\scripts\version.bat .\project .\src\version.h)</Command>
+      <Outputs>null</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Chai3dUseExternalGiflib)' != 'true'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/giflib/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Chai3dUseExternalLib3ds)' != 'true'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/lib3ds/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Chai3dUseExternalLibjpeg)' != 'true'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/libjpeg/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Chai3dUseExternalLibpng)' != 'true'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/libpng/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Chai3dUseExternalOpenAL)' != 'true'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/openal/include;externals/openal/OpenAL32/Include;externals/openal/Alc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Chai3dUseExternalPugiXML)' != 'true'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/pugixml/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Chai3dUseExternalRtMidi)' != 'true'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/RtMidi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Chai3dUseExternalTheoraPlayer)' != 'true'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/theoraplayer/include/theoraplayer;externals/theoraplayer/src/Theora;externals/theoraplayer/src/YUV/C;externals/theoraplayer/externals/ogg/include;externals/theoraplayer/externals/vorbis/include;externals/theoraplayer/externals/vorbis/lib;externals/theoraplayer/externals/theora/include;externals/theoraplayer/externals/theora/lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="externals/glew/src/glew.c" />
+    <ClCompile Include="src/collisions/CCollisionAABB.cpp" />
+    <ClCompile Include="src/collisions/CCollisionAABBTree.cpp" />
+    <ClCompile Include="src/collisions/CCollisionBrute.cpp" />
+    <ClCompile Include="src/collisions/CGenericCollision.cpp" />
+    <ClCompile Include="src/devices/CDeltaDevices.cpp" />
+    <ClCompile Include="src/devices/CGenericDevice.cpp" />
+    <ClCompile Include="src/devices/CGenericHapticDevice.cpp" />
+    <ClCompile Include="src/devices/CHapticDeviceHandler.cpp" />
+    <ClCompile Include="src/devices/CLeapDevices.cpp" />
+    <ClCompile Include="src/devices/CMyCustomDevice.cpp" />
+    <ClCompile Include="src/devices/CPhantomDevices.cpp" />
+    <ClCompile Include="src/devices/CSixenseDevices.cpp" />
+    <ClCompile Include="src/display/CCamera.cpp" />
+    <ClCompile Include="src/display/CFrameBuffer.cpp" />
+    <ClCompile Include="src/effects/CEffectMagnet.cpp" />
+    <ClCompile Include="src/effects/CEffectStickSlip.cpp" />
+    <ClCompile Include="src/effects/CEffectSurface.cpp" />
+    <ClCompile Include="src/effects/CEffectVibration.cpp" />
+    <ClCompile Include="src/effects/CEffectViscosity.cpp" />
+    <ClCompile Include="src/effects/CGenericEffect.cpp" />
+    <ClCompile Include="src/files/CFileAudioWAV.cpp" />
+    <ClCompile Include="src/files/CFileImageBMP.cpp" />
+    <ClCompile Include="src/files/CFileImagePPM.cpp" />
+    <ClCompile Include="src/files/CFileImageRAW.cpp" />
+    <ClCompile Include="src/files/CFileImageSTB.cpp" />
+    <ClCompile Include="src/files/CFileModelOBJ.cpp" />
+    <ClCompile Include="src/files/CFileModelSTL.cpp" />
+    <ClCompile Include="src/files/CFileModelTRI.cpp" />
+    <ClCompile Include="src/forces/CAlgorithmFingerProxy.cpp" />
+    <ClCompile Include="src/forces/CAlgorithmPotentialField.cpp" />
+    <ClCompile Include="src/forces/CGenericForceAlgorithm.cpp" />
+    <ClCompile Include="src/graphics/CColor.cpp" />
+    <ClCompile Include="src/graphics/CDisplayList.cpp" />
+    <ClCompile Include="src/graphics/CDraw3D.cpp" />
+    <ClCompile Include="src/graphics/CFog.cpp" />
+    <ClCompile Include="src/graphics/CFont.cpp" />
+    <ClCompile Include="src/graphics/CImage.cpp" />
+    <ClCompile Include="src/graphics/CMultiImage.cpp" />
+    <ClCompile Include="src/graphics/CPointArray.cpp" />
+    <ClCompile Include="src/graphics/CPrimitives.cpp" />
+    <ClCompile Include="src/graphics/CSegmentArray.cpp" />
+    <ClCompile Include="src/graphics/CTriangleArray.cpp" />
+    <ClCompile Include="src/lighting/CDirectionalLight.cpp" />
+    <ClCompile Include="src/lighting/CGenericLight.cpp" />
+    <ClCompile Include="src/lighting/CPositionalLight.cpp" />
+    <ClCompile Include="src/lighting/CShadowMap.cpp" />
+    <ClCompile Include="src/lighting/CSpotLight.cpp" />
+    <ClCompile Include="src/materials/CMaterial.cpp" />
+    <ClCompile Include="src/materials/CNormalMap.cpp" />
+    <ClCompile Include="src/materials/CTexture1d.cpp" />
+    <ClCompile Include="src/materials/CTexture2d.cpp" />
+    <ClCompile Include="src/materials/CTexture3d.cpp" />
+    <ClCompile Include="src/shaders/CShader.cpp" />
+    <ClCompile Include="src/shaders/CShaderProgram.cpp" />
+    <ClCompile Include="src/system/CGlobals.cpp" />
+    <ClCompile Include="src/system/CMutex.cpp" />
+    <ClCompile Include="src/system/CString.cpp" />
+    <ClCompile Include="src/system/CThread.cpp" />
+    <ClCompile Include="src/timers/CFrequencyCounter.cpp" />
+    <ClCompile Include="src/timers/CPrecisionClock.cpp" />
+    <ClCompile Include="src/tools/CGenericTool.cpp" />
+    <ClCompile Include="src/tools/CHapticPoint.cpp" />
+    <ClCompile Include="src/tools/CToolCursor.cpp" />
+    <ClCompile Include="src/tools/CToolGripper.cpp" />
+    <ClCompile Include="src/widgets/CBackground.cpp" />
+    <ClCompile Include="src/widgets/CBitmap.cpp" />
+    <ClCompile Include="src/widgets/CDial.cpp" />
+    <ClCompile Include="src/widgets/CGenericWidget.cpp" />
+    <ClCompile Include="src/widgets/CLabel.cpp" />
+    <ClCompile Include="src/widgets/CLevel.cpp" />
+    <ClCompile Include="src/widgets/CPanel.cpp" />
+    <ClCompile Include="src/widgets/CScope.cpp" />
+    <ClCompile Include="src/widgets/CViewPanel.cpp" />
+    <ClCompile Include="src/world/CGenericObject.cpp" />
+    <ClCompile Include="src/world/CMesh.cpp" />
+    <ClCompile Include="src/world/CMultiMesh.cpp" />
+    <ClCompile Include="src/world/CMultiPoint.cpp" />
+    <ClCompile Include="src/world/CMultiSegment.cpp" />
+    <ClCompile Include="src/world/CShapeBox.cpp" />
+    <ClCompile Include="src/world/CShapeEllipsoid.cpp" />
+    <ClCompile Include="src/world/CShapeCylinder.cpp" />
+    <ClCompile Include="src/world/CShapeLine.cpp" />
+    <ClCompile Include="src/world/CShapeSphere.cpp" />
+    <ClCompile Include="src/world/CShapeTorus.cpp" />
+    <ClCompile Include="src/world/CVoxelObject.cpp" />
+    <ClCompile Include="src/world/CWorld.cpp" />
+    <ClCompile Include="src/system/CGenericType.cpp" />
+    <ClCompile Include="src\display\CViewport.cpp" />
+    <ClCompile Include="src\files\CFileAudioMP3.cpp" />
+    <ClCompile Include="src\network\CSocket.cpp" />
+    <ClCompile Include="src\network\CSocketHelper.cpp" />
+    <ClCompile Include="src\widgets\CHistogram.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseGiflib)' != 'false'">
+    <ClCompile Include="src/files/CFileImageGIF.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseLib3ds)' != 'false'">
+    <ClCompile Include="src/files/CFileModel3DS.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseLibjpeg)' != 'false'">
+    <ClCompile Include="src/files/CFileImageJPG.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseLibpng)' != 'false'">
+    <ClCompile Include="src/files/CFileImagePNG.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseOpenAL)' != 'false'">
+    <ClCompile Include="src/audio/CAudioBuffer.cpp" />
+    <ClCompile Include="src/audio/CAudioDevice.cpp" />
+    <ClCompile Include="src/audio/CAudioSource.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUsePugiXML)' != 'false'">
+    <ClCompile Include="src/files/CFileXML.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseRtMidi)' != 'false'">
+    <ClCompile Include="src/devices/CXTouchController.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseTheoraPlayer)' != 'false'">
+    <ClCompile Include="src/graphics/CVideo.cpp" />
+    <ClCompile Include="src/materials/CTextureVideo.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseExternalGiflib)' != 'true'">
+    <ClCompile Include="externals/giflib/src/dev2gif.c" />
+    <ClCompile Include="externals/giflib/src/dgif_lib.c" />
+    <ClCompile Include="externals/giflib/src/egif_lib.c" />
+    <ClCompile Include="externals/giflib/src/getarg.c" />
+    <ClCompile Include="externals/giflib/src/gifalloc.c" />
+    <ClCompile Include="externals/giflib/src/gif_err.c" />
+    <ClCompile Include="externals/giflib/src/gif_font.c" />
+    <ClCompile Include="externals/giflib/src/gif_hash.c" />
+    <ClCompile Include="externals/giflib/src/qprintf.c" />
+    <ClCompile Include="externals/giflib/src/quantize.c" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseExternalLib3ds)' != 'true'">
+    <ClCompile Include="externals/lib3ds/src/lib3ds_atmosphere.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_background.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_camera.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_chunk.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_chunktable.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_file.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_io.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_light.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_material.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_math.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_matrix.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_mesh.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_node.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_quat.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_shadow.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_track.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_util.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_vector.c" />
+    <ClCompile Include="externals/lib3ds/src/lib3ds_viewport.c" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseExternalLibjpeg)' != 'true'">
+    <ClCompile Include="externals/libjpeg/src/jaricom.c" />
+    <ClCompile Include="externals/libjpeg/src/jcapimin.c" />
+    <ClCompile Include="externals/libjpeg/src/jcapistd.c" />
+    <ClCompile Include="externals/libjpeg/src/jcarith.c" />
+    <ClCompile Include="externals/libjpeg/src/jccoefct.c" />
+    <ClCompile Include="externals/libjpeg/src/jccolor.c" />
+    <ClCompile Include="externals/libjpeg/src/jcdctmgr.c" />
+    <ClCompile Include="externals/libjpeg/src/jchuff.c" />
+    <ClCompile Include="externals/libjpeg/src/jcinit.c" />
+    <ClCompile Include="externals/libjpeg/src/jcmainct.c" />
+    <ClCompile Include="externals/libjpeg/src/jcmarker.c" />
+    <ClCompile Include="externals/libjpeg/src/jcmaster.c" />
+    <ClCompile Include="externals/libjpeg/src/jcomapi.c" />
+    <ClCompile Include="externals/libjpeg/src/jcparam.c" />
+    <ClCompile Include="externals/libjpeg/src/jcprepct.c" />
+    <ClCompile Include="externals/libjpeg/src/jcsample.c" />
+    <ClCompile Include="externals/libjpeg/src/jctrans.c" />
+    <ClCompile Include="externals/libjpeg/src/jdapimin.c" />
+    <ClCompile Include="externals/libjpeg/src/jdapistd.c" />
+    <ClCompile Include="externals/libjpeg/src/jdarith.c" />
+    <ClCompile Include="externals/libjpeg/src/jdatadst.c" />
+    <ClCompile Include="externals/libjpeg/src/jdatasrc.c" />
+    <ClCompile Include="externals/libjpeg/src/jdcoefct.c" />
+    <ClCompile Include="externals/libjpeg/src/jdcolor.c" />
+    <ClCompile Include="externals/libjpeg/src/jddctmgr.c" />
+    <ClCompile Include="externals/libjpeg/src/jdhuff.c" />
+    <ClCompile Include="externals/libjpeg/src/jdinput.c" />
+    <ClCompile Include="externals/libjpeg/src/jdmainct.c" />
+    <ClCompile Include="externals/libjpeg/src/jdmarker.c" />
+    <ClCompile Include="externals/libjpeg/src/jdmaster.c" />
+    <ClCompile Include="externals/libjpeg/src/jdmerge.c" />
+    <ClCompile Include="externals/libjpeg/src/jdpostct.c" />
+    <ClCompile Include="externals/libjpeg/src/jdsample.c" />
+    <ClCompile Include="externals/libjpeg/src/jdtrans.c" />
+    <ClCompile Include="externals/libjpeg/src/jerror.c" />
+    <ClCompile Include="externals/libjpeg/src/jfdctflt.c" />
+    <ClCompile Include="externals/libjpeg/src/jfdctfst.c" />
+    <ClCompile Include="externals/libjpeg/src/jfdctint.c" />
+    <ClCompile Include="externals/libjpeg/src/jidctflt.c" />
+    <ClCompile Include="externals/libjpeg/src/jidctfst.c" />
+    <ClCompile Include="externals/libjpeg/src/jidctint.c" />
+    <ClCompile Include="externals/libjpeg/src/jmemansi.c" />
+    <ClCompile Include="externals/libjpeg/src/jmemmgr.c" />
+    <ClCompile Include="externals/libjpeg/src/jmemnobs.c" />
+    <ClCompile Include="externals/libjpeg/src/jquant1.c" />
+    <ClCompile Include="externals/libjpeg/src/jquant2.c" />
+    <ClCompile Include="externals/libjpeg/src/jutils.c" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseExternalLibpng)' != 'true'">
+    <ClCompile Include="externals/libpng/src/adler32.c" />
+    <ClCompile Include="externals/libpng/src/compress.c" />
+    <ClCompile Include="externals/libpng/src/crc32.c" />
+    <ClCompile Include="externals/libpng/src/deflate.c" />
+    <ClCompile Include="externals/libpng/src/gzclose.c" />
+    <ClCompile Include="externals/libpng/src/gzlib.c" />
+    <ClCompile Include="externals/libpng/src/gzread.c" />
+    <ClCompile Include="externals/libpng/src/gzwrite.c" />
+    <ClCompile Include="externals/libpng/src/infback.c" />
+    <ClCompile Include="externals/libpng/src/inffast.c" />
+    <ClCompile Include="externals/libpng/src/inflate.c" />
+    <ClCompile Include="externals/libpng/src/inftrees.c" />
+    <ClCompile Include="externals/libpng/src/png.c" />
+    <ClCompile Include="externals/libpng/src/pngerror.c" />
+    <ClCompile Include="externals/libpng/src/pngget.c" />
+    <ClCompile Include="externals/libpng/src/pngmem.c" />
+    <ClCompile Include="externals/libpng/src/pngpread.c" />
+    <ClCompile Include="externals/libpng/src/pngread.c" />
+    <ClCompile Include="externals/libpng/src/pngrio.c" />
+    <ClCompile Include="externals/libpng/src/pngrtran.c" />
+    <ClCompile Include="externals/libpng/src/pngrutil.c" />
+    <ClCompile Include="externals/libpng/src/pngset.c" />
+    <ClCompile Include="externals/libpng/src/pngtrans.c" />
+    <ClCompile Include="externals/libpng/src/pngwio.c" />
+    <ClCompile Include="externals/libpng/src/pngwrite.c" />
+    <ClCompile Include="externals/libpng/src/pngwtran.c" />
+    <ClCompile Include="externals/libpng/src/pngwutil.c" />
+    <ClCompile Include="externals/libpng/src/trees.c" />
+    <ClCompile Include="externals/libpng/src/uncompr.c" />
+    <ClCompile Include="externals/libpng/src/zutil.c" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseExternalOpenAL)' != 'true'">
+    <ClCompile Include="externals/openal/Alc/ALc.c" />
+    <ClCompile Include="externals/openal/Alc/alcConfig.c" />
+    <ClCompile Include="externals/openal/Alc/alcDedicated.c" />
+    <ClCompile Include="externals/openal/Alc/alcEcho.c" />
+    <ClCompile Include="externals/openal/Alc/alcModulator.c" />
+    <ClCompile Include="externals/openal/Alc/alcReverb.c" />
+    <ClCompile Include="externals/openal/Alc/alcRing.c" />
+    <ClCompile Include="externals/openal/Alc/alcThread.c" />
+    <ClCompile Include="externals/openal/Alc/ALu.c" />
+    <ClCompile Include="externals/openal/Alc/backends/dsound.c" />
+    <ClCompile Include="externals/openal/Alc/backends/loopback.c" />
+    <ClCompile Include="externals/openal/Alc/backends/mmdevapi.c" />
+    <ClCompile Include="externals/openal/Alc/backends/null.c" />
+    <ClCompile Include="externals/openal/Alc/backends/wave.c" />
+    <ClCompile Include="externals/openal/Alc/backends/winmm.c" />
+    <ClCompile Include="externals/openal/Alc/bs2b.c" />
+    <ClCompile Include="externals/openal/Alc/helpers.c" />
+    <ClCompile Include="externals/openal/Alc/hrtf.c" />
+    <ClCompile Include="externals/openal/Alc/mixer.c" />
+    <ClCompile Include="externals/openal/Alc/mixer_c.c" />
+    <ClCompile Include="externals/openal/Alc/mixer_sse.c" />
+    <ClCompile Include="externals/openal/Alc/panning.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alAuxEffectSlot.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alBuffer.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alEffect.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alError.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alExtension.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alFilter.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alListener.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alSource.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alState.c" />
+    <ClCompile Include="externals/openal/OpenAL32/alThunk.c" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseExternalRtMidi)' != 'true'">
+    <ClCompile Include="externals\RtMidi\RtMidi.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Chai3dUseExternalTheoraPlayer)' != 'true'">
+    <ClCompile Include="externals/theoraplayer/externals/ogg/src/bitwise.c" />
+    <ClCompile Include="externals/theoraplayer/externals/ogg/src/framing.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/analyze.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/apiwrapper.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/bitpack.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/collect.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/decapiwrapper.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/decinfo.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/decode.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/dequant.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/encapiwrapper.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/encfrag.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/encinfo.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/encode.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/encoder_disabled.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/enquant.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/fdct.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/fragment.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/huffdec.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/huffenc.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/idct.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/infot.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/internal.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/mathops.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/mcenc.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/quant.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/rate.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/state.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/tokenize.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/x86_vc/mmxencfrag.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/x86_vc/mmxfdct.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/x86_vc/mmxfrag.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/x86_vc/mmxidct.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/x86_vc/mmxstate.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/x86_vc/x86cpu.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/x86_vc/x86enc.c" />
+    <ClCompile Include="externals/theoraplayer/externals/theora/lib/x86_vc/x86state.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/analysis.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/bitrate.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/block.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/codebook.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/envelope.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/floor0.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/floor1.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/info.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/lookup.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/lpc.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/lsp.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/mapping0.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/mdct.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/psy.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/registry.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/res0.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/sharedbook.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/smallft.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/synthesis.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/vorbisenc.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/vorbisfile.c" />
+    <ClCompile Include="externals/theoraplayer/externals/vorbis/lib/window.c" />
+    <ClCompile Include="externals/theoraplayer/src/OpenAL_AudioInterface.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraAsync.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraAudioInterface.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraAudioPacketQueue.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraDataSource.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraException.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraFrameQueue.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraTimer.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraUtil.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraVideoClip.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraVideoFrame.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraVideoManager.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/TheoraWorkerThread.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/Theora/TheoraVideoClip_Theora.cpp" />
+    <ClCompile Include="externals/theoraplayer/src/YUV/C/yuv420_grey_c.c" />
+    <ClCompile Include="externals/theoraplayer/src/YUV/C/yuv420_rgb_c.c" />
+    <ClCompile Include="externals/theoraplayer/src/YUV/C/yuv420_yuv_c.c" />
+    <ClCompile Include="externals/theoraplayer/src/YUV/C/yuv_util.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="externals/glew/include/GL/glew.h" />
+    <ClInclude Include="externals/glew/include/GL/wglew.h" />
+    <ClInclude Include="externals/pugixml/include/pugiconfig.hpp" />
+    <ClInclude Include="externals/pugixml/include/pugixml.hpp" />
+    <ClInclude Include="externals/STB/include/stb_image.h" />
+    <ClInclude Include="externals\RtMidi\RtMidi.h" />
+    <ClInclude Include="src/audio/CAudioBuffer.h" />
+    <ClInclude Include="src/audio/CAudioDevice.h" />
+    <ClInclude Include="src/audio/CAudioSource.h" />
+    <ClInclude Include="src/chai3d.h" />
+    <ClInclude Include="src/collisions/CCollisionAABB.h" />
+    <ClInclude Include="src/collisions/CCollisionAABBBox.h" />
+    <ClInclude Include="src/collisions/CCollisionAABBTree.h" />
+    <ClInclude Include="src/collisions/CCollisionBasics.h" />
+    <ClInclude Include="src/collisions/CCollisionBrute.h" />
+    <ClInclude Include="src/collisions/CGenericCollision.h" />
+    <ClInclude Include="src/devices/CDeltaDevices.h" />
+    <ClInclude Include="src/devices/CGenericDevice.h" />
+    <ClInclude Include="src/devices/CGenericHapticDevice.h" />
+    <ClInclude Include="src/devices/CHapticDeviceHandler.h" />
+    <ClInclude Include="src/devices/CLeapDevices.h" />
+    <ClInclude Include="src/devices/CMyCustomDevice.h" />
+    <ClInclude Include="src/devices/CPhantomDevices.h" />
+    <ClInclude Include="src/devices/CSixenseDevices.h" />
+    <ClInclude Include="src/display/CCamera.h" />
+    <ClInclude Include="src/display/CFrameBuffer.h" />
+    <ClInclude Include="src/effects/CEffectMagnet.h" />
+    <ClInclude Include="src/effects/CEffectStickSlip.h" />
+    <ClInclude Include="src/effects/CEffectSurface.h" />
+    <ClInclude Include="src/effects/CEffectVibration.h" />
+    <ClInclude Include="src/effects/CEffectViscosity.h" />
+    <ClInclude Include="src/effects/CGenericEffect.h" />
+    <ClInclude Include="src/files/CFileAudioWAV.h" />
+    <ClInclude Include="src/files/CFileImageBMP.h" />
+    <ClInclude Include="src/files/CFileImageGIF.h" />
+    <ClInclude Include="src/files/CFileImageJPG.h" />
+    <ClInclude Include="src/files/CFileImagePNG.h" />
+    <ClInclude Include="src/files/CFileImagePPM.h" />
+    <ClInclude Include="src/files/CFileImageRAW.h" />
+    <ClInclude Include="src/files/CFileImageSTB.h" />
+    <ClInclude Include="src/files/CFileModel3DS.h" />
+    <ClInclude Include="src/files/CFileModelOBJ.h" />
+    <ClInclude Include="src/files/CFileModelSTL.h" />
+    <ClInclude Include="src/files/CFileModelTRI.h" />
+    <ClInclude Include="src/files/CFileXML.h" />
+    <ClInclude Include="src/forces/CAlgorithmFingerProxy.h" />
+    <ClInclude Include="src/forces/CAlgorithmPotentialField.h" />
+    <ClInclude Include="src/forces/CGenericForceAlgorithm.h" />
+    <ClInclude Include="src/forces/CInteractionBasics.h" />
+    <ClInclude Include="src/graphics/CColor.h" />
+    <ClInclude Include="src/graphics/CDisplayList.h" />
+    <ClInclude Include="src/graphics/CDraw3D.h" />
+    <ClInclude Include="src/graphics/CFog.h" />
+    <ClInclude Include="src/graphics/CFont.h" />
+    <ClInclude Include="src/graphics/CGenericArray.h" />
+    <ClInclude Include="src/graphics/CImage.h" />
+    <ClInclude Include="src/graphics/CMultiImage.h" />
+    <ClInclude Include="src/graphics/CPointArray.h" />
+    <ClInclude Include="src/graphics/CPrimitives.h" />
+    <ClInclude Include="src/graphics/CRenderOptions.h" />
+    <ClInclude Include="src/graphics/CSegmentArray.h" />
+    <ClInclude Include="src/graphics/CTriangleArray.h" />
+    <ClInclude Include="src/graphics/CVertexArray.h" />
+    <ClInclude Include="src/graphics/CVideo.h" />
+    <ClInclude Include="src/lighting/CDirectionalLight.h" />
+    <ClInclude Include="src/lighting/CGenericLight.h" />
+    <ClInclude Include="src/lighting/CPositionalLight.h" />
+    <ClInclude Include="src/lighting/CShadowMap.h" />
+    <ClInclude Include="src/lighting/CSpotLight.h" />
+    <ClInclude Include="src/materials/CGenericTexture.h" />
+    <ClInclude Include="src/materials/CMaterial.h" />
+    <ClInclude Include="src/materials/CNormalMap.h" />
+    <ClInclude Include="src/materials/CTexture1d.h" />
+    <ClInclude Include="src/materials/CTexture2d.h" />
+    <ClInclude Include="src/materials/CTexture3d.h" />
+    <ClInclude Include="src/materials/CTextureVideo.h" />
+    <ClInclude Include="src/math/CBezier.h" />
+    <ClInclude Include="src/math/CConstants.h" />
+    <ClInclude Include="src/math/CGeometry.h" />
+    <ClInclude Include="src/math/CMarchingCubes.h" />
+    <ClInclude Include="src/math/CMaths.h" />
+    <ClInclude Include="src/math/CMatrix3d.h" />
+    <ClInclude Include="src/math/CPolySolver.h" />
+    <ClInclude Include="src/math/CQuaternion.h" />
+    <ClInclude Include="src/math/CTransform.h" />
+    <ClInclude Include="src/math/CVector3d.h" />
+    <ClInclude Include="src/resources/CChai3dLogo.h" />
+    <ClInclude Include="src/resources/CFontCalibri144.h" />
+    <ClInclude Include="src/resources/CFontCalibri16.h" />
+    <ClInclude Include="src/resources/CFontCalibri18.h" />
+    <ClInclude Include="src/resources/CFontCalibri20.h" />
+    <ClInclude Include="src/resources/CFontCalibri22.h" />
+    <ClInclude Include="src/resources/CFontCalibri24.h" />
+    <ClInclude Include="src/resources/CFontCalibri26.h" />
+    <ClInclude Include="src/resources/CFontCalibri28.h" />
+    <ClInclude Include="src/resources/CFontCalibri32.h" />
+    <ClInclude Include="src/resources/CFontCalibri36.h" />
+    <ClInclude Include="src/resources/CFontCalibri40.h" />
+    <ClInclude Include="src/resources/CFontCalibri72.h" />
+    <ClInclude Include="src/resources/CShaderBasicVoxel-LUT8.h" />
+    <ClInclude Include="src/resources/CShaderBasicVoxel-RGBA8.h" />
+    <ClInclude Include="src/resources/CShaderDVR-LUT8.h" />
+    <ClInclude Include="src/resources/CShaderFong.h" />
+    <ClInclude Include="src/resources/CShaderIsosurface-L8.h" />
+    <ClInclude Include="src/resources/CShaderIsosurface-RGBA8.h" />
+    <ClInclude Include="src/resources/CShaderIsosurfaceColor-L8.h" />
+    <ClInclude Include="src/resources/CShaderIsosurfaceColor-LUT8.h" />
+    <ClInclude Include="src/resources/CShaderIsosurfaceColor-RGBA8.h" />
+    <ClInclude Include="src/shaders/CShader.h" />
+    <ClInclude Include="src/shaders/CShaderProgram.h" />
+    <ClInclude Include="src/system/CGenericType.h" />
+    <ClInclude Include="src/system/CGlobals.h" />
+    <ClInclude Include="src/system/CMutex.h" />
+    <ClInclude Include="src/system/CString.h" />
+    <ClInclude Include="src/system/CThread.h" />
+    <ClInclude Include="src/timers/CFrequencyCounter.h" />
+    <ClInclude Include="src/timers/CPrecisionClock.h" />
+    <ClInclude Include="src/tools/CGenericTool.h" />
+    <ClInclude Include="src/tools/CHapticPoint.h" />
+    <ClInclude Include="src/tools/CToolCursor.h" />
+    <ClInclude Include="src/tools/CToolGripper.h" />
+    <ClInclude Include="src/widgets/CBackground.h" />
+    <ClInclude Include="src/widgets/CBitmap.h" />
+    <ClInclude Include="src/widgets/CDial.h" />
+    <ClInclude Include="src/widgets/CGenericWidget.h" />
+    <ClInclude Include="src/widgets/CLabel.h" />
+    <ClInclude Include="src/widgets/CLevel.h" />
+    <ClInclude Include="src/widgets/CPanel.h" />
+    <ClInclude Include="src/widgets/CScope.h" />
+    <ClInclude Include="src/widgets/CViewPanel.h" />
+    <ClInclude Include="src/world/CGenericObject.h" />
+    <ClInclude Include="src/world/CMesh.h" />
+    <ClInclude Include="src/world/CMultiMesh.h" />
+    <ClInclude Include="src/world/CMultiPoint.h" />
+    <ClInclude Include="src/world/CMultiSegment.h" />
+    <ClInclude Include="src/world/CShapeBox.h" />
+    <ClInclude Include="src/world/CShapeCylinder.h" />
+    <ClInclude Include="src/world/CShapeEllipsoid.h" />
+    <ClInclude Include="src/world/CShapeLine.h" />
+    <ClInclude Include="src/world/CShapeSphere.h" />
+    <ClInclude Include="src/world/CShapeTorus.h" />
+    <ClInclude Include="src/world/CVoxelObject.h" />
+    <ClInclude Include="src/world/CWorld.h" />
+    <ClInclude Include="src\devices\CXTouchController.h" />
+    <ClInclude Include="src\display\CViewport.h" />
+    <ClInclude Include="src\files\CFileAudioMP3.h" />
+    <ClInclude Include="src\network\CSocket.h" />
+    <ClInclude Include="src\network\CSocketHelper.h" />
+    <ClInclude Include="src\resources\CFontConsolas16.h" />
+    <ClInclude Include="src\resources\CFontConsolas18.h" />
+    <ClInclude Include="src\resources\CFontConsolas20.h" />
+    <ClInclude Include="src\resources\CFontConsolas22.h" />
+    <ClInclude Include="src\resources\CFontConsolas24.h" />
+    <ClInclude Include="src\resources\CFontConsolas28.h" />
+    <ClInclude Include="src\resources\CFontConsolas32.h" />
+    <ClInclude Include="src\widgets\CHistogram.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)/Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

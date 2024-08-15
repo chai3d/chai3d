@@ -14,7 +14,7 @@
    <string>CHAI3D</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="resources.qrc">
     <normaloff>:/chai3d.ico</normaloff>:/chai3d.ico</iconset>
   </property>
   <property name="toolTip">
@@ -40,25 +40,10 @@
     <item>
      <widget class="QWidget" name="Settings" native="true">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>300</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>300</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -154,7 +139,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="Application.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

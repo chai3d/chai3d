@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   1.0.0
 */
 //===========================================================================
 
@@ -183,6 +183,8 @@ public:
     //! This method renders this node in OpenGL.
     inline void render()
     {
+#ifdef C_USE_OPENGL
+
         // set pose
         chai3d::cTransform mat;
         mat.set(m_pos, m_rot);
@@ -210,6 +212,8 @@ public:
             glVertex3dv( (const double *)&m_pos);
             glVertex3dv( (const double *)&v);
         glEnd();
+
+#endif
     }
 
 

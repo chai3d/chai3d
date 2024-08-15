@@ -16,7 +16,7 @@ files to ./bin directory of each module.
 
 ________________________
 
-(C) 2003-2016 by CHAI3D
+(C) 2003-2017 by CHAI3D
 
 All Rights Reserved.
 

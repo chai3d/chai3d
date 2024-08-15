@@ -1,7 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="/home/seb/workspace/svn.chai3d.org/tags/3.2.0/doc/doxygen/chai3d.tag$classchai3d_1_1c_generic_type.html" title="chai3d::cGenericType" alt="" coords="5,31,155,57"/>
-<area shape="rect" id="node2" href="/home/seb/workspace/svn.chai3d.org/tags/3.2.0/doc/doxygen/chai3d.tag$classchai3d_1_1c_generic_object.html" title="chai3d::cGenericObject" alt="" coords="203,31,361,57"/>
-<area shape="rect" id="node3" href="$classc_g_e_l_world.html" title="This class implements a virtual world that manages deformable objects. " alt="" coords="432,5,521,32"/>
-<area shape="rect" id="node4" href="/home/seb/workspace/svn.chai3d.org/tags/3.2.0/doc/doxygen/chai3d.tag$classchai3d_1_1c_multi_mesh.html" title="chai3d::cMultiMesh" alt="" coords="409,56,544,83"/>
-<area shape="rect" id="node5" href="$classc_g_e_l_mesh.html" title="This class inherits from class cMesh and integrate a skeleton model for modelling deformations of the..." alt="" coords="592,56,679,83"/>
+<area shape="rect" id="Node000000" href="/home/seb/workspace/chai3d-3/doc/doxygen/chai3d.tag$classchai3d_1_1c_generic_type.html" title=" " alt="" coords="5,31,153,56"/>
+<area shape="rect" id="Node000001" href="/home/seb/workspace/chai3d-3/doc/doxygen/chai3d.tag$classchai3d_1_1c_generic_object.html" title=" " alt="" coords="201,31,360,56"/>
+<area shape="poly" id="edge2_Node000000_Node000001" title=" " alt="" coords="167,41,201,41,201,46,167,46"/>
+<area shape="rect" id="Node000002" href="$classc_g_e_l_world.html" title="This class implements a virtual world that manages deformable objects." alt="" coords="431,5,519,31"/>
+<area shape="poly" id="edge3_Node000001_Node000002" title=" " alt="" coords="374,29,431,21,432,26,374,34"/>
+<area shape="rect" id="Node000003" href="/home/seb/workspace/chai3d-3/doc/doxygen/chai3d.tag$classchai3d_1_1c_multi_mesh.html" title=" " alt="" coords="408,55,543,80"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="374,52,408,56,407,62,373,57"/>
+<area shape="rect" id="Node000004" href="$classc_g_e_l_mesh.html" title="This class inherits from class cMesh and integrate a skeleton model for modelling deformations of the..." alt="" coords="591,55,677,80"/>
+<area shape="poly" id="edge5_Node000003_Node000004" title=" " alt="" coords="557,65,590,65,590,70,557,70"/>
 </map>

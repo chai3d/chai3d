@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2164 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -105,6 +105,9 @@ public:
 
 public:
 
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("ShapeLine"); }
+
     //! This method creates a copy of itself.
     cShapeLine* copy(const bool a_duplicateMaterialData = false,
                      const bool a_duplicateTextureData = false, 
@@ -125,6 +128,9 @@ public:
 
     //! This method returns the stipple pattern value.
     GLushort  getLineStipplePattern() { return (m_stipplePattern); }
+
+    //! This method updates position of line extremity points.
+    void updateLinePoints();
 
 
     //--------------------------------------------------------------------------
@@ -192,11 +198,8 @@ protected:
         const bool a_duplicateMeshData,
         const bool a_buildCollisionDetector);
 
-    // Initialize line object.
+    // This method initializes this shape line object.
     void reset();
-
-    // Update position of line extremities.
-    void updateLinePoints();
 
 
     //--------------------------------------------------------------------------

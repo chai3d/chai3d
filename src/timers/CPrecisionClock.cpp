@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -33,18 +33,20 @@
     CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-    POSSIBILITY OF SUCH DAMAGE. 
+    POSSIBILITY OF SUCH DAMAGE.
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2048 $
+    \version   3.3.0
 */
 //==============================================================================
 
 //------------------------------------------------------------------------------
 #include "timers/CPrecisionClock.h"
 //------------------------------------------------------------------------------
-
+#if !defined(WIN32) & !defined(WIN64)
+#include <chrono>
+#endif
 //------------------------------------------------------------------------------
 namespace chai3d {
 //------------------------------------------------------------------------------
@@ -92,7 +94,7 @@ cPrecisionClock::cPrecisionClock()
 void cPrecisionClock::initialize()
 {
 #if defined(WIN32) | defined(WIN64)
-    // test if high performance clock is available on the local machine. 
+    // test if high performance clock is available on the local machine.
     // Some old computers may not offer this feature.
     QueryPerformanceFrequency(&m_freq);
     if (m_freq.QuadPart <= 0)
@@ -131,10 +133,10 @@ void cPrecisionClock::reset(const double a_currentTime)
 
 //==============================================================================
 /*!
-    This method starts or restarts the clock. To read the clock time, call 
+    This method starts or restarts the clock. To read the clock time, call
     method getCurrentTimeSeconds().
 
-    \param  a_resetClock  If __true__ clock is initialized, otherwise 
+    \param  a_resetClock  If __true__ clock is initialized, otherwise
             resume counting.
 
     \return Current clock time in seconds.
@@ -158,7 +160,7 @@ double cPrecisionClock::start(const bool a_resetClock)
 
 //==============================================================================
 /*!
-    This method stops the clock and returns elapsed time. To resume counting 
+    This method stops the clock and returns elapsed time. To resume counting
     call method start().
 
     \return Time in seconds.
@@ -180,7 +182,7 @@ double cPrecisionClock::stop()
 //==============================================================================
 /*!
     This method sets the period in seconds before _timeout_ occurs. Do not forget
-    to enable the timer __ON__ by calling method start(). Monitoring 
+    to enable the timer __ON__ by calling method start(). Monitoring
     for _timeout_ is performed by calling timeoutOccurred().
 
     \param  a_timeoutPeriod  Timeout period in seconds.
@@ -199,7 +201,7 @@ void cPrecisionClock::setTimeoutPeriodSeconds(const double a_timeoutPeriod)
     \return __true__ if _timeout_ occurred, otherwise __false__.
 */
 //==============================================================================
-bool cPrecisionClock::timeoutOccurred() const 
+bool cPrecisionClock::timeoutOccurred() const
 {
     // check if timeout has occurred
     if (getCurrentTimeSeconds() > m_timeoutPeriod)
@@ -220,7 +222,7 @@ bool cPrecisionClock::timeoutOccurred() const
     \return Current time in seconds.
 */
 //==============================================================================
-double cPrecisionClock::getCurrentTimeSeconds() const 
+double cPrecisionClock::getCurrentTimeSeconds() const
 {
     if (m_on)
     {
@@ -260,30 +262,10 @@ double cPrecisionClock::getCPUTimeSeconds()
         return (((double)(GetTickCount())) / 1000.0);
     }
 
-#endif
+#else
 
-#ifdef LINUX
-
-    struct timespec time;
-    clock_gettime (CLOCK_MONOTONIC, &time);
-    return ((double)(time.tv_sec + time.tv_nsec*1e-9));
-
-#endif
-
-#ifdef MACOSX
-
-    static double ratio = 0.0;
-
-    if (!ratio) 
-    {
-        mach_timebase_info_data_t info;
-        if (mach_timebase_info(&info) == KERN_SUCCESS) 
-        {
-            ratio = info.numer * 1e-9 * info.denom;
-        }
-    }
-
-    return (mach_absolute_time() * ratio);
+    auto t = std::chrono::steady_clock::now();
+    return std::chrono::duration<double>(t.time_since_epoch()).count();
 
 #endif
 }

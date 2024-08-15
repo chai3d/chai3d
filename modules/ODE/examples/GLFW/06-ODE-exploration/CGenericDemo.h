@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   1.0.0
 */
 //===========================================================================
 
@@ -78,10 +78,10 @@ public:
     virtual void init() {};
 
     //! Update haptics
-    virtual void updateHaptics();
+    virtual void renderHaptics();
 
     //! Update graphics
-    virtual void updateGraphics(int a_width, int a_height);
+    virtual void renderGraphics(int a_width, int a_height);
 
     //! Set stiffness
     virtual void setStiffness(double a_stiffness){};
@@ -100,51 +100,51 @@ public:
 public:
 
     //! virtual world
-    cWorld* m_world;
+    cWorld* m_world { nullptr };
 
     //! camera
-    cCamera* m_camera;
+    cCamera* m_camera { nullptr };
 
     //! light source 0
-    cSpotLight *m_light0;
+    cSpotLight *m_light0 { nullptr };
 
     //! light source 1
-    cDirectionalLight *m_light1;
+    cDirectionalLight *m_light1 { nullptr };
 
     //! radius of tools
-    double m_toolRadius;
+    double m_toolRadius { 0.0 };
 
     //! tool 0
-    cToolGripper* m_tool0;
+    cToolGripper* m_tool0 { nullptr };
 
     //! tool 1
-    cToolGripper* m_tool1;
+    cToolGripper* m_tool1 { nullptr };
 
     //! table 
-    cMesh* m_ground;
+    cMesh* m_ground { nullptr };
 
     //! base
-    cMultiMesh* m_base;
+    cMultiMesh* m_base { nullptr };
 
     //! simulation clock
     cPrecisionClock simClock;
 
     //! number of tools
-    int m_numTools;
+    int m_numTools { 0 };
 
     //! table of tools
-    cToolGripper* m_tools[2];
+    cToolGripper* m_tools[2] {};
 
     //! ODE world
-    cODEWorld* m_ODEWorld;
+    cODEWorld* m_ODEWorld { nullptr };
 
     //! ODE planes
-    cODEGenericBody* m_ODEGPlane0;
-    cODEGenericBody* m_ODEGPlane1;
-    cODEGenericBody* m_ODEGPlane2;
-    cODEGenericBody* m_ODEGPlane3;
-    cODEGenericBody* m_ODEGPlane4;
-    cODEGenericBody* m_ODEGPlane5;
+    cODEGenericBody* m_ODEGPlane0 { nullptr };
+    cODEGenericBody* m_ODEGPlane1 { nullptr };
+    cODEGenericBody* m_ODEGPlane2 { nullptr };
+    cODEGenericBody* m_ODEGPlane3 { nullptr };
+    cODEGenericBody* m_ODEGPlane4 { nullptr };
+    cODEGenericBody* m_ODEGPlane5 { nullptr };
 
     //! torque gain
     double m_torqueGain;

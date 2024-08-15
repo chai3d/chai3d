@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Francois Conti
     \author    Dan Morris
-    \version   3.2.0 $Rev: 2158 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -76,8 +76,17 @@ cColorf cGenericObject::s_boundaryBoxColor(0.7f, 0.7f, 0.7f);
 //==============================================================================
 cGenericObject::cGenericObject()
 {
+    // increment counter
+    s_objectCounter++;
+
     // object is enabled
     m_enabled = true;
+
+    // clear components
+    m_components.clear();
+
+    // clear children
+    m_children.clear();
 
     // initialize local position and orientation
     m_localPos.zero();
@@ -185,7 +194,7 @@ cGenericObject::cGenericObject()
 cGenericObject::~cGenericObject()
 {
     // delete collision detector
-    deleteCollisionDetector(false);
+    deleteCollisionDetector(false, false);
 
     // delete all haptics effects
     deleteAllEffects();
@@ -206,13 +215,26 @@ cGenericObject::~cGenericObject()
     Enabling or disabling an object will not affect child objects, 
     unless explicitly specified.
 
-    \param  a_enabled         If __true__ then object is enabled, __false__ otherwise.
-    \param  a_affectChildren  If __true__, then children are updated too.
+    \param  a_enabled           If __true__ then object is enabled, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cGenericObject::setEnabled(bool a_enabled, const bool a_affectChildren)
+void cGenericObject::setEnabled(bool a_enabled,
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_enabled = a_enabled;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setEnabled(a_enabled, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -220,9 +242,51 @@ void cGenericObject::setEnabled(bool a_enabled, const bool a_affectChildren)
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setEnabled(a_enabled, true);
+            (*it)->setEnabled(a_enabled, a_affectChildren, a_affectComponents);
         }
     }
+}
+
+
+//==============================================================================
+/*!
+    This method returns a pointer to an object with a given name.
+
+    \param  a_name  Object name.
+
+    \return Pointer to found object.
+*/
+//==============================================================================
+cGenericObject* cGenericObject::getObject(std::string& a_name)
+{
+    if (a_name == m_name)
+    {
+        return (this);
+    }
+
+    // check components
+    vector<cGenericObject*>::iterator it;
+    for (it = m_components.begin(); it < m_components.end(); it++)
+    {
+        cGenericObject* object = (*it)->getObject(a_name);
+        if (object != NULL)
+        {
+            return (object);
+        }
+    }
+
+    // check children
+    for (it = m_children.begin(); it < m_children.end(); it++)
+    {
+        cGenericObject* object = (*it)->getObject(a_name);
+        if (object != NULL)
+        {
+            return (object);
+        }
+    }
+
+    // no object found
+    return (NULL);
 }
 
 
@@ -374,8 +438,14 @@ void cGenericObject::computeGlobalPositions(const bool a_frameOnly,
     // updated (e.g. vertex positions)
     updateGlobalPositions(a_frameOnly);
 
-    // propagate this method to my children
+    // propagate this method to components
     vector<cGenericObject*>::iterator it;
+    for (it = m_components.begin(); it < m_components.end(); it++)
+    {
+        (*it)->computeGlobalPositions(a_frameOnly, m_globalPos, m_globalRot);
+    }
+
+    // propagate this method to children
     for (it = m_children.begin(); it < m_children.end(); it++)
     {
         (*it)->computeGlobalPositions(a_frameOnly, m_globalPos, m_globalRot);
@@ -409,7 +479,7 @@ void cGenericObject::computeGlobalPositionsFromRoot(const bool a_frameOnly)
     {
         // walk up the scene graph until we reach the root, updating
         // my global position and rotation at each step
-        do 
+        do
         {
             curObject->getLocalRot().mul(globalPos);
             globalPos.add(curObject->getLocalPos());
@@ -497,16 +567,17 @@ void cGenericObject::deleteAllEffects()
 /*!
     This method creates a magnetic haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::createEffectMagnetic()
+void cGenericObject::createEffectMagnetic(const bool a_affectChildren, const bool a_affectComponents)
 {
     bool flag = true;
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        if (dynamic_cast<cEffectMagnet*>(*it) != NULL)
+        if (dynamic_cast<cEffectMagnet*>(*effectIt) != NULL)
         {
             flag = false;
         }
@@ -516,9 +587,27 @@ bool cGenericObject::createEffectMagnetic()
     {
         cGenericEffect* effect = new cEffectMagnet(this);
         addEffect(effect);
-        return (true);
     }
-    return (false);
+
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->createEffectMagnetic(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->createEffectMagnetic(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 
@@ -526,23 +615,42 @@ bool cGenericObject::createEffectMagnetic()
 /*!
     This method deletes the magnetic haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::deleteEffectMagnetic()
+void cGenericObject::deleteEffectMagnetic(const bool a_affectChildren, const bool a_affectComponents)
 {
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        cGenericEffect* effect = dynamic_cast<cEffectMagnet*>(*it);
+        cGenericEffect* effect = dynamic_cast<cEffectMagnet*>(*effectIt);
         if (effect != NULL)
         {
-            m_effects.erase(it);
+            m_effects.erase(effectIt);
             delete effect;
-            return (true);
         }
     }
-    return (false);
+
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectMagnetic(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectMagnetic(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 
@@ -550,16 +658,17 @@ bool cGenericObject::deleteEffectMagnetic()
 /*!
     This method creates a stick-and-slip haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::createEffectStickSlip()
+void cGenericObject::createEffectStickSlip(const bool a_affectChildren, const bool a_affectComponents)
 {
     bool flag = true;
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        if (dynamic_cast<cEffectStickSlip*>(*it) != NULL)
+        if (dynamic_cast<cEffectStickSlip*>(*effectIt) != NULL)
         {
             flag = false;
         }
@@ -569,32 +678,69 @@ bool cGenericObject::createEffectStickSlip()
     {
         cGenericEffect* effect = new cEffectStickSlip(this);
         addEffect(effect);
-        return (true);
     }
-    return (false);
+
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->createEffectStickSlip(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->createEffectStickSlip(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 //==============================================================================
 /*!
     This method deletes the stick-and-slip haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::deleteEffectStickSlip()
+void cGenericObject::deleteEffectStickSlip(const bool a_affectChildren, const bool a_affectComponents)
 {
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        cGenericEffect* effect = dynamic_cast<cEffectStickSlip*>(*it);
+        cGenericEffect* effect = dynamic_cast<cEffectStickSlip*>(*effectIt);
         if (effect != NULL)
         {
-            m_effects.erase(it);
+            m_effects.erase(effectIt);
             delete effect;
-            return (true);
         }
     }
-    return (false);
+
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectStickSlip(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectStickSlip(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 
@@ -602,16 +748,17 @@ bool cGenericObject::deleteEffectStickSlip()
 /*!
     This method creates a surface haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::createEffectSurface()
+void cGenericObject::createEffectSurface(const bool a_affectChildren, const bool a_affectComponents)
 {
     bool flag = true;
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        if (dynamic_cast<cEffectSurface*>(*it) != NULL)
+        if (dynamic_cast<cEffectSurface*>(*effectIt) != NULL)
         {
             flag = false;
         }
@@ -621,10 +768,27 @@ bool cGenericObject::createEffectSurface()
     {
         cGenericEffect* effect = new cEffectSurface(this);
         addEffect(effect);
-        return (true);
     }
  
-    return (false);
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->createEffectSurface(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->createEffectSurface(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 
@@ -632,23 +796,42 @@ bool cGenericObject::createEffectSurface()
 /*!
     This method deletes the surface haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::deleteEffectSurface()
+void cGenericObject::deleteEffectSurface(const bool a_affectChildren, const bool a_affectComponents)
 {
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        cGenericEffect* effect = dynamic_cast<cEffectSurface*>(*it);
+        cGenericEffect* effect = dynamic_cast<cEffectSurface*>(*effectIt);
         if (effect != NULL)
         {
-            m_effects.erase(it);
+            m_effects.erase(effectIt);
             delete effect;
-            return (true);
         }
     }
-    return (false);
+
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectSurface(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectSurface(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 
@@ -656,16 +839,17 @@ bool cGenericObject::deleteEffectSurface()
 /*!
     This method creates a vibration haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::createEffectVibration()
+void cGenericObject::createEffectVibration(const bool a_affectChildren, const bool a_affectComponents)
 {
     bool flag = true;
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        if (dynamic_cast<cEffectVibration*>(*it) != NULL)
+        if (dynamic_cast<cEffectVibration*>(*effectIt) != NULL)
         {
             flag = false;
         }
@@ -675,9 +859,27 @@ bool cGenericObject::createEffectVibration()
     {
         cGenericEffect* effect = new cEffectVibration(this);
         addEffect(effect);
-        return (true);
     }
-    return (false);
+
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->createEffectVibration(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->createEffectVibration(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 
@@ -685,23 +887,41 @@ bool cGenericObject::createEffectVibration()
 /*!
     This method deletes the current vibration haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::deleteEffectVibration()
+void cGenericObject::deleteEffectVibration(const bool a_affectChildren, const bool a_affectComponents)
 {
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        cGenericEffect* effect = dynamic_cast<cEffectVibration*>(*it);
+        cGenericEffect* effect = dynamic_cast<cEffectVibration*>(*effectIt);
         if (effect != NULL)
         {
-            m_effects.erase(it);
+            m_effects.erase(effectIt);
             delete effect;
-            return (true);
         }
     }
-    return (false);
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectVibration(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectVibration(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 
@@ -709,16 +929,17 @@ bool cGenericObject::deleteEffectVibration()
 /*!
     This method creates a viscous haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::createEffectViscosity()
+void cGenericObject::createEffectViscosity(const bool a_affectChildren, const bool a_affectComponents)
 {
     bool flag = true;
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        if (dynamic_cast<cEffectViscosity*>(*it) != NULL)
+        if (dynamic_cast<cEffectViscosity*>(*effectIt) != NULL)
         {
             flag = false;
         }
@@ -728,9 +949,27 @@ bool cGenericObject::createEffectViscosity()
     {
         cGenericEffect* effect = new cEffectViscosity(this);
         addEffect(effect);
-        return (true);
     }
-    return (false);
+
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->createEffectViscosity(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->createEffectViscosity(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 
@@ -738,23 +977,41 @@ bool cGenericObject::createEffectViscosity()
 /*!
     This method deletes the current viscous haptic effect.
 
-    \return __true__ if the operation succeeds, __false__ otherwise.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-bool cGenericObject::deleteEffectViscosity()
+void cGenericObject::deleteEffectViscosity(const bool a_affectChildren, const bool a_affectComponents)
 {
-    vector<cGenericEffect*>::iterator it;
-    for (it = m_effects.begin(); it < m_effects.end(); it++)
+    vector<cGenericEffect*>::iterator effectIt;
+    for (effectIt = m_effects.begin(); effectIt < m_effects.end(); effectIt++)
     {
-        cGenericEffect* effect = dynamic_cast<cEffectViscosity*>(*it);
+        cGenericEffect* effect = dynamic_cast<cEffectViscosity*>(*effectIt);
         if (effect != NULL)
         {
-            m_effects.erase(it);
+            m_effects.erase(effectIt);
             delete effect;
-            return (true);
         }
     }
-    return (false);
+    // apply effect to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_components.begin(); objectIt < m_components.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectViscosity(a_affectChildren, a_affectComponents);
+        }
+    }
+
+    // apply effect to children
+    if (a_affectChildren)
+    {
+        vector<cGenericObject*>::iterator objectIt;
+        for (objectIt = m_children.begin(); objectIt < m_children.end(); objectIt++)
+        {
+            (*objectIt)->deleteEffectViscosity(a_affectChildren, a_affectComponents);
+        }
+    }
 }
 
 
@@ -765,14 +1022,26 @@ bool cGenericObject::deleteEffectViscosity()
     If argument \p a_affectChildren is set to __true__ then all children are
     updated with the new value.
 
-    \param  a_hapticEnabled   If __true__ then the object can be touched when visible.
-    \param  a_affectChildren  If __true__ then all children are updated too.
+    \param  a_hapticEnabled     If __true__ then the object can be touched when visible.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setHapticEnabled(const bool a_hapticEnabled, 
-    const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_hapticEnabled = a_hapticEnabled;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setHapticEnabled(a_hapticEnabled, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -780,7 +1049,7 @@ void cGenericObject::setHapticEnabled(const bool a_hapticEnabled,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setHapticEnabled(a_hapticEnabled, true);
+            (*it)->setHapticEnabled(a_hapticEnabled, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -791,14 +1060,26 @@ void cGenericObject::setHapticEnabled(const bool a_hapticEnabled,
      This method sets the haptic stiffness for this object, optionally recursively 
      affecting children.
 
-     \param  a_stiffness       The stiffness to apply to this object.
-     \param  a_affectChildren  If __true__, then children are updated too.
+     \param  a_stiffness         The stiffness to apply to this object.
+     \param  a_affectChildren    If __true__, then children are updated too.
+     \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setStiffness(const double a_stiffness, 
-    const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_material->setStiffness(a_stiffness);
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setStiffness(a_stiffness, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -806,7 +1087,7 @@ void cGenericObject::setStiffness(const double a_stiffness,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setStiffness(a_stiffness, true);
+            (*it)->setStiffness(a_stiffness, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -817,17 +1098,29 @@ void cGenericObject::setStiffness(const double a_stiffness,
     This method sets the static and dynamic friction properties for this object,
     optionally recursively affecting children.
 
-    \param  a_staticFriction   The static friction to apply to this object.
-    \param  a_dynamicFriction  The dynamic friction to apply to this object.
-    \param  a_affectChildren   If __true__ then children are updated too.
+    \param  a_staticFriction    The static friction to apply to this object.
+    \param  a_dynamicFriction   The dynamic friction to apply to this object.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setFriction(double a_staticFriction, 
-    double a_dynamicFriction, 
-    const bool a_affectChildren)
+    double a_dynamicFriction,
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_material->setStaticFriction(a_staticFriction);
     m_material->setDynamicFriction(a_dynamicFriction);
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setFriction(a_staticFriction, a_dynamicFriction, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -835,7 +1128,7 @@ void cGenericObject::setFriction(double a_staticFriction,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setFriction(a_staticFriction, a_dynamicFriction, true);
+            (*it)->setFriction(a_staticFriction, a_dynamicFriction, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -846,14 +1139,27 @@ void cGenericObject::setFriction(double a_staticFriction,
     This method graphically shows or hides this object, optionally recursively 
     affecting children.
 
-    \param  a_show            If __true__ then object is visible.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_show              If __true__ then object is visible.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cGenericObject::setShowEnabled(const bool a_show, const bool a_affectChildren)
+void cGenericObject::setShowEnabled(const bool a_show,
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // update current object
     m_showEnabled = a_show;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setShowEnabled(a_show, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -861,7 +1167,7 @@ void cGenericObject::setShowEnabled(const bool a_show, const bool a_affectChildr
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setShowEnabled(a_show, true);
+            (*it)->setShowEnabled(a_show, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -873,14 +1179,27 @@ void cGenericObject::setShowEnabled(const bool a_show, const bool a_affectChildr
     enabled then make sure that multi-pass rendering is enabled too. For more 
     information, see class \ref cCamera.
 
-    \param  a_useTransparency  If __true__ then transparency is enabled.
-    \param  a_affectChildren   If __true__ then children are updated too.
+    \param  a_useTransparency   If __true__ then transparency is enabled.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cGenericObject::setUseTransparency(const bool a_useTransparency, const bool a_affectChildren)
+void cGenericObject::setUseTransparency(const bool a_useTransparency,
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // update changes to object
     m_useTransparency = a_useTransparency;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setUseTransparency(a_useTransparency, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -888,7 +1207,7 @@ void cGenericObject::setUseTransparency(const bool a_useTransparency, const bool
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setUseTransparency(a_useTransparency, true);
+            (*it)->setUseTransparency(a_useTransparency, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -902,16 +1221,18 @@ void cGenericObject::setUseTransparency(const bool a_useTransparency, const bool
     Using the 'apply to textures' option causes the actual texture
     alpha values to be over-written in my texture, if it exists. \n
 
-    \param  a_level            Level of transparency ranging from 0.0 to 1.0.
-    \param  a_applyToTextures  If __true__, then apply changes to texture pixels.
-    \param  a_applyToVertices  If __true__, then apply changes to vertex colors.
-    \param  a_affectChildren   If __true__, then children are updated too.
+    \param  a_level             Level of transparency ranging from 0.0 to 1.0.
+    \param  a_applyToTextures   If __true__, then apply changes to texture pixels.
+    \param  a_applyToVertices   If __true__, then apply changes to vertex colors.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setTransparencyLevel(const float a_level,
     const bool a_applyToVertices,
     const bool a_applyToTextures,
-    const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // if the transparency level is equal to 1.0, then do not apply transparency
     // otherwise enable it.
@@ -940,6 +1261,20 @@ void cGenericObject::setTransparencyLevel(const float a_level,
         }
     }
 
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setTransparencyLevel(a_level,
+                a_applyToVertices,
+                a_applyToTextures,
+                a_affectChildren,
+                a_affectComponents);
+        }
+    }
+
     // apply change to children
     if (a_affectChildren)
     {
@@ -947,9 +1282,10 @@ void cGenericObject::setTransparencyLevel(const float a_level,
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
             (*it)->setTransparencyLevel(a_level,
-                                        a_applyToVertices,
-                                        a_applyToTextures,
-                                        true);
+                a_applyToVertices,
+                a_applyToTextures,
+                a_affectChildren,
+                a_affectComponents);
         }
     }
 }
@@ -960,12 +1296,14 @@ void cGenericObject::setTransparencyLevel(const float a_level,
     This method enables or disables wireframe rendering, optionally propagating
     the operation to children.
 
-    \param  a_showWireMode    If __true__ then wireframe mode is used.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_showWireMode      If __true__ then wireframe mode is used.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setWireMode(const bool a_showWireMode, 
-                                 const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     if (a_showWireMode)
     { 
@@ -978,13 +1316,23 @@ void cGenericObject::setWireMode(const bool a_showWireMode,
         m_triangleMode = GL_FILL;
     }
 
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setWireMode(a_showWireMode, a_affectChildren, a_affectComponents);
+        }
+    }
+
     // apply change to children
     if (a_affectChildren)
     {
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setWireMode(a_showWireMode, true);
+            (*it)->setWireMode(a_showWireMode, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -995,14 +1343,26 @@ void cGenericObject::setWireMode(const bool a_showWireMode,
     This method enables or disables back face culling. \n
     Rendering in OpenGL is much faster with culling enabled.
 
-    \param  a_useCulling      If __true__ then back faces are culled.
-    \param  a_affectChildren  If __true__ then then children are updated too.
+    \param  a_useCulling        If __true__ then back faces are culled.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cGenericObject::setUseCulling(const bool a_useCulling, 
-                                   const bool a_affectChildren)
+void cGenericObject::setUseCulling(const bool a_useCulling,
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_cullingEnabled = a_useCulling;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setUseCulling(a_useCulling, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1010,7 +1370,7 @@ void cGenericObject::setUseCulling(const bool a_useCulling,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setUseCulling(a_useCulling, true);
+            (*it)->setUseCulling(a_useCulling, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1023,13 +1383,25 @@ void cGenericObject::setUseCulling(const bool a_useCulling,
 
     \param  a_useColors       If __true__ then then vertex color information is 
                               applied.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setUseVertexColors(const bool a_useColors, 
-                                        const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_useVertexColors = a_useColors;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setUseVertexColors(a_useColors, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1037,7 +1409,7 @@ void cGenericObject::setUseVertexColors(const bool a_useColors,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setUseVertexColors(a_useColors, true);
+            (*it)->setUseVertexColors(a_useColors, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1048,15 +1420,27 @@ void cGenericObject::setUseVertexColors(const bool a_useColors,
     This method creates a backup of the material color properties of this object,
     optionally recursively affecting children.
 
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cGenericObject::backupMaterialColors(const bool a_affectChildren)
+void cGenericObject::backupMaterialColors(const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // backup colors for current material
     if ((m_material != nullptr) && (m_material != s_defaultMaterial))
     {
         m_material->backupColors();
+    }
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->backupMaterialColors(a_affectChildren, a_affectComponents);
+        }
     }
 
     // apply change to children
@@ -1065,7 +1449,7 @@ void cGenericObject::backupMaterialColors(const bool a_affectChildren)
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->backupMaterialColors(true);
+            (*it)->backupMaterialColors(a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1076,15 +1460,27 @@ void cGenericObject::backupMaterialColors(const bool a_affectChildren)
     This method restores material color properties for this object, optionally 
     recursively affecting children.
 
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cGenericObject::restoreMaterialColors(const bool a_affectChildren)
+void cGenericObject::restoreMaterialColors(const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // restore original colors for current material
     if ((m_material != nullptr) && (m_material != s_defaultMaterial))
     {
         m_material->restoreColors();
+    }
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->restoreMaterialColors(a_affectChildren, a_affectComponents);
+        }
     }
 
     // apply change to children
@@ -1093,7 +1489,7 @@ void cGenericObject::restoreMaterialColors(const bool a_affectChildren)
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->restoreMaterialColors(true);
+            (*it)->restoreMaterialColors(a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1107,15 +1503,27 @@ void cGenericObject::restoreMaterialColors(const bool a_affectChildren)
     positions) will not take effect until you invalidate the existing display list
     by calling \ref markForUpdate().
 
-    \param  a_useDisplayList  If __true__ then a display list is created (cMesh).
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_useDisplayList    If __true__ then a display list is created (cMesh).
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setUseDisplayList(const bool a_useDisplayList,
-                                       const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // update changes to object
     m_useDisplayList = a_useDisplayList;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setUseDisplayList(a_useDisplayList, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1123,7 +1531,7 @@ void cGenericObject::setUseDisplayList(const bool a_useDisplayList,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setUseDisplayList(a_useDisplayList, true);
+            (*it)->setUseDisplayList(a_useDisplayList, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1135,13 +1543,25 @@ void cGenericObject::setUseDisplayList(const bool a_useDisplayList,
     if you're using display lists and you modify mesh options, vertex positions,
     etc.
 
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cGenericObject::markForUpdate(const bool a_affectChildren)
+void cGenericObject::markForUpdate(const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // invalidate display list
     m_displayList.invalidate();
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->markForUpdate(a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1149,7 +1569,7 @@ void cGenericObject::markForUpdate(const bool a_affectChildren)
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->markForUpdate(true);
+            (*it)->markForUpdate(a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1159,23 +1579,35 @@ void cGenericObject::markForUpdate(const bool a_affectChildren)
 /*!
      This method enables or disables the use of material properties.
 
-     \param  a_useMaterial     If __true__ then material properties are used for rendering.
-     \param  a_affectChildren  If __true__ then children are updated too.
+     \param  a_useMaterial       If __true__ then material properties are used for rendering.
+     \param  a_affectChildren    If __true__, then children are updated too.
+     \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setUseMaterial(const bool a_useMaterial, 
-                                    const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // update changes to object
     m_useMaterialProperty = a_useMaterial;
 
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setUseMaterial(a_useMaterial, a_affectChildren, a_affectComponents);
+        }
+    }
+
     // apply change to children
     if (a_affectChildren)
     {
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setUseMaterial(a_useMaterial, true);
+            (*it)->setUseMaterial(a_useMaterial, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1191,23 +1623,35 @@ void cGenericObject::setUseMaterial(const bool a_useMaterial,
     enabled.  Call method \ref setUseMaterial() to enable or disable material
     rendering.
 
-    \param  a_material        The material to apply to this object.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_material          The material to apply to this object.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setMaterial(cMaterialPtr a_material,
-                                 const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // copy material properties
     m_material = a_material;
 
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setMaterial(a_material, a_affectChildren, a_affectComponents);
+        }
+    }
+
     // apply change to children
     if (a_affectChildren)
     {
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setMaterial(a_material, true);
+            (*it)->setMaterial(a_material, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1223,12 +1667,14 @@ void cGenericObject::setMaterial(cMaterialPtr a_material,
     enabled.  Call method \ref setUseMaterial() to enable or disable material
     rendering.
 
-    \param  a_material        The material to apply to this object
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_material          The material to apply to this object
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setMaterial(cMaterial& a_material,
-                                 const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // copy material properties
     if ((m_material == nullptr) || (m_material == s_defaultMaterial))
@@ -1241,13 +1687,23 @@ void cGenericObject::setMaterial(cMaterial& a_material,
         a_material.copyTo(m_material);
     }
 
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setMaterial(a_material, a_affectChildren, a_affectComponents);
+        }
+    }
+
     // apply change to children
     if (a_affectChildren)
     {
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setMaterial(a_material, true);
+            (*it)->setMaterial(a_material, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1258,14 +1714,26 @@ void cGenericObject::setMaterial(cMaterial& a_material,
     This method enables or disables texture-mapping, optionally recursively
     affecting children.
 
-    \param  a_useTexture      If __true__ then texture mapping is used.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_useTexture        If __true__ then texture mapping is used.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setUseTexture(const bool a_useTexture, 
-                                   const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_useTextureMapping = a_useTexture;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setUseTexture(a_useTexture, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1273,7 +1741,7 @@ void cGenericObject::setUseTexture(const bool a_useTexture,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setUseTexture(a_useTexture, true);
+            (*it)->setUseTexture(a_useTexture, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1288,14 +1756,26 @@ void cGenericObject::setUseTexture(const bool a_useTexture,
     the texture that will be rendered _if_ texturing is enabled.  Call
     method \ref setUseTexture() to enable or disable texturing.
 
-    \param  a_texture         The texture to apply to this object.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_texture           The texture to apply to this object.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setTexture(cTexture1dPtr a_texture,
-                                const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_texture = a_texture;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setTexture(a_texture, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1303,7 +1783,7 @@ void cGenericObject::setTexture(cTexture1dPtr a_texture,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setTexture(a_texture, true);
+            (*it)->setTexture(a_texture, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1316,14 +1796,26 @@ void cGenericObject::setTexture(cTexture1dPtr a_texture,
     If \p a_affectChildren is set to __true__ then all children are assigned
     with the shader program.
 
-    \param  a_shaderProgram   Shader program to be assigned to object.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_shaderProgram     Shader program to be assigned to object.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setShaderProgram(cShaderProgramPtr a_shaderProgram,
-                                      const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_shaderProgram = a_shaderProgram;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setShaderProgram(a_shaderProgram, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1331,7 +1823,7 @@ void cGenericObject::setShaderProgram(cShaderProgramPtr a_shaderProgram,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setShaderProgram(a_shaderProgram, true);
+            (*it)->setShaderProgram(a_shaderProgram, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1345,15 +1837,27 @@ void cGenericObject::setShaderProgram(cShaderProgramPtr a_shaderProgram,
     If \p a_affectChildren is set to __true__ then all children are updated
     with the new value.
 
-    \param  a_showBoundaryBox  If __true__ boundary box is displayed.
-    \param  a_affectChildren   If __true__ then children are updated too.
+    \param  a_showBoundaryBox   If __true__ boundary box is displayed.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setShowBoundaryBox(const bool a_showBoundaryBox, 
-                                        const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // update current object
     m_showBoundaryBox = a_showBoundaryBox;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setShowBoundaryBox(a_showBoundaryBox, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1361,7 +1865,7 @@ void cGenericObject::setShowBoundaryBox(const bool a_showBoundaryBox,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setShowBoundaryBox(a_showBoundaryBox, true);
+            (*it)->setShowBoundaryBox(a_showBoundaryBox, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1388,25 +1892,8 @@ void cGenericObject::computeBoundaryBox(const bool a_includeChildren)
     // compute the bounding box of this object
     updateBoundaryBox();
 
-    // if children are not included, then we simply propagate the command
-    // recursively so that all children update their bounding box individually.
-    if (a_includeChildren == false) 
-    {
-        vector<cGenericObject*>::iterator it;
-        for (it = m_children.begin(); it < m_children.end(); it++)
-        {
-            cGenericObject* object = (*it);
-
-            // compute boundary box of child
-            object->computeBoundaryBox(false);
-        }
-
-        return;
-    }
-
-    // compute the bounding box of all my children
+    // compute the bounding box of all components and optionaly children
     cVector3d minBox, maxBox;
-
     if (m_boundaryBoxEmpty)
     {
         minBox.set( C_LARGE, C_LARGE, C_LARGE);
@@ -1418,57 +1905,128 @@ void cGenericObject::computeBoundaryBox(const bool a_includeChildren)
         maxBox = m_boundaryBoxMax;
     }
 
-    bool empty = true;
-    vector<cGenericObject*>::iterator it;
-    for (it = m_children.begin(); it < m_children.end(); it++)
+    bool empty = m_boundaryBoxEmpty;
+
+    // include components
+    if (true)
     {
-        cGenericObject* object = (*it);
-
-        // compute boundary box of child
-        object->computeBoundaryBox(a_includeChildren);
-
-        // if boundary box is not empty, then include update
-        if (!object->getBoundaryBoxEmpty())
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
         {
-            // since child is not empty, parent is no longer empty too.
-            empty = false;
+            cGenericObject* object = (*it);
 
-            // retrieve position and orientation of child.
-            cVector3d pos = object->getLocalPos();
-            cMatrix3d rot = object->getLocalRot();
+            // compute boundary box of child
+            object->computeBoundaryBox(true);
 
-            // compute position of corners of child within parent reference frame
-            double xMin = object->getBoundaryMin().x();
-            double yMin = object->getBoundaryMin().y();
-            double zMin = object->getBoundaryMin().z();
-            double xMax = object->getBoundaryMax().x();
-            double yMax = object->getBoundaryMax().y();
-            double zMax = object->getBoundaryMax().z();
-
-            cVector3d corners[8];
-            corners[0] = pos + rot * cVector3d(xMin, yMin, zMin);
-            corners[1] = pos + rot * cVector3d(xMin, yMin, zMax);
-            corners[2] = pos + rot * cVector3d(xMin, yMax, zMin);
-            corners[3] = pos + rot * cVector3d(xMin, yMax, zMax);
-            corners[4] = pos + rot * cVector3d(xMax, yMin, zMin);
-            corners[5] = pos + rot * cVector3d(xMax, yMin, zMax);
-            corners[6] = pos + rot * cVector3d(xMax, yMax, zMin);
-            corners[7] = pos + rot * cVector3d(xMax, yMax, zMax);
-
-            // update boundary box by taking into account child boundary box
-            for (int i=0; i<8; i++)
+            // if boundary box is not empty, then include update
+            if (!object->getBoundaryBoxEmpty())
             {
-                minBox(0) = cMin(corners[i](0),  m_boundaryBoxMin(0));
-                minBox(1) = cMin(corners[i](1),  m_boundaryBoxMin(1));
-                minBox(2) = cMin(corners[i](2),  m_boundaryBoxMin(2));
-                maxBox(0) = cMin(corners[i](0),  m_boundaryBoxMax(0));
-                maxBox(1) = cMin(corners[i](1),  m_boundaryBoxMax(1));
-                maxBox(2) = cMin(corners[i](2),  m_boundaryBoxMax(2));
+                // since child is not empty, parent is no longer empty too.
+                empty = false;
+
+                // retrieve position and orientation of child.
+                cVector3d pos = object->getLocalPos();
+                cMatrix3d rot = object->getLocalRot();
+
+                // compute position of corners of child within parent reference frame
+                double xMin = object->getBoundaryMin().x();
+                double yMin = object->getBoundaryMin().y();
+                double zMin = object->getBoundaryMin().z();
+                double xMax = object->getBoundaryMax().x();
+                double yMax = object->getBoundaryMax().y();
+                double zMax = object->getBoundaryMax().z();
+
+                cVector3d corners[8];
+                corners[0] = pos + rot * cVector3d(xMin, yMin, zMin);
+                corners[1] = pos + rot * cVector3d(xMin, yMin, zMax);
+                corners[2] = pos + rot * cVector3d(xMin, yMax, zMin);
+                corners[3] = pos + rot * cVector3d(xMin, yMax, zMax);
+                corners[4] = pos + rot * cVector3d(xMax, yMin, zMin);
+                corners[5] = pos + rot * cVector3d(xMax, yMin, zMax);
+                corners[6] = pos + rot * cVector3d(xMax, yMax, zMin);
+                corners[7] = pos + rot * cVector3d(xMax, yMax, zMax);
+
+                // update boundary box by taking into account child boundary box
+                for (int i = 0; i<8; i++)
+                {
+                    minBox(0) = cMin(corners[i](0), minBox(0));
+                    minBox(1) = cMin(corners[i](1), minBox(1));
+                    minBox(2) = cMin(corners[i](2), minBox(2));
+                    maxBox(0) = cMax(corners[i](0), maxBox(0));
+                    maxBox(1) = cMax(corners[i](1), maxBox(1));
+                    maxBox(2) = cMax(corners[i](2), maxBox(2));
+                }
             }
         }
     }
 
-    if (empty && m_boundaryBoxEmpty)
+    // include children
+    if (a_includeChildren)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_children.begin(); it < m_children.end(); it++)
+        {
+            cGenericObject* object = (*it);
+
+            // compute boundary box of child
+            object->computeBoundaryBox(a_includeChildren);
+
+            // if boundary box is not empty, then include update
+            if (!object->getBoundaryBoxEmpty())
+            {
+                // since child is not empty, parent is no longer empty too.
+                empty = false;
+
+                // retrieve position and orientation of child.
+                cVector3d pos = object->getLocalPos();
+                cMatrix3d rot = object->getLocalRot();
+
+                // compute position of corners of child within parent reference frame
+                double xMin = object->getBoundaryMin().x();
+                double yMin = object->getBoundaryMin().y();
+                double zMin = object->getBoundaryMin().z();
+                double xMax = object->getBoundaryMax().x();
+                double yMax = object->getBoundaryMax().y();
+                double zMax = object->getBoundaryMax().z();
+
+                cVector3d corners[8];
+                corners[0] = pos + rot * cVector3d(xMin, yMin, zMin);
+                corners[1] = pos + rot * cVector3d(xMin, yMin, zMax);
+                corners[2] = pos + rot * cVector3d(xMin, yMax, zMin);
+                corners[3] = pos + rot * cVector3d(xMin, yMax, zMax);
+                corners[4] = pos + rot * cVector3d(xMax, yMin, zMin);
+                corners[5] = pos + rot * cVector3d(xMax, yMin, zMax);
+                corners[6] = pos + rot * cVector3d(xMax, yMax, zMin);
+                corners[7] = pos + rot * cVector3d(xMax, yMax, zMax);
+
+                // update boundary box by taking into account child boundary box
+                for (int i=0; i<8; i++)
+                {
+                    minBox(0) = cMin(corners[i](0), minBox(0));
+                    minBox(1) = cMin(corners[i](1), minBox(1));
+                    minBox(2) = cMin(corners[i](2), minBox(2));
+                    maxBox(0) = cMax(corners[i](0), maxBox(0));
+                    maxBox(1) = cMax(corners[i](1), maxBox(1));
+                    maxBox(2) = cMax(corners[i](2), maxBox(2));
+                }
+            }
+        }
+    }
+    else
+    {
+        // update boundary box of children
+        vector<cGenericObject*>::iterator it;
+        for (it = m_children.begin(); it < m_children.end(); it++)
+        {
+            cGenericObject* object = (*it);
+
+            // compute boundary box of child
+            object->computeBoundaryBox(a_includeChildren);
+        }
+
+    }
+
+    if (empty)
     {
         m_boundaryBoxMin.zero();
         m_boundaryBoxMax.zero();
@@ -1492,15 +2050,27 @@ void cGenericObject::computeBoundaryBox(const bool a_includeChildren)
     If argument \p a_affectChildren is set to __true__ then all children are 
     updated with the new value.
 
-    \param  a_showFrame       If __true__ then frame is displayed.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_showFrame         If __true__ then frame is displayed.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setShowFrame(const bool a_showFrame, 
-                                  const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // update current object
     m_showFrame = a_showFrame;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setShowFrame(a_showFrame, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1508,7 +2078,7 @@ void cGenericObject::setShowFrame(const bool a_showFrame,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setShowFrame(a_showFrame, true);
+            (*it)->setShowFrame(a_showFrame, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1522,16 +2092,28 @@ void cGenericObject::setShowFrame(const bool a_showFrame,
     If argument \p a_affectChildren is set to __true__ then all children are 
     updated with the new value.
 
-    \param  a_size            Length of graphical representation of frame.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_size              Length of graphical representation of frame.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setFrameSize(const double a_size, 
-                                  const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // sanity check
     m_frameSize = fabs(a_size);
     m_frameThicknessScale = 1.7 * m_frameSize;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setFrameSize(a_size, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1539,7 +2121,7 @@ void cGenericObject::setFrameSize(const double a_size,
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setFrameSize(a_size, true);
+            (*it)->setFrameSize(a_size, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1554,10 +2136,12 @@ void cGenericObject::setFrameSize(const double a_size,
     default for a new object, in fact), it just means that no collisions 
     will be found.
 
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cGenericObject::deleteCollisionDetector(const bool a_affectChildren)
+void cGenericObject::deleteCollisionDetector(const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // delete current collision detector
     if (m_collisionDetector)
@@ -1566,13 +2150,23 @@ void cGenericObject::deleteCollisionDetector(const bool a_affectChildren)
         m_collisionDetector = NULL;
     }
 
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->deleteCollisionDetector(a_affectChildren, a_affectComponents);
+        }
+    }
+
     // apply change to children
     if (a_affectChildren)
     {
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->deleteCollisionDetector(true);
+            (*it)->deleteCollisionDetector(a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1679,6 +2273,25 @@ bool cGenericObject::computeCollisionDetection(const cVector3d& a_segmentPointA,
 
 
     ///////////////////////////////////////////////////////////////////////////
+    // CHECK COMPONENTS
+    ///////////////////////////////////////////////////////////////////////////
+
+    // check for collisions with all components of this object
+    for (unsigned int i = 0; i<m_components.size(); i++)
+    {
+        // call this child's collision detection function to see if it (or any
+        // of its descendants) are intersected by the segment
+        bool hitComponent = m_components.at(i)->computeCollisionDetection(localSegmentPointA,
+            localSegmentPointB,
+            a_recorder,
+            a_settings);
+
+        // update if a hit occurred
+        hit = hit | hitComponent;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     // CHECK CHILDREN
     ///////////////////////////////////////////////////////////////////////////
 
@@ -1715,13 +2328,25 @@ bool cGenericObject::computeCollisionDetection(const cVector3d& a_segmentPointA,
     updated with the new value.
 
     \param  a_showCollisionDetector  If __true__ then display collision detector graphically.
-    \param  a_affectChildren         If __true__ then children are updated too.
+    \param  a_affectChildren         If __true__, then children are updated too.
+    \param  a_affectComponents       If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setShowCollisionDetector(const bool a_showCollisionDetector, 
-                                              const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     m_showCollisionDetector = a_showCollisionDetector;
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setShowCollisionDetector(a_showCollisionDetector, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1729,7 +2354,7 @@ void cGenericObject::setShowCollisionDetector(const bool a_showCollisionDetector
         vector<cGenericObject*>::iterator it;
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
-            (*it)->setShowCollisionDetector(a_showCollisionDetector, true);
+            (*it)->setShowCollisionDetector(a_showCollisionDetector, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -1743,20 +2368,35 @@ void cGenericObject::setShowCollisionDetector(const bool a_showCollisionDetector
     If argument \p a_affectChildren is set to __true__ then all children are
     updated with the new values.
 
-    \param  a_color           Color used to render collision detector.
-    \param  a_displayDepth    Indicated which depth of collision tree needs to be displayed
-                              (see cGenericCollision).
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_color             Color used to render collision detector.
+    \param  a_displayDepth      Indicated which depth of collision tree needs to be displayed
+                                (see cGenericCollision).
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cGenericObject::setCollisionDetectorProperties(unsigned int a_displayDepth,
-                                                    cColorf& a_color, 
-                                                    const bool a_affectChildren)
+    cColorf& a_color, 
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     if (m_collisionDetector != NULL)
     {
         m_collisionDetector->m_color = a_color;
         m_collisionDetector->setDisplayDepth(a_displayDepth);
+    }
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->setCollisionDetectorProperties(a_displayDepth,
+                a_color,
+                a_affectChildren,
+                a_affectComponents);
+        }
     }
 
     // apply change to children
@@ -1767,7 +2407,8 @@ void cGenericObject::setCollisionDetectorProperties(unsigned int a_displayDepth,
         {
             (*it)->setCollisionDetectorProperties(a_displayDepth,
                                                   a_color, 
-                                                  true);
+                                                  a_affectChildren,
+                                                  a_affectComponents);
         }
     }
 }
@@ -1776,10 +2417,10 @@ void cGenericObject::setCollisionDetectorProperties(unsigned int a_displayDepth,
 //==============================================================================
 /*!
     This method adds an object to the scene graph below this object. \n
-    Note that an object can only be a child of \b one single object, unless 
-    )ghosting_ is enabled.
+    Note that an object can only be a child of one single object, unless 
+    _ghosting_ is enabled.
 
-    \param  a_object  Object to be added to child list.
+    \param  a_object  Object to be added to children list.
 
     \return __true__ if operation succeeded.
 */
@@ -1789,7 +2430,7 @@ bool cGenericObject::addChild(cGenericObject* a_object)
     // sanity check
     if ((a_object == NULL) || (a_object == this)) { return (false); }
 
-    // the object does not have any parent yet, so we can add it as a child
+    // if the object does not have any parent yet, we can add it as a child
     // to current object.
     if (a_object->m_parent == NULL)
     {
@@ -1814,9 +2455,9 @@ bool cGenericObject::addChild(cGenericObject* a_object)
 //==============================================================================
 /*!
     This method removes an object from the list of children, without deleting the
-    child object from memory. \n
+    object from memory. \n
 
-    This method assigns the child object's parent point to null, so
+    This method assigns the child object's parent point to __null__, so
     if you're moving an object around in your scene graph, make sure you
     call this function _before_ you add the child to another node in
     the scene graph.
@@ -1837,10 +2478,10 @@ bool cGenericObject::removeChild(cGenericObject* a_object)
     {
         if ((*it) == a_object)
         {
-            // he doesn't have a parent any more
+            // reset parent
             a_object->m_parent = NULL;
 
-            // remove this object from my list of children
+            // remove this object from the list of children
             m_children.erase(it);
 
             // return success
@@ -1864,7 +2505,10 @@ bool cGenericObject::removeFromGraph()
 {
     if (m_parent)
     {
-        return (m_parent->removeChild(this));
+        bool statusChild = m_parent->removeChild(this);
+        bool statusComponent = m_parent->removeChild(this);
+
+        return (statusChild | statusComponent);
     }
     else 
     {
@@ -1875,13 +2519,37 @@ bool cGenericObject::removeFromGraph()
 
 //==============================================================================
 /*!
-    This method removes an object from its list of children, and deletes the
-    child object from memory.
+    This method returns the root object of the scenegraph. If this object has
+    no parent, then a pointer to this current object is returned.
 
-    \param  a_object  Object to be removed from my list of children 
+    \return  Pointer to root object of scenegraph.
+*/
+//==============================================================================
+cGenericObject* cGenericObject::getRootObject()
+{
+    cGenericObject* object = this;
+    cGenericObject* parent = object->getParent();
+    
+    while (parent != NULL)
+    {
+        object = parent;
+        parent = object->getParent();
+    }
+
+    return (object);
+}
+
+
+//==============================================================================
+/*!
+    This method removes an object from its list of children, and deletes the
+    object from memory.
+
+    \param  a_object  Object to be removed from the list of children 
                       and deleted.
 
-    \return __true__ if the specified object was found in the child list.
+    \return __true__ if the specified object was found in the child list,
+            __false__ otherwise.
 */
 //==============================================================================
 bool cGenericObject::deleteChild(cGenericObject* a_object)
@@ -1905,13 +2573,13 @@ bool cGenericObject::deleteChild(cGenericObject* a_object)
 
 //==============================================================================
 /*!
-    This method clears all objects from my list of children, without deleting
+    This method clears all objects from its list of children, without deleting
     them.
 */
 //==============================================================================
 void cGenericObject::clearAllChildren()
 {
-    // clear parent member for all children
+    // clear parent member of all children
     vector<cGenericObject*>::iterator it;
     for (it = m_children.begin(); it < m_children.end(); it++)
     {
@@ -1925,7 +2593,7 @@ void cGenericObject::clearAllChildren()
 
 //==============================================================================
 /*!
-    This method deletes and clear all objects the list of children.
+    This method deletes and clears all objects from the list of children.
 */
 //==============================================================================
 void cGenericObject::deleteAllChildren()
@@ -1935,10 +2603,10 @@ void cGenericObject::deleteAllChildren()
     for (it = m_children.begin(); it < m_children.end(); it++)
     {
         cGenericObject* nextObject = (*it);
-        delete (nextObject);
+        delete nextObject;
     }
 
-    // clear my list of children
+    // clear list of children
     m_children.clear();
 }
 
@@ -1964,7 +2632,146 @@ unsigned int cGenericObject::getNumDescendants(bool a_includeCurrentObject)
         numDescendants += (*it)->getNumDescendants(true);
     }
 
+    // return result
     return (numDescendants);
+}
+
+
+//==============================================================================
+/*!
+    This method adds an existing object to the list of components.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cGenericObject::addComponent(cGenericObject* a_component)
+{
+    // sanity check
+    if (a_component == NULL) { return (false); }
+    if (a_component->getParent() != NULL) { return (false); }
+
+    // add component to list
+    m_components.push_back(a_component);
+
+    // set parent and owner
+    a_component->setParent(this);
+    a_component->setOwner(this);
+
+    // return success
+    return (true);
+}
+
+
+//==============================================================================
+/*!
+    This method removes an object from the list of components, without deleting the
+    object from memory. \n
+
+    This method assigns the object's parent point to __NULL__, so
+    if you're moving an object around in your scene graph, make sure you
+    call this function __before__ you add the child to another node in
+    the scene graph.
+
+    \param  a_object  Object to be removed from the list of components.
+
+    \return __true__ if the specified object was found on the list of components,
+            __false__ otherwise.
+*/
+//==============================================================================
+bool cGenericObject::removeComponent(cGenericObject* a_object)
+{
+    // sanity check
+    if (a_object == NULL) { return (false); }
+
+    vector<cGenericObject*>::iterator it;
+    for (it = m_components.begin(); it < m_components.end(); it++)
+    {
+        if ((*it) == a_object)
+        {
+            // reset parent
+            a_object->m_parent = NULL;
+
+            // remove this object from the list of components
+            m_components.erase(it);
+
+            // return success
+            return (true);
+        }
+    }
+
+    // operation failed
+    return (false);
+}
+
+
+//==============================================================================
+/*!
+    This method removes an object from its list of components, and deletes the
+    object from memory.
+
+    \param  a_object  Object to be removed from the list of components 
+                      and deleted.
+
+    \return __true__ if the specified object was found in the component list,
+            __false__ otherwise.
+*/
+//==============================================================================
+bool cGenericObject::deleteComponent(cGenericObject *a_object)
+{
+    // sanity check
+    if (a_object == NULL) { return (false); }
+
+    // remove object from list
+    bool result = removeComponent(a_object);
+
+    // if operation succeeds, delete the object
+    if (result)
+    {
+        delete (a_object);
+    }
+
+    // return result
+    return result;
+}
+
+
+//==============================================================================
+/*!
+    This method clears all objects from its list of components, without deleting
+    them.
+*/
+//==============================================================================
+void cGenericObject::clearAllComponents()
+{
+    // clear parent member for all components
+    vector<cGenericObject*>::iterator it;
+    for (it = m_components.begin(); it < m_components.end(); it++)
+    {
+        (*it)->m_parent = NULL;
+    }
+
+    // clear component list
+    m_components.clear();
+}
+
+
+//==============================================================================
+/*!
+    This method deletes and clears all objects from the list of components.
+*/
+//==============================================================================
+void cGenericObject::deleteAllComponents()
+{
+    // delete all components
+    vector<cGenericObject*>::iterator it;
+    for (it = m_components.begin(); it < m_components.end(); it++)
+    {
+        cGenericObject* nextObject = (*it);
+        delete nextObject;
+    }
+
+    // clear list of components
+    m_components.clear();
 }
 
 
@@ -1973,15 +2780,28 @@ unsigned int cGenericObject::getNumDescendants(bool a_includeCurrentObject)
     This method performs a uniform scale on the object, optionally including 
     children.
 
-    \param  a_scaleFactor     Scale factor.
-    \param  a_affectChildren  If __true__ then children are updated too.
+    \param  a_scaleFactor       Scale factor.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cGenericObject::scale(const double& a_scaleFactor, 
-                           const bool a_affectChildren)
+void cGenericObject::scale(const double& a_scaleFactor,
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
     // scale object
     scaleObject(a_scaleFactor);
+
+    // apply change to components
+    if (a_affectComponents)
+    {
+        vector<cGenericObject*>::iterator it;
+        for (it = m_components.begin(); it < m_components.end(); it++)
+        {
+            (*it)->m_localPos.mul(a_scaleFactor);
+            (*it)->scale(a_scaleFactor, a_affectChildren, a_affectComponents);
+        }
+    }
 
     // apply change to children
     if (a_affectChildren)
@@ -1990,7 +2810,7 @@ void cGenericObject::scale(const double& a_scaleFactor,
         for (it = m_children.begin(); it < m_children.end(); it++)
         {
             (*it)->m_localPos.mul(a_scaleFactor);
-            (*it)->scale(a_scaleFactor, true);
+            (*it)->scale(a_scaleFactor, a_affectChildren, a_affectComponents);
         }
     }
 }
@@ -2171,7 +2991,7 @@ void cGenericObject::renderSceneGraph(cRenderOptions& a_options)
         if(a_options.m_markForUpdate)
         {
             // invalidate display list 
-            markForUpdate(false);
+            markForUpdate(false, false);
 
             // invalidate texture
             if (m_texture != nullptr)
@@ -2377,6 +3197,12 @@ void cGenericObject::renderSceneGraph(cRenderOptions& a_options)
         }
     }
 
+    // render components
+    for (unsigned int i = 0; i<m_components.size(); i++)
+    {
+        m_components[i]->renderSceneGraph(a_options);
+    }
+
     // render children
     for (unsigned int i=0; i<m_children.size(); i++)
     {
@@ -2500,8 +3326,18 @@ cVector3d cGenericObject::computeInteractions(const cVector3d& a_toolPos,
         }
     }
 
-    // descend through the children
+    // descend through the components
     vector<cGenericObject*>::iterator it;
+    for (it = m_components.begin(); it < m_components.end(); it++)
+    {
+        cVector3d force = (*it)->computeInteractions(toolPosLocal,
+            toolVelLocal,
+            a_IDN,
+            a_interactions);
+        localForce.add(force);
+    }
+
+    // descend through the children
     for (it = m_children.begin(); it < m_children.end(); it++)
     {
         cVector3d force = (*it)->computeInteractions(toolPosLocal,

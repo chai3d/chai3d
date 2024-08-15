@@ -1,3 +1,5 @@
 <map id="chai3d::cEffectSurface" name="chai3d::cEffectSurface">
-<area shape="rect" id="node2" href="$classchai3d_1_1c_generic_effect.html" title="This class implements a base class for haptic effects. " alt="" coords="5,5,160,32"/>
+<area shape="rect" id="Node000001" title="This class implements a haptic surface effect." alt="" coords="5,79,160,104"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_generic_effect.html" title="This class implements a base class for haptic effects." alt="" coords="5,5,160,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,44,85,79,80,79,80,44"/>
 </map>

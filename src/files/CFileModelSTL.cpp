@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2097 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -128,8 +128,8 @@ bool cLoadFileSTL(cMultiMesh* a_object, const std::string& a_filename)
     }
 
     // check if the length of the file correspond to the number of triangles found
-    double num = (double)(length - sizeof(cHeaderSTL)) / 50.0;
-    if ((num != floor(num)) && ((int)num != numTriangles))
+    double num = static_cast<double>(length - sizeof(cHeaderSTL)) / 50.0;
+    if ((num != floor(num)) && (static_cast<unsigned int>(num) != numTriangles))
     {
         file.close();
         return (C_ERROR);

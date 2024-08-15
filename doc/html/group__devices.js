@@ -1,6 +1,6 @@
 var group__devices =
 [
-    [ "cDeltaDevice", "classchai3d_1_1c_delta_device.html", [
+    [ "chai3d::cDeltaDevice", "classchai3d_1_1c_delta_device.html", [
       [ "cDeltaDevice", "classchai3d_1_1c_delta_device.html#a35b516192d6e8ce7ae33107375f4b5aa", null ],
       [ "~cDeltaDevice", "classchai3d_1_1c_delta_device.html#a8583501b68e25874a331b0f378b2e5e1", null ],
       [ "open", "classchai3d_1_1c_delta_device.html#a0f8093324461eb73be166dafb5fdad5a", null ],
@@ -13,10 +13,19 @@ var group__devices =
       [ "getGripperAngleRad", "classchai3d_1_1c_delta_device.html#a63f82815f45e337d9d7fa1a72787335a", null ],
       [ "getUserSwitches", "classchai3d_1_1c_delta_device.html#a33b1239a0ca6f03e3b178985f891cdaa", null ],
       [ "setForceAndTorqueAndGripperForce", "classchai3d_1_1c_delta_device.html#a4bebab33493c14cba07a5b8fcd30e31b", null ],
-      [ "getDeviceType", "classchai3d_1_1c_delta_device.html#a374455078138dc9e3f65f18ea8f539f1", null ],
       [ "enableForces", "classchai3d_1_1c_delta_device.html#ab07c0e2688bd5c566eac77b7c8117971", null ],
+      [ "getDeviceType", "classchai3d_1_1c_delta_device.html#a374455078138dc9e3f65f18ea8f539f1", null ],
       [ "setDeviceAngleDeg", "classchai3d_1_1c_delta_device.html#ae0af472098fb3323ac09f9429297a326", null ],
       [ "setVibration", "classchai3d_1_1c_delta_device.html#a9719efa46b3ac0c3e4b487c8c2b787ee", null ],
+      [ "presetEnc", "classchai3d_1_1c_delta_device.html#a31726845a2ccd08a2f0f6939a48ec625", null ],
+      [ "presetEncAll", "classchai3d_1_1c_delta_device.html#a10cf8a36b9eb3ffc9d731adedffaed89", null ],
+      [ "getEncPos", "classchai3d_1_1c_delta_device.html#a37c196d6eabb4ee47f94492aaa284beb", null ],
+      [ "getEncVel", "classchai3d_1_1c_delta_device.html#a813eb4d624302df8eef48d378f76d3a7", null ],
+      [ "setMot", "classchai3d_1_1c_delta_device.html#a9f3538f5dd139461d07296c380b90283", null ],
+      [ "getJacobianDelta", "classchai3d_1_1c_delta_device.html#af781a02d1a624c3419870dfbd6e4001f", null ],
+      [ "getJacobianWrist", "classchai3d_1_1c_delta_device.html#aaed582b71226640ea13d97e197f3b822", null ],
+      [ "setJointTorques", "classchai3d_1_1c_delta_device.html#a6e3f5718d6fa34dd42fddaeff571a5a2", null ],
+      [ "getJointTorquesGravityCompensation", "classchai3d_1_1c_delta_device.html#accbd914755b020dbcc98f2a3b288986c", null ],
       [ "m_deviceID", "classchai3d_1_1c_delta_device.html#a511832e8f2109075007eb2042b2188c6", null ],
       [ "m_deviceType", "classchai3d_1_1c_delta_device.html#a370218c78a3437de4261b9783e04107d", null ],
       [ "m_userSwitchCount", "classchai3d_1_1c_delta_device.html#a2b59b09ed1f5ed64340c41f95d1cda04", null ],
@@ -26,7 +35,7 @@ var group__devices =
       [ "m_external", "classchai3d_1_1c_delta_device.html#a2d55da4d05300a3164e45dc3e3c58a03", null ],
       [ "m_posWorkspaceOffset", "classchai3d_1_1c_delta_device.html#a81622c69902a441ba73c89427792a144", null ]
     ] ],
-    [ "cGenericDevice", "classchai3d_1_1c_generic_device.html", [
+    [ "chai3d::cGenericDevice", "classchai3d_1_1c_generic_device.html", [
       [ "cGenericDevice", "classchai3d_1_1c_generic_device.html#a0a0ac25c3f5e48522aa07d5216bec3f5", null ],
       [ "~cGenericDevice", "classchai3d_1_1c_generic_device.html#af1d60801b2b9a3aa3ea288b2efe0644e", null ],
       [ "open", "classchai3d_1_1c_generic_device.html#a2f8edb06944398dbe8666b55e378760f", null ],
@@ -37,7 +46,7 @@ var group__devices =
       [ "m_deviceReady", "classchai3d_1_1c_generic_device.html#a3ba45fad6e1b63f8232eb9a85615d98c", null ],
       [ "m_deviceNumber", "classchai3d_1_1c_generic_device.html#aa09e1b05f9e8cd820fb16d2512d96bb4", null ]
     ] ],
-    [ "cHapticDeviceInfo", "structchai3d_1_1c_haptic_device_info.html", [
+    [ "chai3d::cHapticDeviceInfo", "structchai3d_1_1c_haptic_device_info.html", [
       [ "m_model", "structchai3d_1_1c_haptic_device_info.html#a41317c7fe5c36575201fd318c6a9a44a", null ],
       [ "m_modelName", "structchai3d_1_1c_haptic_device_info.html#ac2793bf5501a492ed0ae6a4509ed9a3e", null ],
       [ "m_manufacturerName", "structchai3d_1_1c_haptic_device_info.html#a9caf5cce98dd6509d393632801bb0989", null ],
@@ -61,7 +70,7 @@ var group__devices =
       [ "m_leftHand", "structchai3d_1_1c_haptic_device_info.html#a8391d0388ec9f0ed555663d0676d09eb", null ],
       [ "m_rightHand", "structchai3d_1_1c_haptic_device_info.html#a06d6c520ad8201c3d7047004a1a54478", null ]
     ] ],
-    [ "cGenericHapticDevice", "classchai3d_1_1c_generic_haptic_device.html", [
+    [ "chai3d::cGenericHapticDevice", "classchai3d_1_1c_generic_haptic_device.html", [
       [ "cGenericHapticDevice", "classchai3d_1_1c_generic_haptic_device.html#a50935f712fdc62f8c2d2ddc4be322ed7", null ],
       [ "~cGenericHapticDevice", "classchai3d_1_1c_generic_haptic_device.html#a18f9498dca7c2529509e0abc7725fe2f", null ],
       [ "open", "classchai3d_1_1c_generic_haptic_device.html#ad17b036ef6401fe753bdf6664a435eca", null ],
@@ -83,10 +92,11 @@ var group__devices =
       [ "getUserSwitches", "classchai3d_1_1c_generic_haptic_device.html#af713f601e048e8161ffb55a47373c55b", null ],
       [ "getSpecifications", "classchai3d_1_1c_generic_haptic_device.html#a9fbeedc4b791b7d1b6a011a18cbfa462", null ],
       [ "setEnableGripperUserSwitch", "classchai3d_1_1c_generic_haptic_device.html#ad0c0f9116e543034e1b639919533e977", null ],
-      [ "getEnableGripperUserSwitch", "classchai3d_1_1c_generic_haptic_device.html#a117b3b7589b0fe035b9e55632bad89cf", null ],
+      [ "getEnableGripperUserSwitch", "classchai3d_1_1c_generic_haptic_device.html#aecb5676b21a057ef9abd38d7ba5216ab", null ],
       [ "setForce", "classchai3d_1_1c_generic_haptic_device.html#a13b461852d9cba445f082b9a501872ac", null ],
       [ "setForceAndTorque", "classchai3d_1_1c_generic_haptic_device.html#aeaa8e4f6bed1ae3a169199e62bf457c2", null ],
       [ "setForceAndTorqueAndGripperForce", "classchai3d_1_1c_generic_haptic_device.html#a40924753fd216dc11dab45ba2a26c9b0", null ],
+      [ "enableForces", "classchai3d_1_1c_generic_haptic_device.html#ad654742b0c0ef43f3c2bdb49516faf01", null ],
       [ "estimateLinearVelocity", "classchai3d_1_1c_generic_haptic_device.html#a45aeb65232808b5c75c2b360f8ca3dfe", null ],
       [ "estimateAngularVelocity", "classchai3d_1_1c_generic_haptic_device.html#a7401bb308eed519116ba6b19e7adae07", null ],
       [ "estimateGripperVelocity", "classchai3d_1_1c_generic_haptic_device.html#ac7de0441a1478ece0b82c86cbe72f2a5", null ],
@@ -123,7 +133,7 @@ var group__devices =
       [ "m_virtualGripperAngularVelocity", "classchai3d_1_1c_generic_haptic_device.html#ae3f1fc4dc34c3ec7c3c8b446e497da48", null ],
       [ "m_virtualGripperClock", "classchai3d_1_1c_generic_haptic_device.html#a521fc3551a537c084d6276d3ca19e239", null ]
     ] ],
-    [ "cHapticDeviceHandler", "classchai3d_1_1c_haptic_device_handler.html", [
+    [ "chai3d::cHapticDeviceHandler", "classchai3d_1_1c_haptic_device_handler.html", [
       [ "cHapticDeviceHandler", "classchai3d_1_1c_haptic_device_handler.html#a38d81669a84a52aa3fa277564f85172f", null ],
       [ "~cHapticDeviceHandler", "classchai3d_1_1c_haptic_device_handler.html#ab95d687d764ad60a76817646e8ac09e3", null ],
       [ "getNumDevices", "classchai3d_1_1c_haptic_device_handler.html#a437a1d09b56ffdfccb30d761e01f30da", null ],
@@ -131,7 +141,7 @@ var group__devices =
       [ "getDeviceSpecifications", "classchai3d_1_1c_haptic_device_handler.html#a4f3fdc803d50860976cb9fcee82b32f2", null ],
       [ "getDevice", "classchai3d_1_1c_haptic_device_handler.html#aae5099b986c25b2f9afb5c2d2908e586", null ]
     ] ],
-    [ "cLeapDevice", "classchai3d_1_1c_leap_device.html", [
+    [ "chai3d::cLeapDevice", "classchai3d_1_1c_leap_device.html", [
       [ "cLeapDevice", "classchai3d_1_1c_leap_device.html#a4eb81bc868e83a45552fdae12bf86542", null ],
       [ "~cLeapDevice", "classchai3d_1_1c_leap_device.html#a62344f1220f98eda3f3baea464c67d4c", null ],
       [ "open", "classchai3d_1_1c_leap_device.html#a67c814c77a6849bc3fbd9f7704c5fa0e", null ],
@@ -143,7 +153,7 @@ var group__devices =
       [ "getUserSwitches", "classchai3d_1_1c_leap_device.html#a830a2877c94d9ce22ccb3a6d3aeb4d7a", null ],
       [ "updateData", "classchai3d_1_1c_leap_device.html#a84e54366148764548c76fcd928862479", null ]
     ] ],
-    [ "cMyCustomDevice", "classchai3d_1_1c_my_custom_device.html", [
+    [ "chai3d::cMyCustomDevice", "classchai3d_1_1c_my_custom_device.html", [
       [ "cMyCustomDevice", "classchai3d_1_1c_my_custom_device.html#a73b231f33a74d5f86c6de4d1ab2799c2", null ],
       [ "~cMyCustomDevice", "classchai3d_1_1c_my_custom_device.html#a65688245c689e6978c23884f78f2ffee", null ],
       [ "open", "classchai3d_1_1c_my_custom_device.html#ac28951c05e134416df9dd0c9a96fbae2", null ],
@@ -156,7 +166,7 @@ var group__devices =
       [ "setForceAndTorqueAndGripperForce", "classchai3d_1_1c_my_custom_device.html#a6cfa2757c758d3f45db0479098d1682e", null ],
       [ "m_MyVariable", "classchai3d_1_1c_my_custom_device.html#aa7a4cef6563a8e3ad9d20edd3ae3b205", null ]
     ] ],
-    [ "cPhantomDevice", "classchai3d_1_1c_phantom_device.html", [
+    [ "chai3d::cPhantomDevice", "classchai3d_1_1c_phantom_device.html", [
       [ "cPhantomDevice", "classchai3d_1_1c_phantom_device.html#aa1470a805c3c3a3d3666404f1b5bbea1", null ],
       [ "~cPhantomDevice", "classchai3d_1_1c_phantom_device.html#aaf8463b65937934253cf5e60fd670236", null ],
       [ "open", "classchai3d_1_1c_phantom_device.html#a10247a87c774d5fd87e57c7bb068d357", null ],
@@ -168,7 +178,7 @@ var group__devices =
       [ "setForceAndTorqueAndGripperForce", "classchai3d_1_1c_phantom_device.html#a515b6e849e0158cf831a6f745ecb38c1", null ],
       [ "m_deviceID", "classchai3d_1_1c_phantom_device.html#afa4632356c6cbcac40dc756a25511f31", null ]
     ] ],
-    [ "cSixenseDevice", "classchai3d_1_1c_sixense_device.html", [
+    [ "chai3d::cSixenseDevice", "classchai3d_1_1c_sixense_device.html", [
       [ "cSixenseDevice", "classchai3d_1_1c_sixense_device.html#a937d2a3159ffdb4bcc60f32bad196354", null ],
       [ "~cSixenseDevice", "classchai3d_1_1c_sixense_device.html#ac7ade3e7feecfea9bd3e0515fbd04ae2", null ],
       [ "open", "classchai3d_1_1c_sixense_device.html#aab8de58c32f9bc8afc32a6f601c13dbb", null ],
@@ -179,5 +189,88 @@ var group__devices =
       [ "getGripperAngleRad", "classchai3d_1_1c_sixense_device.html#a7da06c37b901dd728f20eeb63a8bdafd", null ],
       [ "getUserSwitches", "classchai3d_1_1c_sixense_device.html#a820047bd99723c78d85ad3551476bbcd", null ],
       [ "updateData", "classchai3d_1_1c_sixense_device.html#a0a0f08f7186e034f86547d8e384efffc", null ]
+    ] ],
+    [ "chai3d::cXTouchController", "classchai3d_1_1c_x_touch_controller.html", [
+      [ "cXTouchController", "classchai3d_1_1c_x_touch_controller.html#a6429bdc33746757cff10ee5f3d350bf9", null ],
+      [ "~cXTouchController", "classchai3d_1_1c_x_touch_controller.html#a21bc39f9d863de4249cf78f5de04a685", null ],
+      [ "open", "classchai3d_1_1c_x_touch_controller.html#a0a19a0d8d15c892093e3a355b4aced4a", null ],
+      [ "close", "classchai3d_1_1c_x_touch_controller.html#acd3c9c4eecb0adcfbf76a1ebac75630c", null ],
+      [ "getModel", "classchai3d_1_1c_x_touch_controller.html#a102d5043db246e56d2941cf5abf256a7", null ],
+      [ "setLayerA", "classchai3d_1_1c_x_touch_controller.html#a74c161b72291b58cc8e7b43d81063ce5", null ],
+      [ "setLayerB", "classchai3d_1_1c_x_touch_controller.html#a62930439f517d64f397f13d9d1b0cf72", null ],
+      [ "setLayer", "classchai3d_1_1c_x_touch_controller.html#acdaea6c8d3b487afd2914735333debd7", null ],
+      [ "initialize", "classchai3d_1_1c_x_touch_controller.html#a140a0f6ad7161d41376c3c7761fbe255", null ],
+      [ "getNumSliders", "classchai3d_1_1c_x_touch_controller.html#afcf069fb1b13e41824dbe06a4db503a9", null ],
+      [ "getSliderValue", "classchai3d_1_1c_x_touch_controller.html#af859b5a95627cfd99277464346f4ddc1", null ],
+      [ "setSliderValue", "classchai3d_1_1c_x_touch_controller.html#a69aef86a8604c759fa07c75dd2ef0827", null ],
+      [ "setAllSlidersValue", "classchai3d_1_1c_x_touch_controller.html#aec06303434ee420a98934b766cb6dcf4", null ],
+      [ "getNumDials", "classchai3d_1_1c_x_touch_controller.html#a34104170a00e4368ec6bf9eefcdc2c4e", null ],
+      [ "getDialValue", "classchai3d_1_1c_x_touch_controller.html#ae6d9b607c9a58f2905d0c7c38c34e5db", null ],
+      [ "getDialRangeMin", "classchai3d_1_1c_x_touch_controller.html#a8b77f55c2662c9e3809df6d78f54e75e", null ],
+      [ "getDialRangeMax", "classchai3d_1_1c_x_touch_controller.html#aa00786c63e47cee8de95926a1ca28104", null ],
+      [ "setDialRange", "classchai3d_1_1c_x_touch_controller.html#a8d36d3f2fc2c95fadb74cbbcf772edf0", null ],
+      [ "setDialValue", "classchai3d_1_1c_x_touch_controller.html#aac27a0d8377f16a34c0b7dc7d5cd11dd", null ],
+      [ "setDialMode", "classchai3d_1_1c_x_touch_controller.html#a1aae5d0a409915831469e8cd8dcde3b1", null ],
+      [ "setDialModeSingle", "classchai3d_1_1c_x_touch_controller.html#a8ae341eb02fae78782b85ca790cb3caa", null ],
+      [ "setDialModePan", "classchai3d_1_1c_x_touch_controller.html#a03628746f214a6c99a6ee1d09e02273d", null ],
+      [ "setDialModeFan", "classchai3d_1_1c_x_touch_controller.html#a31e6daf06b7d23a01d126cb24c0fe67d", null ],
+      [ "setDialModeSpread", "classchai3d_1_1c_x_touch_controller.html#a3310eca57135f649814e06e47f8ddbbb", null ],
+      [ "setDialModeTrim", "classchai3d_1_1c_x_touch_controller.html#a97414a1b4e6395296d9fd0923f0fbdd6", null ],
+      [ "setDialLightOn", "classchai3d_1_1c_x_touch_controller.html#a8df4b83e909b031e68d895427ec2684a", null ],
+      [ "setDialLightOff", "classchai3d_1_1c_x_touch_controller.html#a12a0da780e3b2df1bd39cea09d52bc8f", null ],
+      [ "setDialLightBlinking", "classchai3d_1_1c_x_touch_controller.html#a6483c85d948fa2ad1f098b47dfcacd0c", null ],
+      [ "setAllDialsValue", "classchai3d_1_1c_x_touch_controller.html#a4b79df2def8ed6e4dc0078a241954a50", null ],
+      [ "setAllDialsRange", "classchai3d_1_1c_x_touch_controller.html#ad142130d87fbdc275c1cb47a9932c0a4", null ],
+      [ "setAllDialsMode", "classchai3d_1_1c_x_touch_controller.html#aebed2a0ac312d1b908c9807a1be63c1f", null ],
+      [ "setAllDialsModeSingle", "classchai3d_1_1c_x_touch_controller.html#a3aee4a2fb8d03f7dd823e4be8c4ecb2f", null ],
+      [ "setAllDialsModePan", "classchai3d_1_1c_x_touch_controller.html#a73a57277361538eeb172fc56497b3656", null ],
+      [ "setAllDialsModeFan", "classchai3d_1_1c_x_touch_controller.html#a000a4d959ffbb741f0199b1c75de25d3", null ],
+      [ "setAllDialsModeSpread", "classchai3d_1_1c_x_touch_controller.html#af3869c8f442c06d1f4344d1d41300cac", null ],
+      [ "setAllDialsModeTrim", "classchai3d_1_1c_x_touch_controller.html#a89ef13a2d4250d5d9e6b1b024bfcbd2b", null ],
+      [ "setAllDialsLightOn", "classchai3d_1_1c_x_touch_controller.html#ab6c9392eb7e1506fdf2122919e5386da", null ],
+      [ "setAllDialsLightOff", "classchai3d_1_1c_x_touch_controller.html#aa625278b2f8d5a5f5f57b13a3fc1ae60", null ],
+      [ "setAllDialsLightBlinking", "classchai3d_1_1c_x_touch_controller.html#ad878bd4b6483dcac8932b877487eb651", null ],
+      [ "getNumButtons", "classchai3d_1_1c_x_touch_controller.html#aad7a35ea9d6324a651cfc935a359c3eb", null ],
+      [ "getButtonMode", "classchai3d_1_1c_x_touch_controller.html#a97762a833e00be8aa0e542fe11aaef2c", null ],
+      [ "getButtonState", "classchai3d_1_1c_x_touch_controller.html#ab8a8fe8b5d6ca93c9e5898af8f88080b", null ],
+      [ "getButtonLightBehavior", "classchai3d_1_1c_x_touch_controller.html#ace0b0a9adea1755347d86a025df8a8aa", null ],
+      [ "setButtonState", "classchai3d_1_1c_x_touch_controller.html#a64bf44c4c8d7638ba4aaecc7eaf1e77c", null ],
+      [ "setButtonToggleMode", "classchai3d_1_1c_x_touch_controller.html#ad43b316eaab022afc9a3ea3fe9e96575", null ],
+      [ "setButtonMomentaryMode", "classchai3d_1_1c_x_touch_controller.html#a7e63519ee96f6112e4110668cef9489f", null ],
+      [ "setButtonMode", "classchai3d_1_1c_x_touch_controller.html#a084ba52417672c7b8779c377a564f391", null ],
+      [ "setButtonToggleOn", "classchai3d_1_1c_x_touch_controller.html#ab9b20abbb12c40fabd988e5f9b63becc", null ],
+      [ "setButtonToggleOff", "classchai3d_1_1c_x_touch_controller.html#afa926e040889be6b4cbcd78c8fbdd1d8", null ],
+      [ "setButtonLightBehavior", "classchai3d_1_1c_x_touch_controller.html#a62fc7c1f583c02ebecaeca0eda00fea4", null ],
+      [ "setButtonLightOn", "classchai3d_1_1c_x_touch_controller.html#a20dab123dff3843d40a4a739493b8b9d", null ],
+      [ "setButtonLightOff", "classchai3d_1_1c_x_touch_controller.html#a4ea4d3ed3e3c9e6f81405f7aecef7879", null ],
+      [ "setButtonLightBlinking", "classchai3d_1_1c_x_touch_controller.html#adbe1e9367811497f818ee24861817df5", null ],
+      [ "setAllButtonsState", "classchai3d_1_1c_x_touch_controller.html#a8542279023d37c17be67d2c557b656ce", null ],
+      [ "setAllButtonsToggleMode", "classchai3d_1_1c_x_touch_controller.html#ad0cda22bfd437bd887a75be3902856ac", null ],
+      [ "setAllButtonsMomentaryMode", "classchai3d_1_1c_x_touch_controller.html#acc6eca8feac0ecabf70da2dac8f87bcd", null ],
+      [ "setAllButtonsMode", "classchai3d_1_1c_x_touch_controller.html#a62ae654061f7b42eaa028edea4cee061", null ],
+      [ "setAllButtonsToggleOn", "classchai3d_1_1c_x_touch_controller.html#a0c022f92d033b749d2c334810f0f5eb9", null ],
+      [ "setAllButtonsToggleOff", "classchai3d_1_1c_x_touch_controller.html#a9e0accf8892fccb72ee7d905815a68ce", null ],
+      [ "setAllButtonsLightBehavior", "classchai3d_1_1c_x_touch_controller.html#a666071ea58a15f8d1e2416025b58d1c0", null ],
+      [ "setAllButtonsLightOn", "classchai3d_1_1c_x_touch_controller.html#aebedaaffc1bdca40d2a058e1c3c27b5b", null ],
+      [ "setAllButtonsLightOff", "classchai3d_1_1c_x_touch_controller.html#a42369bcd049bde17a09eb0a69329716a", null ],
+      [ "setAllButtonsLightBlinking", "classchai3d_1_1c_x_touch_controller.html#abbeee05ac9d1b751bcafa1dfde7ff3bd", null ],
+      [ "callbackMidiIn", "classchai3d_1_1c_x_touch_controller.html#ae09b0e888f2acd035f2d8cfb313345d8", null ],
+      [ "sendMidi3", "classchai3d_1_1c_x_touch_controller.html#ab6428be85259d89a061565d645b0f939", null ],
+      [ "sendMidi2", "classchai3d_1_1c_x_touch_controller.html#a22e6a51c403b2897684ab58d63238314", null ],
+      [ "convertFrom", "classchai3d_1_1c_x_touch_controller.html#a398fc0d2163b4ebc435b48dfbc72b169", null ],
+      [ "convertTo", "classchai3d_1_1c_x_touch_controller.html#a510f1bfcdcf3aa4cbdd9a9f1387fc9d8", null ],
+      [ "m_model", "classchai3d_1_1c_x_touch_controller.html#ae146141a411cc13ba8f89823bc546b83", null ],
+      [ "midiin", "classchai3d_1_1c_x_touch_controller.html#ab961a44b3029b897c020e43c86a7e43b", null ],
+      [ "midiout", "classchai3d_1_1c_x_touch_controller.html#a68a16ee5d2bf2dabd880029e4ff87690", null ],
+      [ "m_portNumberIn", "classchai3d_1_1c_x_touch_controller.html#a5dc19017a14b52378ab84edfe53c81d9", null ],
+      [ "m_portNumberOut", "classchai3d_1_1c_x_touch_controller.html#a7aaae6b12ac31e34821ca84b90d36c14", null ],
+      [ "m_layer", "classchai3d_1_1c_x_touch_controller.html#adc9ccf30c85e27609a098c3cc57f31b8", null ],
+      [ "m_sliderValue", "classchai3d_1_1c_x_touch_controller.html#a16d78296a375e7ce5d7755a1276bb307", null ],
+      [ "m_sliderRange", "classchai3d_1_1c_x_touch_controller.html#a97c9845e36f89ac0d424c78fa5715d91", null ],
+      [ "m_dialValue", "classchai3d_1_1c_x_touch_controller.html#aae9443a619c13d49c65640f518e037c5", null ],
+      [ "m_dialRange", "classchai3d_1_1c_x_touch_controller.html#a5c63a9ab09b15d29a5fabd903ad9adb1", null ],
+      [ "m_buttonState", "classchai3d_1_1c_x_touch_controller.html#adbed49668c2634734b9ffb4b3aa9610f", null ],
+      [ "m_buttonMode", "classchai3d_1_1c_x_touch_controller.html#a6a48fc648dd18b2391af35c584bddb73", null ],
+      [ "m_buttonBehavior", "classchai3d_1_1c_x_touch_controller.html#a10e11ef40a056caacfc09ec53e3c0764", null ]
     ] ]
 ];

@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2022, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Francois Conti
     \author    Force Dimension - www.forcedimension.com
-    \version   3.2.0 $Rev: 2098 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -65,75 +65,14 @@ namespace chai3d {
 //==============================================================================
 
 //------------------------------------------------------------------------------
-#if defined(WIN32) | defined(WIN64)
-//------------------------------------------------------------------------------
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 //------------------------------------------------------------------------------
 
-/* devices */
-#define DHD_DEVICE_NONE              0
-#define DHD_DEVICE_3DOF             31
-#define DHD_DEVICE_6DOF             61
-#define DHD_DEVICE_6DOF_500         62
-#define DHD_DEVICE_DELTA3           63
-#define DHD_DEVICE_DELTA6           64
-#define DHD_DEVICE_OMEGA            32
-#define DHD_DEVICE_OMEGA3           33
-#define DHD_DEVICE_OMEGA33          34
-#define DHD_DEVICE_OMEGA33_LEFT     36
-#define DHD_DEVICE_OMEGA331         35
-#define DHD_DEVICE_OMEGA331_LEFT    37
-#define DHD_DEVICE_FALCON           60
-#define DHD_DEVICE_CONTROLLER       81
-#define DHD_DEVICE_CONTROLLER_HR    82
-#define DHD_DEVICE_CUSTOM           91
-#define DHD_DEVICE_SIGMA331        104
-#define DHD_DEVICE_SIGMA331_LEFT   105
-#define DHD_DEVICE_SIGMA33P        106
-#define DHD_DEVICE_SIGMA33P_LEFT   107
-
-/* status */
-#define DHD_ON                     1
-#define DHD_OFF                    0
-
-/* device count */
-#define DHD_MAX_DEVICE             4
-
-/* TimeGuard return value */
-#define DHD_TIMEGUARD              1
-
-/* status count */
-#define DHD_MAX_STATUS            16
-
-/* status codes */
-#define DHD_STATUS_POWER           0
-#define DHD_STATUS_CONNECTED       1
-#define DHD_STATUS_STARTED         2
-#define DHD_STATUS_RESET           3
-#define DHD_STATUS_IDLE            4
-#define DHD_STATUS_FORCE           5
-#define DHD_STATUS_BRAKE           6
-#define DHD_STATUS_TORQUE          7
-#define DHD_STATUS_WRIST_DETECTED  8
-#define DHD_STATUS_ERROR           9
-#define DHD_STATUS_GRAVITY        10
-#define DHD_STATUS_TIMEGUARD      11
-#define DHD_STATUS_ROTATOR_RESET  12
-#define DHD_STATUS_REDUNDANCY     13
-#define DHD_STATUS_FORCEOFFCAUSE  14
-#define DHD_STATUS_LOCKS          15
-
-/* velocity estimator computation mode */
-#define DHD_VELOCITY_WINDOWING     0
-#define DHD_VELOCITY_AVERAGING     1
-
-/* encoder count */
+// encoder count (must match the definition of the Force Dimension SDK)
 #define DHD_MAX_DOF                8
 
 //------------------------------------------------------------------------------
 #endif  // DOXYGEN_SHOULD_SKIP_THIS
-//------------------------------------------------------------------------------
-#endif  // WIN32
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -209,6 +148,9 @@ public:
     //! This method sends a force, torque, and gripper force to the haptic device.
     virtual bool setForceAndTorqueAndGripperForce(const cVector3d& a_force, const cVector3d& a_torque, double a_gripperForce);
 
+    //! This method enables or disables forces.
+    virtual bool enableForces(bool a_value);
+
 
     //--------------------------------------------------------------------------
     // PUBLIC  STATIC METHODS:
@@ -255,14 +197,38 @@ public:
     //! This method returns the type of this haptic device.
     int getDeviceType() { return (m_deviceType); }
 
-    //! This method enables or disables forces.
-    bool enableForces(bool a_value);
-
     //! This method orients the device around the y-axis.
     bool setDeviceAngleDeg(double a_angleDeg);
 
     //! This method assign a vibration to the devices that support this feature.
     bool setVibration(double a_freq, double a_amplitude, int a_type = 0);
+
+    //! This method presets the encoder values given a table of values.
+    bool presetEnc(int a_encPreset[DHD_MAX_DOF], unsigned short a_mask = 0xff);
+
+    //! This method presets all encoder values to given value.
+    bool presetEncAll(int a_encPreset = 0);
+
+    //! This method returns the encoder position values of the device.
+    bool getEncPos(int a_encPos[DHD_MAX_DOF]);
+
+    //! This method returns the encoder velocity values of the device.
+    bool getEncVel(double a_encVel[DHD_MAX_DOF]);
+
+    //! This method sets motor commands to the device.
+    bool setMot(unsigned short a_mot[DHD_MAX_DOF], unsigned short a_mask = 0xff);
+
+    //! This method returns the jacobian of the base.
+    bool getJacobianDelta(cMatrix3d& a_jacobian);
+
+    //! This method returns the Jacobian of the wrist.
+    bool getJacobianWrist(cMatrix3d& a_jacobian);
+
+    //! This method applies joint torques on the device
+    bool setJointTorques(double a_jointTorques[DHD_MAX_DOF]);
+
+    //! This method returns the joints torques for gravity compensation.
+    bool getJointTorquesGravityCompensation(double a_jointTorques[DHD_MAX_DOF]);
 
 
     //--------------------------------------------------------------------------
@@ -335,6 +301,15 @@ protected:
     static bool s_dhdSetDeviceAngleDeg;
     static bool s_dhdGetJointAngles;
     static bool s_dhdSetVibration;
+    static bool s_dhdEnableSimulator;
+    static bool s_dhdPreset;
+    static bool s_dhdGetEnc;
+    static bool s_dhdGetEncVelocities;
+    static bool s_dhdSetMot;
+    static bool s_dhdGetDeltaJacobian;
+    static bool s_dhdGetWristJacobian;
+    static bool s_dhdSetJointTorques;
+    static bool s_dhdJointAnglesToGravityJointTorques;
 
     //--------------------------------------------------------------------------
     #endif  // DOXYGEN_SHOULD_SKIP_THIS

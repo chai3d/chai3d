@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['example_20review',['Example Review',['../chapter5-example.html',1,'overview']]]
+  ['devices_0',['Haptic Devices',['../chapter6-haptic-devices.html',1,'overview']]]
 ];

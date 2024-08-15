@@ -11,8 +11,7 @@
 using std::string;
 //------------------------------------------------------------------------------
 
-Interface::Interface (QWidget        *parent,
-                      Qt::WindowFlags flags) : QMainWindow (parent, flags)
+Interface::Interface (QWidget *parent) : QMainWindow (parent)
 {
     // setup ui
     ui.setupUi(this);
@@ -29,6 +28,8 @@ Interface::Interface (QWidget        *parent,
     {
         Application->setSizePolicy (QSizePolicy::Expanding, QSizePolicy::Expanding);
         centralWidget()->layout()->addWidget (Application);
+        static_cast<QBoxLayout*>(centralWidget()->layout())->setStretchFactor(ui.groupOptions, 0);
+        static_cast<QBoxLayout*>(centralWidget()->layout())->setStretchFactor(Application, 1);
     }
     else 
     {

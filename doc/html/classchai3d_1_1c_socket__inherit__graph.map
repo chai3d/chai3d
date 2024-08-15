@@ -1,0 +1,7 @@
+<map id="chai3d::cSocket" name="chai3d::cSocket">
+<area shape="rect" id="Node000001" title="This class implements all methods shared by TCP and UDP sockets." alt="" coords="103,5,219,31"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_socket_t_c_p.html" title="This class implements all methods specific to TCP sockets." alt="" coords="5,79,148,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,42,92,80,89,76,135,38"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_socket_u_d_p.html" title="This class implements all methods specific to UDP sockets." alt="" coords="172,79,317,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,38,233,76,229,80,183,42"/>
+</map>

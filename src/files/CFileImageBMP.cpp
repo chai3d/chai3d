@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -57,10 +57,10 @@ using namespace std;
 
 #include <sys/types.h>
 
-typedef u_int8_t  BYTE, *LPBYTE;    // unsigned char
-typedef u_int16_t WORD;             // unsigned short
-typedef u_int32_t DWORD;            // unsigned long
-typedef int32_t   LONG;             // long
+typedef uint8_t  BYTE, *LPBYTE;    // unsigned char
+typedef uint16_t WORD;             // unsigned short
+typedef uint32_t DWORD;            // unsigned long
+typedef int32_t  LONG;             // long
 
 // tell GCC to byte align the following structures
 #pragma pack(1)

@@ -1,17 +1,17 @@
 var group__display =
 [
-    [ "cCamera", "classchai3d_1_1c_camera.html", [
+    [ "chai3d::cCamera", "classchai3d_1_1c_camera.html", [
       [ "cCamera", "classchai3d_1_1c_camera.html#aff49b9144fd0b965c8bd581068abd23d", null ],
       [ "~cCamera", "classchai3d_1_1c_camera.html#a410962a83ae49a5f536054b28905d8fc", null ],
-      [ "getParentWorld", "classchai3d_1_1c_camera.html#a661b10c9bf21e2e6dcc7dae3df40b7fa", null ],
+      [ "getParentWorld", "classchai3d_1_1c_camera.html#a84aeddcf6a7f11bf6ded60bc4b40f768", null ],
       [ "selectWorld", "classchai3d_1_1c_camera.html#ae0114c34675e26a5fba8cb81cfc5ec93", null ],
       [ "selectFrontLayer", "classchai3d_1_1c_camera.html#acaff13dc6eb53a23011ab1863e2ab01b", null ],
       [ "selectBackLayer", "classchai3d_1_1c_camera.html#a7bca3ac423c6f2a4ca91aababa9e6b80", null ],
       [ "selectLayers", "classchai3d_1_1c_camera.html#ab2bb99d01d0067de77a6d5879855c41d", null ],
       [ "set", "classchai3d_1_1c_camera.html#ae73f88c79d3d84eedf6c7891064afcfe", null ],
-      [ "getLookVector", "classchai3d_1_1c_camera.html#a72d021b57e526dd5d0d3826648de8732", null ],
-      [ "getUpVector", "classchai3d_1_1c_camera.html#a7948c7202deccc700ddb22de55a64898", null ],
-      [ "getRightVector", "classchai3d_1_1c_camera.html#a0248205253a803ff0251c98a7600c6c3", null ],
+      [ "getLookVector", "classchai3d_1_1c_camera.html#a8594256ba6f2f0812530908f249cf0ad", null ],
+      [ "getUpVector", "classchai3d_1_1c_camera.html#ab8fc78f54ee67b3a53a4be982122ac90", null ],
+      [ "getRightVector", "classchai3d_1_1c_camera.html#a430b295fcd3d2ca20aa891d26b486c23", null ],
       [ "setSphericalRad", "classchai3d_1_1c_camera.html#a71c4ee46f45beaaaf6653b4d5efeb04e", null ],
       [ "setSphericalDeg", "classchai3d_1_1c_camera.html#aa07c44607c5c6cde9ae4087798829ca4", null ],
       [ "setSphericalReferences", "classchai3d_1_1c_camera.html#aaa8b1a9de48f18a9a9f7f95b65bfbf2c", null ],
@@ -96,7 +96,7 @@ var group__display =
       [ "m_originReference", "classchai3d_1_1c_camera.html#a1bc3973e803d0d4a04c21b1d78fa204d", null ],
       [ "m_audioDevice", "classchai3d_1_1c_camera.html#a7d190614009270aedebc90a0bf4774f9", null ]
     ] ],
-    [ "cFrameBuffer", "classchai3d_1_1c_frame_buffer.html", [
+    [ "chai3d::cFrameBuffer", "classchai3d_1_1c_frame_buffer.html", [
       [ "cFrameBuffer", "classchai3d_1_1c_frame_buffer.html#a8b5bf55a2c249d221ed68b8ceae67f8c", null ],
       [ "~cFrameBuffer", "classchai3d_1_1c_frame_buffer.html#aa2a2bb540a4d9d22e194930a719b9ff3", null ],
       [ "setup", "classchai3d_1_1c_frame_buffer.html#ab3f1f443103cb1c256c7749eed377d08", null ],
@@ -104,9 +104,9 @@ var group__display =
       [ "copyImageBuffer", "classchai3d_1_1c_frame_buffer.html#a289d8362336876a7500d457ab9eac48e", null ],
       [ "copyDepthBuffer", "classchai3d_1_1c_frame_buffer.html#a1e21040a40c19d17f6ed7199e9e1caf0", null ],
       [ "setCamera", "classchai3d_1_1c_frame_buffer.html#a857d33da75c9b0c1063bbcb36f1c1c9a", null ],
-      [ "getCamera", "classchai3d_1_1c_frame_buffer.html#aa570747f40afec5d90d4f462aff0c50c", null ],
-      [ "getWidth", "classchai3d_1_1c_frame_buffer.html#a3f74a867e56d248082e7e272a1a23942", null ],
-      [ "getHeight", "classchai3d_1_1c_frame_buffer.html#ae42c99c9409f1bf7cc729cdac7084800", null ],
+      [ "getCamera", "classchai3d_1_1c_frame_buffer.html#ada7e03b586c2fd82076db172c830c34b", null ],
+      [ "getWidth", "classchai3d_1_1c_frame_buffer.html#ab9ec252dbb984567da9ce4a11f0fa0d4", null ],
+      [ "getHeight", "classchai3d_1_1c_frame_buffer.html#afb4806332c93c1dcac985ac0d12058fd", null ],
       [ "setSize", "classchai3d_1_1c_frame_buffer.html#a06faedf245ef98b7de4f79d3c7ae08a5", null ],
       [ "renderInitialize", "classchai3d_1_1c_frame_buffer.html#a77b33dd74eaea2085e58338a25b01d24", null ],
       [ "renderFinalize", "classchai3d_1_1c_frame_buffer.html#a37ef395550021bbdbfb5f0b56b2b580c", null ],
@@ -120,5 +120,33 @@ var group__display =
       [ "m_prevHeight", "classchai3d_1_1c_frame_buffer.html#a5ea1d3c6bbf1c143e7b90bed04976549", null ],
       [ "m_camera", "classchai3d_1_1c_frame_buffer.html#af6e96fe10b6396901a95814c0d3ee5f8", null ],
       [ "m_fbo", "classchai3d_1_1c_frame_buffer.html#a5a4edb5f6bf940f3970737f2b4835482", null ]
+    ] ],
+    [ "chai3d::cViewport", "classchai3d_1_1c_viewport.html", [
+      [ "cViewport", "classchai3d_1_1c_viewport.html#a45df8c28ce24f921be468dbd20ee720f", null ],
+      [ "~cViewport", "classchai3d_1_1c_viewport.html#aeb72ba2174a66d8d466a7695a3f60758", null ],
+      [ "getCamera", "classchai3d_1_1c_viewport.html#aa69f08e54f303d265f60cb91a756a43d", null ],
+      [ "setCamera", "classchai3d_1_1c_viewport.html#ae709279042d87bde5316094690a1c994", null ],
+      [ "selectWorld", "classchai3d_1_1c_viewport.html#a275ef3b01000b8d2775914245e2aab53", null ],
+      [ "selectFrontLayer", "classchai3d_1_1c_viewport.html#a85827ff784a402635ea26dbe768a1d10", null ],
+      [ "selectBackLayer", "classchai3d_1_1c_viewport.html#a6fbecb4593c69c34b6adbc6421315619", null ],
+      [ "selectLayers", "classchai3d_1_1c_viewport.html#adee8ec09cfec2293fd01080dfe23227d", null ],
+      [ "renderView", "classchai3d_1_1c_viewport.html#a75e556ba6b33d70dcb2f85a313b3c9ce", null ],
+      [ "copyImageBuffer", "classchai3d_1_1c_viewport.html#a940876b04ec83caf239670acfc40fd81", null ],
+      [ "getDisplayWidth", "classchai3d_1_1c_viewport.html#a7dc041e31b4b4dd5c1da0c6b733af672", null ],
+      [ "getDisplayHeight", "classchai3d_1_1c_viewport.html#aa34f48c54cb511f329880c7d8a86798d", null ],
+      [ "setContentScaleWidth", "classchai3d_1_1c_viewport.html#a7bba76ad1340bba1410b6a7e21c67554", null ],
+      [ "setContentScaleHeight", "classchai3d_1_1c_viewport.html#ae235c361faa646990ea1a1ed248e11f8", null ],
+      [ "setContentScale", "classchai3d_1_1c_viewport.html#ab1793d48c6da0b0063745935e00135c5", null ],
+      [ "getContentScaleWidth", "classchai3d_1_1c_viewport.html#ada29c4273ba6571e001ae730a8153818", null ],
+      [ "getContentScaleHeight", "classchai3d_1_1c_viewport.html#a33c04b7d18945c753f6d2c459e3e897f", null ],
+      [ "updateGPU", "classchai3d_1_1c_viewport.html#adde844d98a67674c470f506de80f0fbe", null ],
+      [ "m_camera", "classchai3d_1_1c_viewport.html#a9a410d0e1797751a402438446247b7dd", null ],
+      [ "m_cameraViewport", "classchai3d_1_1c_viewport.html#a2c71e237ef6961eda90aa2d1d93c44ed", null ],
+      [ "m_contentScaleWidth", "classchai3d_1_1c_viewport.html#a030eba8bfe05ac03b6e243e226d7993d", null ],
+      [ "m_contentScaleHeight", "classchai3d_1_1c_viewport.html#a9b29b0a058dc945448e1d1acd3b58aec", null ],
+      [ "m_viewPanel", "classchai3d_1_1c_viewport.html#af271d9337e37d8623ae8e173f68a2962", null ],
+      [ "m_displayBuffer", "classchai3d_1_1c_viewport.html#a60499ac091fbf898e55a303184e620c3", null ],
+      [ "m_displayWidth", "classchai3d_1_1c_viewport.html#aa86c3e0c6b766e0a8a9d2dc5bc21fb2f", null ],
+      [ "m_displayHeight", "classchai3d_1_1c_viewport.html#ad6e56d27fc8785373a18655761ab96a9", null ]
     ] ]
 ];

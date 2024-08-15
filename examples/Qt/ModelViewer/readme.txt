@@ -66,5 +66,5 @@ Once the add-in is installed and configured, the project will build like any oth
 
 
 ________________________
-(C) 2003-2016 by CHAI3D
+(C) 2003-2017 by CHAI3D
 All Rights Reserved.

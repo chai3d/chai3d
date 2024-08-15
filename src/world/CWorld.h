@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2159 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -107,6 +107,16 @@ public:
 
 
     //--------------------------------------------------------------------------
+    // PUBLIC METHODS - GENERAL:
+    //--------------------------------------------------------------------------
+
+public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("World"); }
+
+
+    //--------------------------------------------------------------------------
     // PUBLIC METHODS - BACKGROUND PROPERTIES
     //--------------------------------------------------------------------------
 
@@ -143,11 +153,13 @@ public:
 
 public:
 
+    /*
     //! This method computes any collision between a segment and all objects in this world.
     virtual bool computeCollisionDetection(const cVector3d& a_segmentPointA,
                                            const cVector3d& a_segmentPointB,
                                            cCollisionRecorder& a_recorder,
                                            cCollisionSettings& a_settings);
+    */
 
     //! This method updates the geometric relationship between the tool and this world.
     virtual void computeLocalInteraction(const cVector3d& a_toolPos,

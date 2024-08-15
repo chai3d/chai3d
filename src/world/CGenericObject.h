@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Francois Conti
     \author    Dan Morris
-    \version   3.2.0 $Rev: 2014 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -132,11 +132,19 @@ public:
 
 public:
 
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("GenericObject"); }
+
     //! This method enables or disable this object. When an object is disabled, both haptic and graphic rendering no longer occur.
-    virtual void setEnabled(bool a_enabled,  const bool a_affectChildren = false);
+    virtual void setEnabled(bool a_enabled, 
+        const bool a_affectChildren = false, 
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ if the object is enabled, __false__ otherwise.
     bool getEnabled() const { return (m_enabled); }
+
+    //! This method returns a pointer to an object of a given name.
+    cGenericObject* getObject(std::string& a_name);
 
 
     //-----------------------------------------------------------------------
@@ -346,34 +354,34 @@ public:
     void deleteAllEffects();
 
     //! This method creates a magnetic haptic effect.
-    bool createEffectMagnetic();
+    void createEffectMagnetic(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method deletes any current magnetic haptic effect.
-    bool deleteEffectMagnetic();
+    void deleteEffectMagnetic(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method creates a stick-and-slip haptic effect.
-    bool createEffectStickSlip();
+    void createEffectStickSlip(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method delete any current stick-and-slip haptic effect.
-    bool deleteEffectStickSlip();
+    void deleteEffectStickSlip(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method creates a surface haptic effect.
-    bool createEffectSurface();
+    void createEffectSurface(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method deletes any current surface haptic effect.
-    bool deleteEffectSurface();
+    void deleteEffectSurface(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method creates a vibration haptic effect.
-    bool createEffectVibration();
+    void createEffectVibration(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method deletes any current vibration haptic effect.
-    bool deleteEffectVibration();
+    void deleteEffectVibration(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method creates a viscous haptic effect.
-    bool createEffectViscosity();
+    void createEffectViscosity(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method deletes any current viscous haptic effect.
-    bool deleteEffectViscosity();
+    void deleteEffectViscosity(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     
     //-----------------------------------------------------------------------
@@ -383,18 +391,23 @@ public:
 public:
 
     //! This method enables or disables haptic perception of this object, optionally propagating the change to children.
-    virtual void setHapticEnabled(const bool a_hapticEnabled, const bool a_affectChildren = true);
+    virtual void setHapticEnabled(const bool a_hapticEnabled,
+        const bool a_affectChildren = true,
+        const bool a_affectComponents = true);
 
     //! This method returns the haptic status of object (__true__ means it can be felt when visible).
     inline bool getHapticEnabled() const { return (m_hapticEnabled); }
 
     //! This method sets the haptic stiffness of the object, optionally recursively affecting children.
-    virtual void setStiffness(const double a_stiffness, const bool a_affectChildren = true);
+    virtual void setStiffness(const double a_stiffness, 
+        const bool a_affectChildren = true,
+        const bool a_affectComponents = true);
 
     //! This method sets the static and dynamic friction properties (polygonal models only), optionally recursively affecting children.
     virtual void setFriction(double a_staticFriction, 
         double a_dynamicFriction, 
-        const bool a_affectChildren = true);
+        const bool a_affectChildren = true,
+        const bool a_affectComponents = true);
 
 
     //-----------------------------------------------------------------------
@@ -404,19 +417,25 @@ public:
 public:
 
     //! This method enables or disables the graphic display of this object, optionally propagating the change to children.
-    virtual void setShowEnabled(const bool a_show, const bool a_affectChildren = true);
+    virtual void setShowEnabled(const bool a_show, 
+        const bool a_affectChildren = true,
+        const bool a_affectComponents = true);
 
     //! This method returns the display status of object (true means it's visible).
     inline bool getShowEnabled() const { return (m_showEnabled); }
 
     //! This method enables or disables wireframe rendering, optionally propagating the operation to my children.
-    virtual void setWireMode(const bool a_showWireMode, const bool a_affectChildren = false);
+    virtual void setWireMode(const bool a_showWireMode, 
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns whether wireframe rendering is enabled.
     inline bool getWireMode() const { return (m_triangleMode == GL_LINE); }
 
     //! This method enables or disables face-culling, optionally propagating the operation to my children.
-    virtual void setUseCulling(const bool a_useCulling, const bool a_affectChildren = false);
+    virtual void setUseCulling(const bool a_useCulling, 
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ if face-culling is enabled, __false__ otherwise.
     inline bool getUseCulling() const { return (m_cullingEnabled); }
@@ -427,7 +446,9 @@ public:
     //-----------------------------------------------------------------------
 
     //! This method enables or disables transparency.
-    virtual void setUseTransparency(const bool a_useTransparency, const bool a_affectChildren = false);
+    virtual void setUseTransparency(const bool a_useTransparency,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ if transparency is enabled, __false__ otherwise.
     inline bool getUseTransparency() const { return m_useTransparency; }
@@ -436,7 +457,8 @@ public:
     virtual void setTransparencyLevel(const float a_level,
         const bool a_applyToVertices = false,
         const bool a_applyToTextures = false,
-        const bool a_affectChildren = false);
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
 
     //-----------------------------------------------------------------------
@@ -446,13 +468,15 @@ public:
 public:
 
     //! This method enabled or disables the use of a display list for rendering, optionally propagating the operation to its children.
-    virtual void setUseDisplayList(const bool a_useDisplayList, const bool a_affectChildren = false);
+    virtual void setUseDisplayList(const bool a_useDisplayList,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ if a display list is activated, __false__ otherwise.
     inline bool getUseDisplayList() const { return (m_useDisplayList); }
 
     //! This method invalidates any existing display lists, optionally propagating the operation to its children.
-    virtual void markForUpdate(const bool a_affectChildren = false);
+    virtual void markForUpdate(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
 
     //-----------------------------------------------------------------------
@@ -462,7 +486,9 @@ public:
 public:
 
     //! This method enables or disables the use of per-vertex colors, optionally propagating the operation to its children.
-    virtual void setUseVertexColors(const bool a_useColors, const bool a_affectChildren = false);
+    virtual void setUseVertexColors(const bool a_useColors,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ is per-vertex color properties are enabled, __false__ otherwise.
     inline bool getUseVertexColors() const { return (m_useVertexColors); }
@@ -475,22 +501,28 @@ public:
 public:
 
     //! This method enables or disables the use of material properties, optionally propagating the operation to its children.
-    virtual void setUseMaterial(const bool a_useMaterial, const bool a_affectChildren = false);
+    virtual void setUseMaterial(const bool a_useMaterial,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ is material properties are enabled, __false__ otherwise.
     inline bool getUseMaterial() const { return (m_useMaterialProperty); }
 
     //! This method sets the material properties of this object, optionally propagating the operation to its children.
-    virtual void setMaterial(cMaterialPtr a_material, const bool a_affectChildren = false);
+    virtual void setMaterial(cMaterialPtr a_material,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method setd the material properties of this object, optionally propagating the operation to its children.
-    virtual void setMaterial(cMaterial& a_material, const bool a_affectChildren = false);
+    virtual void setMaterial(cMaterial& a_material,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method creates a backup of the material colors of this object, optionally propagating the operation to its children.
-    virtual void backupMaterialColors(const bool a_affectChildren = false);
+    virtual void backupMaterialColors(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method restores the material color properties of this object from a previous backup, optionally propagating the operation to its children.
-    virtual void restoreMaterialColors(const bool a_affectChildren = false);
+    virtual void restoreMaterialColors(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
 
     //--------------------------------------------------------------------------
@@ -500,13 +532,17 @@ public:
 public:
 
     //! This method enables or disables the use of texture-mapping, optionally propagating the operation to its children.
-    virtual void setUseTexture(const bool a_useTexture, const bool a_affectChildren = false);
+    virtual void setUseTexture(const bool a_useTexture,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ if texture-mapping is enabled, __false__ otherwise.
     inline bool getUseTexture() const { return (m_useTextureMapping); }
 
     //! This method sets a texture to this object, optionally propagating the operation to its children.
-    virtual void setTexture(cTexture1dPtr a_texture, const bool a_affectChildren = false);
+    virtual void setTexture(cTexture1dPtr a_texture,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
 
     //-----------------------------------------------------------------------
@@ -516,7 +552,9 @@ public:
 public:
 
     //! This method assigns a shader program to this object, optionally propagating the operation to its children..
-    virtual void setShaderProgram(cShaderProgramPtr a_shaderProgram, const bool a_affectChildren = false);
+    virtual void setShaderProgram(cShaderProgramPtr a_shaderProgram,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns a pointer to the current shader program.
     virtual cShaderProgramPtr getShaderProgram() { return (m_shaderProgram); }
@@ -539,7 +577,9 @@ public:
 public:
 
     //! This method enables or disabled the graphic display of the boundary box for this object, optionally propagating the change to its children.
-    virtual void setShowBoundaryBox(const bool a_showBoundaryBox, const bool a_affectChildren = false);
+    virtual void setShowBoundaryBox(const bool a_showBoundaryBox,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ if the boundary box is being displayed, __false__ otherwise.
     inline bool getShowBoundaryBox() const { return (m_showBoundaryBox); }
@@ -567,13 +607,17 @@ public:
 public:
 
     //! This method enables or disables the graphic display of the reference frame arrows for this object, optionally propagating the change to its children.
-    virtual void setShowFrame(const bool a_showFrame, const bool a_affectChildren  = false);
+    virtual void setShowFrame(const bool a_showFrame,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ if the display of the reference frame is enabled, __false__ otherwise.
     inline bool getShowFrame(void) const { return (m_showFrame); }
 
     //! This method sets the size of the rendered reference frame, optionally propagating the change to its children.
-    virtual void setFrameSize(const double a_size = 1.0, const bool a_affectChildren = false);
+    virtual void setFrameSize(const double a_size = 1.0,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns the size of the graphical reference frame.
     inline double getFrameSize() const { return (m_frameSize); }
@@ -592,7 +636,7 @@ public:
     inline cGenericCollision* getCollisionDetector() const { return (m_collisionDetector); }
 
     //! This method deletes any existing collision detector.
-    virtual void deleteCollisionDetector(const bool a_affectChildren = false);
+    virtual void deleteCollisionDetector(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
     //! This method computes any collision between a segment and this object.
     virtual bool computeCollisionDetection(const cVector3d& a_segmentPointA,
@@ -601,7 +645,9 @@ public:
         cCollisionSettings& a_settings);
 
     //! This method enables or disables the display of the collision detector, optionally propagating the change to its children.
-    virtual void setShowCollisionDetector(const bool a_showCollisionDetector, const bool a_affectChildren = false);
+    virtual void setShowCollisionDetector(const bool a_showCollisionDetector,
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
     //! This method returns __true__ if the collision detector is being displayed graphically, __false__ otherwise.
     inline bool getShowCollisionDetector() { return (m_showCollisionDetector); }
@@ -609,11 +655,12 @@ public:
     //! This method sets the collision detector graphic display properties.
     virtual void setCollisionDetectorProperties(unsigned int a_displayDepth, 
         cColorf& a_color, 
-        const bool a_affectChildren = false);
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
 
     //-----------------------------------------------------------------------
-    // PUBLIC METHODS - SCENE GRAPH:
+    // PUBLIC METHODS - SCENE GRAPH / CHILDREN:
     //-----------------------------------------------------------------------
 
 public:
@@ -630,16 +677,19 @@ public:
     //! This method returns the owner of this object.
     inline cGenericObject* getOwner() { return (m_owner); }
 
+    //! This method returns the root object of the scenegraph.
+    cGenericObject* getRootObject();
+
     //! This method returns a selected child from the list of children.
     inline cGenericObject* getChild(const unsigned int a_index) const { return (m_children[a_index]); }
 
-    //! This method add an object to the list of children.
+    //! This method adds an object to the list of children.
     bool addChild(cGenericObject* a_object);
 
     //! This method removes an object from the list of children, without deleting it.
     bool removeChild(cGenericObject* a_object);
 
-    //! This method removes this object from its parent's list of children.
+    //! This method removes this object from its parent's list of children or list of components.
     bool removeFromGraph();
 
     //! This method removes an object from its list of children and deletes it.
@@ -651,11 +701,34 @@ public:
     //! This method clears and delete all objects from its list of children.
     void deleteAllChildren();
 
-    //! This method returns the number of children from its list of children.
+    //! This method returns the number of objects from its list of children.
     inline unsigned int getNumChildren() { return ((unsigned int)m_children.size()); }
 
     //! This method returns the total number of descendants, optionally including this object.
     inline unsigned int getNumDescendants(bool a_includeCurrentObject = false);
+
+
+    //-----------------------------------------------------------------------
+    // PUBLIC METHODS - OBJECT COMPONENTS:
+    //-----------------------------------------------------------------------
+
+    //! This method adds an object to the list of components.
+    bool addComponent(cGenericObject* a_component);
+
+    //! This method removes an object from the list of components, without deleting it.
+    bool removeComponent(cGenericObject* a_object);
+
+    //! This method removes an object from its list of components and deletes it.
+    bool deleteComponent(cGenericObject *a_object);
+
+    //! This method clears all objects from its list of components, without deleting them.
+    void clearAllComponents();
+
+    //! This method clears and delete all objects from its list of components.
+    void deleteAllComponents();
+
+    //! This method returns the number of objects from its list of components.
+    inline unsigned int getNumComponents() { return ((unsigned int)m_components.size()); }
 
 
     //-----------------------------------------------------------------------
@@ -678,7 +751,9 @@ public:
 public:
 
     //! This method scales the size of this object.
-    virtual void scale(const double& a_scaleFactor, const bool a_affectChildren = true);
+    virtual void scale(const double& a_scaleFactor,
+        const bool a_affectChildren = true,
+        const bool a_affectComponents = true);
 
 
     //-----------------------------------------------------------------------
@@ -686,9 +761,6 @@ public:
     //-----------------------------------------------------------------------
 
 public: 
-
-    //! Name of current object (filename).
-    std::string m_name;
 
     //! Material property.
     cMaterialPtr m_material;
@@ -734,6 +806,9 @@ protected:
         owned by their parent (cMultiMesh). 
     */
     cGenericObject* m_owner;
+
+    //! List of components. Components are sub objects of the current object.
+    std::vector<cGenericObject*> m_components;
 
     //! List of children.
     std::vector<cGenericObject*> m_children;

@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 2163 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -101,6 +101,7 @@ cVideo::cVideo()
 //==============================================================================
 cVideo::~cVideo()
 {
+    /*
     // clean up memory
     cleanup();
 
@@ -125,6 +126,7 @@ cVideo::~cVideo()
 
     // it is now safe to check/modify static members
     m_sharedLock.release();
+    */
 }
 
 

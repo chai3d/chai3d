@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 2097 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -455,9 +455,9 @@ bool cLoadFileJPG(cImage* a_image, const std::string& a_filename)
     \return __true__ in case of success, __false__ otherwise.
 */
 //==============================================================================
-bool cLoadJPG(cImage* a_image, const unsigned char *a_buffer, unsigned int a_len)
+bool cLoadJPG(cImage* a_image, const void* a_buffer, unsigned int a_len)
 {
-    swrapper buf((char*)a_buffer, a_len);
+    swrapper buf(static_cast<char*>(const_cast<void*>(a_buffer)), a_len);
     istream in(&buf);
 
     return (_loadJPG (a_image, in));

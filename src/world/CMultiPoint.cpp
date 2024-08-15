@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2167 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -304,7 +304,7 @@ unsigned int cMultiPoint::newPoint(const unsigned int a_indexVertex0)
     int index = m_points->newPoint(a_indexVertex0);
 
     // mark object for update
-    markForUpdate(true);
+    markForUpdate(false);
 
     // return the index at which I inserted this triangle in my triangle array
     return (index);
@@ -426,16 +426,17 @@ void cMultiPoint::updateGlobalPositions(const bool a_frameOnly)
     if you are using display lists and you modify mesh options, vertex 
     positions, etc.
 
-    \param  a_affectChildren  If __true__, then children are updated too.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cMultiPoint::markForUpdate(const bool a_affectChildren)
+void cMultiPoint::markForUpdate(const bool a_affectChildren, const bool a_affectComponents)
 {
     // mark object for update
     m_points->m_flagMarkForUpdate = true;
 
     // update display list of cGenericObject and children
-    cGenericObject::markForUpdate(a_affectChildren);
+    cGenericObject::markForUpdate(a_affectChildren, a_affectComponents);
 }
 
 
@@ -444,18 +445,20 @@ void cMultiPoint::markForUpdate(const bool a_affectChildren)
     This method sets the alpha value at each vertex, in all of its material 
     colors, optionally propagating the operation to my children.
 
-    \param  a_level            Level of transparency ranging from 0.0 to 1.0.
-    \param  a_applyToVertices  If __true__, then apply changes to vertex colors.
-    \param  a_applyToTextures  If __true__, then apply changes to texture.
-    \param  a_affectChildren   If __true__, then children are updated too.
+    \param  a_level             Level of transparency ranging from 0.0 to 1.0.
+    \param  a_applyToVertices   If __true__, then apply changes to vertex colors.
+    \param  a_applyToTextures   If __true__, then apply changes to texture.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
 void cMultiPoint::setTransparencyLevel(const float a_level,
     const bool a_applyToVertices,
     const bool a_applyToTextures,
-    const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
-    cGenericObject::setTransparencyLevel(a_level, a_applyToVertices, a_applyToTextures, a_affectChildren);
+    cGenericObject::setTransparencyLevel(a_level, a_applyToVertices, a_applyToTextures, a_affectChildren, a_affectComponents);
 
     // apply the new value to all vertex colors
     if (a_applyToVertices)
@@ -467,7 +470,7 @@ void cMultiPoint::setTransparencyLevel(const float a_level,
         }
 
         // mark for update
-        markForUpdate(true);
+        markForUpdate(a_affectChildren, a_affectComponents);
     }
 }
 
@@ -860,14 +863,15 @@ void cMultiPoint::renderPoints(cRenderOptions& a_options)
     //--------------------------------------------------------------------------
     // RENDER OBJECT (OLD METHOD)
     //--------------------------------------------------------------------------
-    else if (!m_displayList.render(m_useDisplayList))   
+    else if (!m_displayList.render(m_useDisplayList))
     {
         // get texture unit
-        GLenum textureUnit = GL_TEXTURE1_ARB;
-        if (m_texture != nullptr)
-        {
-            textureUnit = m_texture->getTextureUnit();
-        }
+        // (placeholder for future functionality)
+        // GLenum textureUnit = GL_TEXTURE1_ARB;
+        // if (m_texture != nullptr)
+        // {
+        //     textureUnit = m_texture->getTextureUnit();
+        // }
 
         // if requested, begin creating display list
         m_displayList.begin(m_useDisplayList);

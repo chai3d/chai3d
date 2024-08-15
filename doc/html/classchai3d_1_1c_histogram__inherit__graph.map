@@ -1,0 +1,13 @@
+<map id="chai3d::cHistogram" name="chai3d::cHistogram">
+<area shape="rect" id="Node000001" title="This class implements a 2D histogram to display an array of data value." alt="" coords="19,372,153,397"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_panel.html" title="This class implements a 2D panel widget." alt="" coords="32,299,140,324"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,338,89,372,83,372,83,338"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_generic_widget.html" title="This class implements a base class for widgets." alt="" coords="5,225,167,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,264,89,299,83,299,83,264"/>
+<area shape="rect" id="Node000004" href="$classchai3d_1_1c_mesh.html" title="This class implements a 3D polygonal mesh." alt="" coords="33,152,139,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="89,191,89,225,83,225,83,191"/>
+<area shape="rect" id="Node000005" href="$classchai3d_1_1c_generic_object.html" title="This class implements a base class for all 2D or 3D objects in CHAI3D." alt="" coords="7,79,165,104"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="89,118,89,152,83,152,83,118"/>
+<area shape="rect" id="Node000006" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type." alt="" coords="12,5,160,31"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="89,44,89,79,83,79,83,44"/>
+</map>

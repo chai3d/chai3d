@@ -1,0 +1,233 @@
+################################################################################
+#
+#  Software License Agreement (BSD License)
+#  Copyright (c) 2003-2024, CHAI3D
+#  (www.chai3d.org)
+#
+#  All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#  * Redistributions of source code must retain the above copyright
+#  notice, this list of conditions and the following disclaimer.
+#
+#  * Redistributions in binary form must reproduce the above
+#  copyright notice, this list of conditions and the following
+#  disclaimer in the documentation and/or other materials provided
+#  with the distribution.
+#
+#  * Neither the name of CHAI3D nor the names of its contributors may
+#  be used to endorse or promote products derived from this software
+#  without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+#  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+#  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+#  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+#  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+#  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+#  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+#  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+#  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#  POSSIBILITY OF SUCH DAMAGE.
+#
+################################################################################
+
+# Additional extensions
+ifneq (,$(wildcard extras/Makefile))
+    EXTERNALS += extras
+endif
+
+# glew dependency
+ifneq (,$(GLEW))
+    VPATH     += $(GLEW)/src
+    CSOURCES  += $(wildcard $(GLEW)/src/*.c)
+endif
+
+# STB dependency
+CFLAGS   += -I$(TOP_DIR)/externals/STB/include
+CXXFLAGS += -I$(TOP_DIR)/externals/STB/include
+
+# minimp3 dependency
+CFLAGS   += -I$(TOP_DIR)/externals/minimp3/include
+CXXFLAGS += -I$(TOP_DIR)/externals/minimp3/include
+
+# giflib support
+ifeq ($(CHAI3D_USE_GIFLIB), no)
+    # Remove source files that rely on giflib.
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/files/CFileImageGIF.cpp, $(CPPSOURCES))
+    CXXFLAGS += -DCHAI3D_GIFLIB_DISABLED
+else
+    # giflib dependency (optional)
+    ifeq ($(CHAI3D_USE_EXTERNAL_GIFLIB), no)
+        GIF       = $(TOP_DIR)/externals/giflib
+        CFLAGS   += -I$(GIF)/include
+        CXXFLAGS += -I$(GIF)/include
+        VPATH    += $(GIF)/src
+        CSOURCES += $(wildcard $(GIF)/src/*.c)
+    endif
+endif
+
+# lib3ds support
+ifeq ($(CHAI3D_USE_LIB3DS), no)
+    # Remove source files that rely on lib3ds.
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/files/CFileModel3DS.cpp, $(CPPSOURCES))
+    CXXFLAGS += -DCHAI3D_LIB3DS_DISABLED
+else
+    # lib3ds dependency (optional)
+    ifeq ($(CHAI3D_USE_EXTERNAL_LIB3DS), no)
+        3DS       = $(TOP_DIR)/externals/lib3ds
+        CFLAGS   += -I$(3DS)/include
+        CXXFLAGS += -I$(3DS)/include
+        VPATH    += $(3DS)/src
+        CSOURCES += $(wildcard $(3DS)/src/*.c)
+    endif
+endif
+
+# libjpeg support
+ifeq ($(CHAI3D_USE_LIBJPEG), no)
+    # Remove source files that rely on libjpeg.
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/files/CFileImageJPG.cpp, $(CPPSOURCES))
+    CXXFLAGS += -DCHAI3D_LIBJPEG_DISABLED
+else
+    # libjpeg dependency (optional)
+    ifeq ($(CHAI3D_USE_EXTERNAL_LIBJPEG), no)
+        JPG       = $(TOP_DIR)/externals/libjpeg
+        CFLAGS   += -I$(JPG)/include
+        CXXFLAGS += -I$(JPG)/include
+        VPATH    += $(JPG)/src
+        CSOURCES += $(filter-out $(JPG)/src/jmemnobs.c, $(wildcard $(JPG)/src/*.c))
+    endif
+endif
+
+# libpng support
+ifeq ($(CHAI3D_USE_LIBPNG), no)
+    # Remove source files that rely on libpng.
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/files/CFileImagePNG.cpp, $(CPPSOURCES))
+    CXXFLAGS += -DCHAI3D_LIBPNG_DISABLED
+else
+    # libpng dependency (optional)
+    ifeq ($(CHAI3D_USE_EXTERNAL_LIBPNG), no)
+        PNG           = $(TOP_DIR)/externals/libpng
+        CFLAGS       += -DPNG_ARM_NEON_OPT=0
+        CXXFLAGS     += -DPNG_ARM_NEON_OPT=0
+        CFLAGS   += -I$(PNG)/include
+        CXXFLAGS += -I$(PNG)/include
+        VPATH        += $(PNG)/src
+        CSOURCES     += $(filter-out $(wildcard $(PNG)/src/*_core.c), $(wildcard $(PNG)/src/*.c))
+    endif
+endif
+
+# PugiXML support
+ifeq ($(CHAI3D_USE_PUGIXML), no)
+    # Remove source files that rely on PugiXML.
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/files/CFileXML.cpp, $(CPPSOURCES))
+    CXXFLAGS += -DCHAI3D_PUGIXML_DISABLED
+else
+    # pugixml dependency (optional)
+    ifeq ($(CHAI3D_USE_EXTERNAL_PUGIXML), no)
+        PUGIXML     = $(TOP_DIR)/externals/pugixml
+        CFLAGS     += -I$(PUGIXML)/include
+        CXXFLAGS   += -I$(PUGIXML)/include
+        VPATH      += $(PUGIXML)/src
+        CPPSOURCES += $(wildcard $(PUGIXML)/src/*.cpp)
+    endif
+endif
+
+# OpenAL support
+ifeq ($(CHAI3D_USE_OPENAL), no)
+    # Remove source files that rely on OpenAL.
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/audio/CAudioBuffer.cpp, $(CPPSOURCES))
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/audio/CAudioDevice.cpp, $(CPPSOURCES))
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/audio/CAudioSource.cpp, $(CPPSOURCES))
+    CXXFLAGS += -DCHAI3D_OPENAL_DISABLED
+else
+    # OpenAL dependency (optional)
+    ifeq ($(CHAI3D_USE_EXTERNAL_OPENAL), no)
+        OPENAL        = $(TOP_DIR)/externals/openal
+        CFLAGS       += -DAL_ALEXT_PROTOTYPES -DAL_BUILD_LIBRARY -DAL_LIBTYPE_STATIC
+        CXXFLAGS     += -DAL_ALEXT_PROTOTYPES -DAL_BUILD_LIBRARY -DAL_LIBTYPE_STATIC
+        CFLAGS       += -I$(OPENAL)/include -I$(OPENAL)/OpenAL32/Include -I$(DIR)/Alc
+        CXXFLAGS     += -I$(OPENAL)/include -I$(OPENAL)/OpenAL32/Include -I$(DIR)/Alc
+        VPATH        += $(OPENAL)/OpenAL32
+        VPATH        += $(OPENAL)/Alc
+        VPATH        += $(OPENAL)/Alc/backends
+        VPATH        += $(OPENAL)/Alc/effects
+        CSOURCES     += $(wildcard $(OPENAL)/OpenAL32/*.c)
+        CSOURCES     += $(wildcard $(OPENAL)/Alc/backends/*.c)
+        CSOURCES     += $(wildcard $(OPENAL)/Alc/*.c)
+    endif
+endif
+
+# RtMidi support
+ifeq ($(CHAI3D_USE_RTMIDI), no)
+    # Remove source files that rely on RtMidi.
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/devices/CXTouchController.cpp, $(CPPSOURCES))
+    CXXFLAGS += -DCHAI3D_RTMIDI_DISABLED
+else
+    # RT Midi dependency
+    ifeq ($(CHAI3D_USE_EXTERNAL_RTMIDI), no)
+        RTMIDI = $(TOP_DIR)/externals/RtMidi
+        ifeq ($(SYSTEM), Linux)
+            CFLAGS   += -D__LINUX_ALSA__
+            CXXFLAGS += -D__LINUX_ALSA__
+        endif
+        ifeq ($(SYSTEM), Darwin)
+            CFLAGS   += -D__MACOSX_CORE__
+            CXXFLAGS += -D__MACOSX_CORE__
+        endif
+        CFLAGS     += -I$(RTMIDI)
+        CXXFLAGS   += -I$(RTMIDI)
+        VPATH      += $(RTMIDI)
+        CPPSOURCES += $(wildcard $(RTMIDI)/*.cpp)
+    endif
+endif
+
+# TheoraPlayer support
+ifeq ($(CHAI3D_USE_THEORAPLAYER), no)
+    # Remove source files that rely on TheoraPlayer.
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/graphics/CVideo.cpp, $(CPPSOURCES))
+    CPPSOURCES := $(filter-out $(TOP_DIR)/src/materials/CTextureVideo.cpp, $(CPPSOURCES))
+    CXXFLAGS += -DCHAI3D_THEORAPLAYER_DISABLED
+else
+    # Theora Player dependency (optional)
+    ifeq ($(CHAI3D_USE_EXTERNAL_THEORAPLAYER), no)
+        THEORAPLAYER  = $(TOP_DIR)/externals/theoraplayer
+        CFLAGS       += -D__THEORA -D_LIB
+        CXXFLAGS     += -D__THEORA -D_LIB
+        CFLAGS       += -I$(THEORAPLAYER)/include/theoraplayer
+        CXXFLAGS     += -I$(THEORAPLAYER)/include/theoraplayer
+        CFLAGS       += -I$(THEORAPLAYER)/src/YUV/C
+        CXXFLAGS     += -I$(THEORAPLAYER)/src/YUV/C
+        CFLAGS       += -I$(THEORAPLAYER)/src/Theora
+        CXXFLAGS     += -I$(THEORAPLAYER)/src/Theora
+        CFLAGS       += -I$(THEORAPLAYER)/externals/ogg/include
+        CXXFLAGS     += -I$(THEORAPLAYER)/externals/ogg/include
+        CFLAGS       += -I$(THEORAPLAYER)/externals/vorbis/include
+        CXXFLAGS     += -I$(THEORAPLAYER)/externals/vorbis/include
+        CFLAGS       += -I$(THEORAPLAYER)/externals/vorbis/lib
+        CXXFLAGS     += -I$(THEORAPLAYER)/externals/vorbis/lib
+        CFLAGS       += -I$(THEORAPLAYER)/externals/theora/include
+        CXXFLAGS     += -I$(THEORAPLAYER)/externals/theora/include
+        CFLAGS       += -I$(THEORAPLAYER)/externals/theora/lib
+        CXXFLAGS     += -I$(THEORAPLAYER)/externals/theora/lib
+        VPATH        += $(THEORAPLAYER)/src
+        VPATH        += $(THEORAPLAYER)/src/YUV/C
+        VPATH        += $(THEORAPLAYER)/src/Theora
+        VPATH        += $(THEORAPLAYER)/externals/ogg/src
+        VPATH        += $(THEORAPLAYER)/externals/vorbis/lib
+        VPATH        += $(THEORAPLAYER)/externals/theora/lib
+        VPATH        += $(THEORAPLAYER)/externals/theora/lib/x86
+        CPPSOURCES   += $(wildcard $(THEORAPLAYER)/src/*.cpp)
+        CPPSOURCES   += $(wildcard $(THEORAPLAYER)/src/Theora/*.cpp)
+        CSOURCES     += $(wildcard $(THEORAPLAYER)/src/YUV/C/*.c)
+        CSOURCES     += $(wildcard $(THEORAPLAYER)/externals/ogg/src/*.c)
+        CSOURCES     += $(wildcard $(THEORAPLAYER)/externals/vorbis/lib/*.c)
+        CSOURCES     += $(filter-out $(THEORAPLAYER)/externals/theora/lib/encoder_disabled.c, $(wildcard $(THEORAPLAYER)/externals/theora/lib/*.c))
+        CSOURCES     += $(wildcard $(THEORAPLAYER)/externals/theora/lib/x86/*.c)
+    endif
+endif

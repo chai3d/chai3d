@@ -1,0 +1,413 @@
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!--                                                                         -->
+<!-- Software License Agreement (BSD License)                                -->
+<!-- Copyright (c) 2003-2024, CHAI3D                                         -->
+<!-- (www.chai3d.org)                                                        -->
+<!--                                                                         -->
+<!-- All rights reserved.                                                    -->
+<!--                                                                         -->
+<!-- Redistribution and use in source and binary forms, with or without      -->
+<!-- modification, are permitted provided that the following conditions      -->
+<!-- are met:                                                                -->
+<!--                                                                         -->
+<!-- * Redistributions of source code must retain the above copyright        -->
+<!-- notice, this list of conditions and the following disclaimer.           -->
+<!--                                                                         -->
+<!-- * Redistributions in binary form must reproduce the above               -->
+<!-- copyright notice, this list of conditions and the following             -->
+<!-- disclaimer in the documentation and/or other materials provided         -->
+<!-- with the distribution.                                                  -->
+<!--                                                                         -->
+<!-- * Neither the name of CHAI3D nor the names of its contributors may      -->
+<!-- be used to endorse or promote products derived from this software       -->
+<!-- without specific prior written permission.                              -->
+<!--                                                                         -->
+<!-- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS     -->
+<!-- "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT       -->
+<!-- LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS       -->
+<!-- FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE          -->
+<!-- COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,     -->
+<!-- INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,    -->
+<!-- BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;        -->
+<!-- LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER        -->
+<!-- CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT      -->
+<!-- LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN       -->
+<!-- ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE         -->
+<!-- POSSIBILITY OF SUCH DAMAGE.                                             -->
+<!--                                                                         -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!--                                                                         -->
+<!-- This file can be used to control what external library support is       -->
+<!-- included with the chai3d library build, and whether the source of the   -->
+<!-- supported library is internal or external to the chai3d project.        -->
+<!--                                                                         -->
+<!-- This feature is intended to be used by parent projects that include     -->
+<!-- chai3d as an external library, and may want to disable specific         -->
+<!-- features to avoid conflicts.                                            -->
+<!--                                                                         -->
+<!-- To deploy, copy this file to the folder of the parent project that      -->
+<!-- the VisualStudio solution file, and rename it to Directory.Build.props. -->
+<!--                                                                         -->
+<!-- Each section below controls a given external library (e.g. MyLibrary)   -->
+<!-- and defines two variables:                                              -->
+<!--   * Chai3dUseMyLibrary (true/false) enables/disables library support    -->
+<!--   * Chai3dUseExternalMyLibrary (true/false) can be used to specific an  -->
+<!--     alternative version for the library that is provided outside of the -->
+<!--     chai3d source tree. The location of this external library headers   -->
+<!--     and (optional) library file can be specified in the                 -->
+<!--     <ItemDefinitionGroup> section of the MyLibrary configuration block. -->
+<!--                                                                         -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<Project>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- giflib                                                                -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <!-- Define giflib support flags -->
+  <PropertyGroup>
+    
+    <!-- Set flag to "false" to disable giflib support -->
+    <Chai3dUseGiflib Condition="'$(Chai3dUseGiflib)' == ''">true</Chai3dUseGiflib>
+
+    <!-- Set flag to "true" to use external giflib library -->
+    <Chai3dUseExternalGiflib Condition="'$(Chai3dUseExternalGiflib)' == ''">false</Chai3dUseExternalGiflib>
+
+    <!-- DO NOT MODIFY: override Chai3dUseExternalGiflib if Chai3dUseGiflib is set to "false" to prevent externals/giflib source inclusion -->
+    <Chai3dUseExternalGiflib Condition="'$(Chai3dUseGiflib)' == 'false'">true</Chai3dUseExternalGiflib>
+
+  </PropertyGroup>
+
+  <!-- Configure external giflib library if required -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseGiflib)' != 'false' And '$(Chai3dUseExternalGiflib)' != 'false'">
+
+    <!-- Define the path to the external giflib headers (point to the internal headers by default) -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/giflib/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <!-- Optional: add an external giflib library to the librarian (e.g. "giflib.lib;%(AdditionalDependencies)%") -->
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+
+  </ItemDefinitionGroup>
+  
+  <!-- Report giflib as missing if it is not enabled -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseGiflib)' == 'false'">
+
+    <!-- Set a macro that lets chai3d know that giflib is not enabled -->
+    <ClCompile>
+      <PreprocessorDefinitions>CHAI3D_GIFLIB_DISABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+
+  </ItemDefinitionGroup>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- lib3ds                                                                -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <!-- Define lib3ds support flags -->
+  <PropertyGroup>
+    
+    <!-- Set flag to "false" to disable lib3ds support -->
+    <Chai3dUseLib3ds Condition="'$(Chai3dUseLib3ds)' == ''">true</Chai3dUseLib3ds>
+
+    <!-- Set flag to "true" to use external lib3ds library -->
+    <Chai3dUseExternalLib3ds Condition="'$(Chai3dUseExternalLib3ds)' == ''">false</Chai3dUseExternalLib3ds>
+
+    <!-- DO NOT MODIFY: override Chai3dUseExternalLib3ds if Chai3dUseLib3ds is set to "false" to prevent externals/lib3ds source inclusion -->
+    <Chai3dUseExternalLib3ds Condition="'$(Chai3dUseLib3ds)' == 'false'">true</Chai3dUseExternalLib3ds>
+
+  </PropertyGroup>
+
+  <!-- Configure external lib3ds library if required -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseLib3ds)' != 'false' And '$(Chai3dUseExternalLib3ds)' != 'false'">
+
+    <!-- Define the path to the external lib3ds headers (point to the internal headers by default) -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/lib3ds/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <!-- Optional: add an external lib3ds library to the librarian (e.g. "lib3ds.lib;%(AdditionalDependencies)%") -->
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+
+  </ItemDefinitionGroup>
+
+  <!-- Report lib3ds as missing if it is not enabled -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseLib3ds)' == 'false'">
+
+    <!-- Set a macro that lets chai3d know that lib3ds is not enabled -->
+    <ClCompile>
+      <PreprocessorDefinitions>CHAI3D_LIB3DS_DISABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+
+  </ItemDefinitionGroup>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- libjpeg                                                               -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <!-- Define libjpeg support flags -->
+  <PropertyGroup>
+    
+    <!-- Set flag to "false" to disable libjpeg support -->
+    <Chai3dUseLibjpeg Condition="'$(Chai3dUseLibjpeg)' == ''">true</Chai3dUseLibjpeg>
+
+    <!-- Set flag to "true" to use external libjpeg library -->
+    <Chai3dUseExternalLibjpeg Condition="'$(Chai3dUseExternalLibjpeg)' == ''">false</Chai3dUseExternalLibjpeg>
+
+    <!-- DO NOT MODIFY: override Chai3dUseExternalLibjpeg if Chai3dUseLibjpeg is set to "false" to prevent externals/libjpeg source inclusion -->
+    <Chai3dUseExternalLibjpeg Condition="'$(Chai3dUseLibjpeg)' == 'false'">true</Chai3dUseExternalLibjpeg>
+
+  </PropertyGroup>
+
+  <!-- Configure external libjpeg library if required -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseLibjpeg)' != 'false' And '$(Chai3dUseExternalLibjpeg)' != 'false'">
+
+    <!-- Define the path to the external libjpeg headers (point to the internal headers by default) -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/libjpeg/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <!-- Optional: add an external libjpeg library to the librarian (e.g. "libjpeg.lib;%(AdditionalDependencies)%") -->
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+
+  </ItemDefinitionGroup>
+
+  <!-- Report libjpeg as missing if it is not enabled -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseLibjpeg)' == 'false'">
+
+    <!-- Set a macro that lets chai3d know that libjpeg is not enabled -->
+    <ClCompile>
+      <PreprocessorDefinitions>CHAI3D_LIBJPEG_DISABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+
+  </ItemDefinitionGroup>
+  
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- libpng                                                                -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <!-- Define libpng support flags -->
+  <PropertyGroup>
+    
+    <!-- Set flag to "false" to disable libpng support -->
+    <Chai3dUseLibpng Condition="'$(Chai3dUseLibpng)' == ''">true</Chai3dUseLibpng>
+
+    <!-- Set flag to "true" to use external libpng library -->
+    <Chai3dUseExternalLibpng Condition="'$(Chai3dUseExternalLibpng)' == ''">false</Chai3dUseExternalLibpng>
+
+    <!-- DO NOT MODIFY: override Chai3dUseExternalLibpng if Chai3dUseLibpng is set to "false" to prevent externals/libpng source inclusion -->
+    <Chai3dUseExternalLibpng Condition="'$(Chai3dUseLibpng)' == 'false'">true</Chai3dUseExternalLibpng>
+
+  </PropertyGroup>
+
+  <!-- Configure external libpng library if required -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseLibpng)' != 'false' And '$(Chai3dUseExternalLibpng)' != 'false'">
+
+    <!-- Define the path to the external libpng headers (point to the internal headers by default) -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/libpng/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <!-- Optional: add an external libpng library to the librarian (e.g. "libpng.lib;%(AdditionalDependencies)%") -->
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+
+  </ItemDefinitionGroup>
+
+  <!-- Report libpng as missing if it is not enabled -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseLibpng)' == 'false'">
+
+    <!-- Set a macro that lets chai3d know that libpng is not enabled -->
+    <ClCompile>
+      <PreprocessorDefinitions>CHAI3D_LIBPNG_DISABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+
+  </ItemDefinitionGroup>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- OpenAL                                                                -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <!-- Define OpenAL support flags -->
+  <PropertyGroup>
+    
+    <!-- Set flag to "false" to disable OpenAL support -->
+    <Chai3dUseOpenAL Condition="'$(Chai3dUseOpenAL)' == ''">true</Chai3dUseOpenAL>
+
+    <!-- Set flag to "true" to use external OpenAL library -->
+    <Chai3dUseExternalOpenAL Condition="'$(Chai3dUseExternalOpenAL)' == ''">false</Chai3dUseExternalOpenAL>
+
+    <!-- DO NOT MODIFY: override Chai3dUseExternalOpenAL if Chai3dUseOpenAL is set to "false" to prevent externals/openal source inclusion -->
+    <Chai3dUseExternalOpenAL Condition="'$(Chai3dUseOpenAL)' == 'false'">true</Chai3dUseExternalOpenAL>
+
+  </PropertyGroup>
+
+  <!-- Configure external OpenAL library if required -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseOpenAL)' != 'false' And '$(Chai3dUseExternalOpenAL)' != 'false'">
+
+    <!-- Define the path to the external OpenAL headers (point to the internal headers by default) -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/openal/include;externals/openal/OpenAL32/Include;externals/openal/Alc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <!-- Optional: add an external OpenAL library to the librarian (e.g. "openal.lib;%(AdditionalDependencies)%") -->
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+
+  </ItemDefinitionGroup>
+
+  <!-- Report OpenAL as missing if it is not enabled -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseOpenAL)' == 'false'">
+
+    <!-- Set a macro that lets chai3d know that OpenAL is not enabled -->
+    <ClCompile>
+      <PreprocessorDefinitions>CHAI3D_OPENAL_DISABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+
+  </ItemDefinitionGroup>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- PugiXML                                                               -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <!-- Define PugiXML support flags -->
+  <PropertyGroup>
+    
+    <!-- Set flag to "false" to disable PugiXML support -->
+    <Chai3dUsePugiXML Condition="'$(Chai3dUsePugiXML)' == ''">true</Chai3dUsePugiXML>
+
+    <!-- Set flag to "true" to use external PugiXML library -->
+    <Chai3dUseExternalPugiXML Condition="'$(Chai3dUseExternalPugiXML)' == ''">false</Chai3dUseExternalPugiXML>
+
+    <!-- DO NOT MODIFY: override Chai3dUseExternalPugiXML if Chai3dUsePugiXML is set to "false" to prevent externals/pugixml source inclusion -->
+    <Chai3dUseExternalPugiXML Condition="'$(Chai3dUsePugiXML)' == 'false'">true</Chai3dUseExternalPugiXML>
+
+  </PropertyGroup>
+
+  <!-- Configure external PugiXML library if required -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUsePugiXML)' != 'false' And '$(Chai3dUseExternalPugiXML)' != 'false'">
+
+    <!-- Define the path to the external PugiXML headers (point to the internal headers by default) -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/pugixml/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <!-- Optional: add an external PugiXML library to the librarian (e.g. "PugiXML.lib;%(AdditionalDependencies)%") -->
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+
+  </ItemDefinitionGroup>
+
+  <!-- Report PugiXML as missing if it is not enabled -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUsePugiXML)' == 'false'">
+
+    <!-- Set a macro that lets chai3d know that PugiXML is not enabled -->
+    <ClCompile>
+      <PreprocessorDefinitions>CHAI3D_PUGIXML_DISABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+
+  </ItemDefinitionGroup>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- RtMidi                                                                -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <!-- Define RtMidi support flags -->
+  <PropertyGroup>
+    
+    <!-- Set flag to "false" to disable RtMidi support -->
+    <Chai3dUseRtMidi Condition="'$(Chai3dUseRtMidi)' == ''">true</Chai3dUseRtMidi>
+
+    <!-- Set flag to "true" to use external RtMidi library -->
+    <Chai3dUseExternalRtMidi Condition="'$(Chai3dUseExternalRtMidi)' == ''">false</Chai3dUseExternalRtMidi>
+
+    <!-- DO NOT MODIFY: override Chai3dUseExternalRtMidi if Chai3dUseRtMidi is set to "false" to prevent externals/RtMidi source inclusion -->
+    <Chai3dUseExternalRtMidi Condition="'$(Chai3dUseRtMidi)' == 'false'">true</Chai3dUseExternalRtMidi>
+
+  </PropertyGroup>
+
+  <!-- Configure external RtMidi library if required -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseRtMidi)' != 'false' And '$(Chai3dUseExternalRtMidi)' != 'false'">
+
+    <!-- Define the path to the external RtMidi headers (point to the internal headers by default) -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/RtMidi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <!-- Optional: add an external RtMidi library to the librarian (e.g. "RtMidi.lib;%(AdditionalDependencies)%") -->
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+
+  </ItemDefinitionGroup>
+
+  <!-- Report RtMidi as missing if it is not enabled -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseRtMidi)' == 'false'">
+
+    <!-- Set a macro that lets chai3d know that RtMidi is not enabled -->
+    <ClCompile>
+      <PreprocessorDefinitions>CHAI3D_RTMIDI_DISABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+
+  </ItemDefinitionGroup>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- TheoraPlayer                                                          -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <!-- Define TheoraPlayer support flags -->
+  <PropertyGroup>
+    
+    <!-- Set flag to "false" to disable TheoraPlayer support -->
+    <Chai3dUseTheoraPlayer Condition="'$(Chai3dUseTheoraPlayer)' == ''">true</Chai3dUseTheoraPlayer>
+
+    <!-- DO NOT MODIFY: override Chai3dUseTheoraPlayer if Chai3dUseOpenAL is set to "false" (TheoraPlayer requires OpenAL) -->
+    <Chai3dUseTheoraPlayer Condition="'$(Chai3dUseOpenAL)' == 'false'">false</Chai3dUseTheoraPlayer>
+
+    <!-- Set flag to "true" to use external TheoraPlayer library -->
+    <Chai3dUseExternalTheoraPlayer Condition="'$(Chai3dUseExternalTheoraPlayer)' == ''">false</Chai3dUseExternalTheoraPlayer>
+
+    <!-- DO NOT MODIFY: override Chai3dUseExternalTheoraPlayer if Chai3dUseTheoraPlayer is set to "false" to prevent externals/TheoraPlayer source inclusion -->
+    <Chai3dUseExternalTheoraPlayer Condition="'$(Chai3dUseTheoraPlayer)' == 'false'">true</Chai3dUseExternalTheoraPlayer>
+
+  </PropertyGroup>
+
+  <!-- Configure external TheoraPlayer library if required -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseTheoraPlayer)' != 'false' And '$(Chai3dUseExternalTheoraPlayer)' != 'false'">
+
+    <!-- Define the path to the external TheoraPlayer headers (point to the internal headers by default) -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>externals/theoraplayer/include/theoraplayer;externals/theoraplayer/src/Theora;externals/theoraplayer/src/YUV/C;externals/theoraplayer/externals/ogg/include;externals/theoraplayer/externals/vorbis/include;externals/theoraplayer/externals/vorbis/lib;externals/theoraplayer/externals/theora/include;externals/theoraplayer/externals/theora/lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <!-- Optional: add an external TheoraPlayer library to the librarian (e.g. "TheoraPlayer.lib;%(AdditionalDependencies)%") -->
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+
+  </ItemDefinitionGroup>
+
+  <!-- Report TheoraPlayer as missing if it is not enabled -->
+  <ItemDefinitionGroup Condition="'$(Chai3dUseTheoraPlayer)' == 'false'">
+
+    <!-- Set a macro that lets chai3d know that TheoraPlayer is not enabled -->
+    <ClCompile>
+      <PreprocessorDefinitions>CHAI3D_THEORAPLAYER_DISABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+
+  </ItemDefinitionGroup>
+
+</Project>

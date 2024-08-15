@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2159 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -103,6 +103,9 @@ public:
     //--------------------------------------------------------------------------
 
 public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("Texture1d"); }
 
     //! This method set the texture unit where a_textureUnit is GL_TEXTUREi_ARB, where 0i<GL_MAX_TEXTURE_UNITS_ARB.
     inline void setTextureUnit(const GLenum a_textureUnit) { m_textureUnit = a_textureUnit; }

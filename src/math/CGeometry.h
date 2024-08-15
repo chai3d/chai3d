@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2171 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -317,19 +317,19 @@ inline cVector3d cProjectPointOnSegment(const cVector3d& a_point,
     double distanceAP = cDistanceSq(projection, a_segmentPointA);
     double distanceBP = cDistanceSq(projection, a_segmentPointB);
 
-    if (distanceAP > distanceAB)
+    if ((distanceAP > distanceAB) || (distanceBP > distanceAB))
     {
-        return(a_segmentPointB);
+        if (distanceAP < distanceBP)
+        {
+            return(a_segmentPointA);
+        }
+        else
+        {
+            return(a_segmentPointB);
+        }
     }
-    else
-    if (distanceBP > distanceAB)
-    {
-        return(a_segmentPointA);
-    }
-    else
-    {
-        return(projection);
-    }
+
+    return(projection);
 }
 
 

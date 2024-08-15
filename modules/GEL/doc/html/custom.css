@@ -1,8 +1,13 @@
-/* additional/overloaded CSS for doxygen 1.8.6 */
+/* additional/overloaded CSS for doxygen 1.9.8 */
 
 h1, h2, h3, h4, h5, h6 
 {
     margin-top: 38px;
+}
+
+div#titlearea
+{
+    display: none;
 }
 
 #projectlogo

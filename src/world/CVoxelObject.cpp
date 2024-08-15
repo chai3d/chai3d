@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Sonny Chan
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2175 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -111,7 +111,6 @@ cVoxelObject::cVoxelObject()
 
     // enable transparency 
     setTransparencyLevel(1.0f);
-    setUseTransparency(true);
 
     // use linear interpollation
     m_useLinearInterpolation = false;
@@ -164,6 +163,9 @@ void cVoxelObject::setRenderingModeBasic()
     // set internal rendering mode
     m_renderingMode = C_RENDERING_MODE_BASIC;
 
+    // enable transparency
+    setUseTransparency(true);
+
     // set interpolation mode
     setUseLinearInterpolation(false);
 }
@@ -179,6 +181,9 @@ void cVoxelObject::setRenderingModeVoxelColors()
     // set internal rendering mode
     m_renderingMode = C_RENDERING_MODE_VOXEL_RGBA8;
 
+    // disable transparency
+    setUseTransparency(false);
+
     // set interpolation mode
     setUseLinearInterpolation(false);
 }
@@ -193,6 +198,9 @@ void cVoxelObject::setRenderingModeVoxelColorMap()
 {
     // set internal rendering mode
     m_renderingMode = C_RENDERING_MODE_VOXEL_LUT8;
+
+    // disable transparency
+    setUseTransparency(false);
 
     // set interpolation mode
     setUseLinearInterpolation(false);
@@ -222,6 +230,9 @@ void cVoxelObject::setRenderingModeIsosurfaceMaterial()
             }
         }
     }
+
+    // disable transparency
+    setUseTransparency(false);
 
     // set interpolation mode
     setUseLinearInterpolation(true);
@@ -253,6 +264,9 @@ void cVoxelObject::setRenderingModeIsosurfaceColors()
         }
     }
 
+    // disable transparency
+    setUseTransparency(false);
+
     // set interpolation mode
     setUseLinearInterpolation(true);
 }
@@ -270,6 +284,9 @@ void cVoxelObject::setRenderingModeIsosurfaceColorMap()
 
     // set internal rendering mode
     m_renderingMode = C_RENDERING_MODE_ISOSURFACE_LUT8;
+
+    // disable transparency
+    setUseTransparency(false);
 
     // set interpolation mode
     setUseLinearInterpolation(true);
@@ -289,6 +306,9 @@ void cVoxelObject::setRenderingModeDVRColorMap()
     // set internal rendering mode
     m_renderingMode = C_RENDERING_MODE_DVR_LUT8;
 
+    // disable transparency
+    setUseTransparency(true);
+
     // set interpolation mode
     setUseLinearInterpolation(true);
 }
@@ -303,6 +323,9 @@ void cVoxelObject::setRenderingModeCustom()
 {
     // set internal rendering mode
     m_renderingMode = C_RENDERING_MODE_CUSTOM;
+
+    // disable transparency
+    setUseTransparency(false);
 
     // set interpolation mode
     setUseLinearInterpolation(false);
@@ -664,11 +687,10 @@ void cVoxelObject::update(cRenderOptions& a_options)
         }
 
         // organize vertices in counter clock wise order
-        int i,j;
-        i = 0;
+        int i = 0;
         while (i < numCollisions)
         {
-            j = i+1;
+            int j = i + 1;
             while (j < numCollisions)
             {
                 if (collisionAngles[i] < collisionAngles[j])
@@ -684,41 +706,41 @@ void cVoxelObject::update(cRenderOptions& a_options)
         // create triangles
         if (numCollisions >= 3)
         {
-            int i=2;
+            i = 2;
             while (i < numCollisions)
             {
                 int v0 = newVertex(collisions[0]);
                 int v1 = newVertex(collisions[i-1]);
                 int v2 = newVertex(collisions[i]);
 
-                cVector3d texCoord, pos, temp;
+                cVector3d texCoord, vertexPos, temp;
 
                 // texcoord v0
-                pos = m_vertices->getLocalPos(v0);
+                vertexPos = m_vertices->getLocalPos(v0);
 
-                texCoord(0) = (pos(0) - m_minCorner(0)) / (m_maxCorner(0) - m_minCorner(0)) * (m_maxTextureCoord(0) - m_minTextureCoord(0)) +  m_minTextureCoord(0);
-                texCoord(1) = (pos(1) - m_minCorner(1)) / (m_maxCorner(1) - m_minCorner(1)) * (m_maxTextureCoord(1) - m_minTextureCoord(1)) +  m_minTextureCoord(1);
-                texCoord(2) = (pos(2) - m_minCorner(2)) / (m_maxCorner(2) - m_minCorner(2)) * (m_maxTextureCoord(2) - m_minTextureCoord(2)) +  m_minTextureCoord(2);
+                texCoord(0) = (vertexPos(0) - m_minCorner(0)) / (m_maxCorner(0) - m_minCorner(0)) * (m_maxTextureCoord(0) - m_minTextureCoord(0)) +  m_minTextureCoord(0);
+                texCoord(1) = (vertexPos(1) - m_minCorner(1)) / (m_maxCorner(1) - m_minCorner(1)) * (m_maxTextureCoord(1) - m_minTextureCoord(1)) +  m_minTextureCoord(1);
+                texCoord(2) = (vertexPos(2) - m_minCorner(2)) / (m_maxCorner(2) - m_minCorner(2)) * (m_maxTextureCoord(2) - m_minTextureCoord(2)) +  m_minTextureCoord(2);
 
                 m_vertices->setTexCoord(v0, texCoord);
                 m_vertices->setNormal(v0, normal);
                 //m_vertices->setColor(v0, texCoord(0), texCoord(1), texCoord(2), 1.0);
 
                 // texcoord v1
-                pos = m_vertices->getLocalPos(v1);
+                vertexPos = m_vertices->getLocalPos(v1);
 
-                texCoord(0) = (pos(0) - m_minCorner(0)) / (m_maxCorner(0) - m_minCorner(0)) * (m_maxTextureCoord(0) - m_minTextureCoord(0)) +  m_minTextureCoord(0);
-                texCoord(1) = (pos(1) - m_minCorner(1)) / (m_maxCorner(1) - m_minCorner(1)) * (m_maxTextureCoord(1) - m_minTextureCoord(1)) +  m_minTextureCoord(1);
-                texCoord(2) = (pos(2) - m_minCorner(2)) / (m_maxCorner(2) - m_minCorner(2)) * (m_maxTextureCoord(2) - m_minTextureCoord(2)) +  m_minTextureCoord(2);
+                texCoord(0) = (vertexPos(0) - m_minCorner(0)) / (m_maxCorner(0) - m_minCorner(0)) * (m_maxTextureCoord(0) - m_minTextureCoord(0)) +  m_minTextureCoord(0);
+                texCoord(1) = (vertexPos(1) - m_minCorner(1)) / (m_maxCorner(1) - m_minCorner(1)) * (m_maxTextureCoord(1) - m_minTextureCoord(1)) +  m_minTextureCoord(1);
+                texCoord(2) = (vertexPos(2) - m_minCorner(2)) / (m_maxCorner(2) - m_minCorner(2)) * (m_maxTextureCoord(2) - m_minTextureCoord(2)) +  m_minTextureCoord(2);
                 m_vertices->setTexCoord(v1, texCoord);
                 m_vertices->setNormal(v1, normal);
                 //m_vertices->setColor(v1, texCoord(0), texCoord(1), texCoord(2), 1.0);
 
                 // texcoord v1
-                pos = m_vertices->getLocalPos(v2);
-                texCoord(0) = (pos(0) - m_minCorner(0)) / (m_maxCorner(0) - m_minCorner(0)) * (m_maxTextureCoord(0) - m_minTextureCoord(0)) +  m_minTextureCoord(0);
-                texCoord(1) = (pos(1) - m_minCorner(1)) / (m_maxCorner(1) - m_minCorner(1)) * (m_maxTextureCoord(1) - m_minTextureCoord(1)) +  m_minTextureCoord(1);
-                texCoord(2) = (pos(2) - m_minCorner(2)) / (m_maxCorner(2) - m_minCorner(2)) * (m_maxTextureCoord(2) - m_minTextureCoord(2)) +  m_minTextureCoord(2);
+                vertexPos = m_vertices->getLocalPos(v2);
+                texCoord(0) = (vertexPos(0) - m_minCorner(0)) / (m_maxCorner(0) - m_minCorner(0)) * (m_maxTextureCoord(0) - m_minTextureCoord(0)) +  m_minTextureCoord(0);
+                texCoord(1) = (vertexPos(1) - m_minCorner(1)) / (m_maxCorner(1) - m_minCorner(1)) * (m_maxTextureCoord(1) - m_minTextureCoord(1)) +  m_minTextureCoord(1);
+                texCoord(2) = (vertexPos(2) - m_minCorner(2)) / (m_maxCorner(2) - m_minCorner(2)) * (m_maxTextureCoord(2) - m_minTextureCoord(2)) +  m_minTextureCoord(2);
                 m_vertices->setTexCoord(v2, texCoord);
                 m_vertices->setNormal(v2, normal);
                 //m_vertices->setColor(v2, texCoord(0), texCoord(1), texCoord(2), 1.0);
@@ -1097,7 +1119,9 @@ bool cVoxelObject::computeOtherCollisionDetection(cVector3d& a_segmentPointA,
     double collisionDistanceSq = C_LARGE;
     double collisionPointV01 = 0.0;
     double collisionPointV02 = 0.0;
-    int voxelIndexX, voxelIndexY, voxelIndexZ;
+    int voxelIndexX = 0;
+    int voxelIndexY = 0;
+    int voxelIndexZ = 0;
     
     // compute distance between both point composing segment
     double distanceAB = cDistance(a_segmentPointB, a_segmentPointA);
@@ -1161,9 +1185,9 @@ bool cVoxelObject::computeOtherCollisionDetection(cVector3d& a_segmentPointA,
                             {
                                 // compute position of texel in local space
                                 double tpos[3];
-                                tpos[0] = m_minCorner(0) + ((((double)t0 / texSize[0]) - m_minTextureCoord(0)) / (texRange(0))) * (objectRange(0));
-                                tpos[1] = m_minCorner(1) + ((((double)t1 / texSize[1]) - m_minTextureCoord(1)) / (texRange(1))) * (objectRange(1));
-                                tpos[2] = m_minCorner(2) + ((((double)t2 / texSize[2]) - m_minTextureCoord(2)) / (texRange(2))) * (objectRange(2));
+                                tpos[0] = m_minCorner(0) + ((((double)t0 / (double)texSize[0]) - m_minTextureCoord(0)) / (texRange(0))) * (objectRange(0));
+                                tpos[1] = m_minCorner(1) + ((((double)t1 / (double)texSize[1]) - m_minTextureCoord(1)) / (texRange(1))) * (objectRange(1));
+                                tpos[2] = m_minCorner(2) + ((((double)t2 / (double)texSize[2]) - m_minTextureCoord(2)) / (texRange(2))) * (objectRange(2));
 
                                 // check if point is located outside of object
                                 double distanceSq = cDistanceSq(cVector3d(tpos[0] + 0.5 * voxelSize[0], tpos[1] + 0.5 * voxelSize[1], tpos[2] + 0.5 * +voxelSize[2]), pointB);
@@ -1176,32 +1200,44 @@ bool cVoxelObject::computeOtherCollisionDetection(cVector3d& a_segmentPointA,
 
                                     if (a_settings.m_collisionRadius == 0)
                                     {
-                                        if (cIntersectionSegmentBox(a_segmentPointA,
-                                            a_segmentPointB,
-                                            cVector3d(tpos[0] - (0.0 * voxelSize[0] + collisionRadius), tpos[1] - (0.0 * voxelSize[1] + collisionRadius), tpos[2] - (0.0 * voxelSize[2] + collisionRadius)),
-                                            cVector3d(tpos[0] + (1.0 * voxelSize[0] + collisionRadius), tpos[1] + (1.0 * voxelSize[1] + collisionRadius), tpos[2] + (1.0 * voxelSize[2] + collisionRadius)),
-                                            t_collisionPoint,
-                                            t_collisionNormal) > 0)
+                                        cVector3d voxelBoxMin(tpos[0] - (0.0 * voxelSize[0] + collisionRadius), tpos[1] - (0.0 * voxelSize[1] + collisionRadius), tpos[2] - (0.0 * voxelSize[2] + collisionRadius));
+                                        cVector3d voxelBoxMax(tpos[0] + (1.0 * voxelSize[0] + collisionRadius), tpos[1] + (1.0 * voxelSize[1] + collisionRadius), tpos[2] + (1.0 * voxelSize[2] + collisionRadius));
+                                        /*
+                                        if (((a_segmentPointA.x() >= voxelBoxMax.x()) || (a_segmentPointA.x() <= voxelBoxMin.x())) &&
+                                            ((a_segmentPointA.y() >= voxelBoxMax.y()) || (a_segmentPointA.y() <= voxelBoxMin.y())) &&
+                                            ((a_segmentPointA.z() >= voxelBoxMax.z()) || (a_segmentPointA.z() <= voxelBoxMin.z())))
+                                            */
                                         {
-                                            // intersection occurred
-                                            hit = true;
-
-                                            counter++;
-
-                                            // compute distance from collision point
-                                            t_collisionDistanceSq = cDistanceSq(a_segmentPointA, t_collisionPoint);
-
-                                            // if nearest, then select and store data.
-                                            if (t_collisionDistanceSq <= collisionDistanceSq)
+                                            if (cIntersectionSegmentBox(a_segmentPointA,
+                                                a_segmentPointB,
+                                                voxelBoxMin,
+                                                voxelBoxMax,
+                                                t_collisionPoint,
+                                                t_collisionNormal) > 0)
                                             {
-                                                collisionPoint = t_collisionPoint;
-                                                collisionNormal = t_collisionNormal;
-                                                collisionDistanceSq = t_collisionDistanceSq;
-                                                collisionPointV01 = 0.0;
-                                                collisionPointV02 = 0.0;
-                                                voxelIndexX = t0;
-                                                voxelIndexY = t1;
-                                                voxelIndexZ = t2;
+                                                if (cAngle(dir, t_collisionNormal) > C_PI_DIV_2)
+                                                {
+                                                    // intersection occurred
+                                                    hit = true;
+
+                                                    counter++;
+
+                                                    // compute distance from collision point
+                                                    t_collisionDistanceSq = cDistanceSq(a_segmentPointA, t_collisionPoint);
+
+                                                    // if nearest, then select and store data.
+                                                    if (t_collisionDistanceSq <= collisionDistanceSq)
+                                                    {
+                                                        collisionPoint = t_collisionPoint;
+                                                        collisionNormal = t_collisionNormal;
+                                                        collisionDistanceSq = t_collisionDistanceSq;
+                                                        collisionPointV01 = 0.0;
+                                                        collisionPointV02 = 0.0;
+                                                        voxelIndexX = t0;
+                                                        voxelIndexY = t1;
+                                                        voxelIndexZ = t2;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1438,7 +1474,6 @@ bool cVoxelObject::polygonize(cMesh* a_mesh, double a_gridSizeX, double a_gridSi
     // declared variables
     cMarchingCubeGridCell gridCell;
     cMarchingCubeTriangle triangles[16];
-    cVector3d p;
 
     // compute padding
     double padding[3];
@@ -1448,6 +1483,7 @@ bool cVoxelObject::polygonize(cMesh* a_mesh, double a_gridSizeX, double a_gridSi
     }
 
     // parse volume
+    cVector3d p;
     p(2) = m_minCorner(2) - padding[2];
     while (p(2) < (m_maxCorner(2) + padding[2]))
     {
@@ -1471,38 +1507,38 @@ bool cVoxelObject::polygonize(cMesh* a_mesh, double a_gridSizeX, double a_gridSi
                 for (int i = 0; i < 8; i++)
                 {
                     // get voxel position
-                    cVector3d p = gridCell.p[i];
+                    cVector3d voxelPos = gridCell.p[i];
 
                     // compute point in texels
                     cVector3d texCoord;
-                    texCoord(0) = m_minTextureCoord(0) + ((p(0) - m_minCorner(0)) / (objectRange(0)) * (texRange(0)));
-                    texCoord(1) = m_minTextureCoord(1) + ((p(1) - m_minCorner(1)) / (objectRange(1)) * (texRange(1)));
-                    texCoord(2) = m_minTextureCoord(2) + ((p(2) - m_minCorner(2)) / (objectRange(2)) * (texRange(2)));
+                    texCoord(0) = m_minTextureCoord(0) + ((voxelPos(0) - m_minCorner(0)) / (objectRange(0)) * (texRange(0)));
+                    texCoord(1) = m_minTextureCoord(1) + ((voxelPos(1) - m_minCorner(1)) / (objectRange(1)) * (texRange(1)));
+                    texCoord(2) = m_minTextureCoord(2) + ((voxelPos(2) - m_minCorner(2)) / (objectRange(2)) * (texRange(2)));
 
                     // color variable
                     cColorf color;
 
                     // get voxel color given a texture coordinate
-#if 0
-                    // get voxel position
+                #if 0
+                                    // get voxel position
                     double x, y, z;
                     m_texture->m_image->getVoxelLocationInterpolated(texCoord, x, y, z, false);
-                  
+
                     // get voxel color
                     m_texture->m_image->getVoxelColorInterpolated(x, y, z, color);
-#else
-                    // get voxel position
+                #else
+                                    // get voxel position
                     int x, y, z;
                     m_texture->m_image->getVoxelLocation(texCoord, x, y, z, false);
-                  
+
                     // get voxel color
                     cColorb colorb;
                     m_texture->m_image->getVoxelColor(x, y, z, colorb);
-                  
+
                     // convert color to floating point format
                     color = colorb.getColorf();
-#endif
-                  
+                #endif
+
                     // convert color to isovalue by taking the luminance
                     double isoValue = color.getA();
                     gridCell.val[i] = isoValue;
@@ -1519,9 +1555,9 @@ bool cVoxelObject::polygonize(cMesh* a_mesh, double a_gridSizeX, double a_gridSi
 
                     // create new triangle
                     a_mesh->newTriangle(triangles[j].p[0],
-                                        triangles[j].p[1],
-                                        triangles[j].p[2],
-                                        normal, normal, normal);
+                        triangles[j].p[1],
+                        triangles[j].p[2],
+                        normal, normal, normal);
                 }
 
                 // increment x
@@ -1540,7 +1576,7 @@ bool cVoxelObject::polygonize(cMesh* a_mesh, double a_gridSizeX, double a_gridSi
         {
             double range = (m_maxCorner(2) + padding[2]) - (m_minCorner(2) - padding[2]);
             int progress = 100 * ((p(2) - (m_minCorner(2) - padding[2])) / range);
-            cout << "polygonization: "+cStr(progress) + "%                                                       \r";
+            cout << "polygonization: " + cStr(progress) + "%                                                       \r";
         }
     }
 
@@ -1549,6 +1585,191 @@ bool cVoxelObject::polygonize(cMesh* a_mesh, double a_gridSizeX, double a_gridSi
 
     // return success
     return (C_SUCCESS);
+}
+
+
+//==============================================================================
+/*!
+    This method creates a voxel model from a triangle mesh.\n
+
+    \param  a_mesh                  Mesh object.
+    \param  a_largestSideInVoxels   Largest edge in voxel of generated model.
+    \param  a_color                 Voxel color to be used when rendering model.
+
+    \return __true__ of the operation succeeds, __false__otherwise.
+*/
+//==============================================================================
+bool cVoxelObject::voxelize(cMesh* a_mesh, unsigned int a_largestSideInVoxels, cColorb& a_color)
+{
+    // sanity check
+    if ((a_mesh == NULL) || (a_largestSideInVoxels == 0))
+    {
+        return C_ERROR;
+    }
+
+    // compute boundary box of mesh
+    a_mesh->computeBoundaryBox(false);
+
+    // compute mesh size
+    cVector3d meshSize = a_mesh->getBoundaryMax() - a_mesh->getBoundaryMin();
+
+    // set origin at lowest boundary corner
+    cVector3d meshOrigin = a_mesh->getBoundaryMin();
+
+    // compute largest edge of mesh
+    double meshLargestEdge = cMax(meshSize.x(), cMax(meshSize.y(), meshSize.z()));
+    if (meshLargestEdge == 0)
+    {
+        return C_ERROR;
+    }
+
+    // compute relative size of each mesh edge, largest being 1.0
+    double meshSizeRatioX = meshSize.x() / meshLargestEdge;
+    double meshSizeRatioY = meshSize.y() / meshLargestEdge;
+    double meshSizeRatioZ = meshSize.z() / meshLargestEdge;
+
+    // compute dimensions of voxel object
+    int voxelSizeX = (int)ceil(meshSizeRatioX * a_largestSideInVoxels);
+    int voxelSizeY = (int)ceil(meshSizeRatioY * a_largestSideInVoxels);
+    int voxelSizeZ = (int)ceil(meshSizeRatioZ * a_largestSideInVoxels);
+
+    // address special cases
+    if (voxelSizeX == 0)
+    {
+        voxelSizeX = 1;
+        meshSizeRatioX = 1.0 / (double)a_largestSideInVoxels;
+    }
+
+    if (voxelSizeY == 0)
+    {
+        voxelSizeY = 1;
+        meshSizeRatioY = 1.0 / (double)a_largestSideInVoxels;
+    }
+
+    if (voxelSizeZ == 0)
+    {
+        voxelSizeY = 1;
+        meshSizeRatioY = 1.0 / (double)a_largestSideInVoxels;
+    }
+
+    // compute conversatipn scale factors
+    double conversionFactorX = (voxelSizeX-1) / meshSize.x();
+    double conversionFactorY = (voxelSizeY-1) / meshSize.y();
+    double conversionFactorZ = (voxelSizeZ-1) / meshSize.z();
+
+    // define distance between two sampled point on triangles
+    double delta = 2.0 * ((double)a_largestSideInVoxels / meshLargestEdge);
+
+    // allocate texture if needed
+    if (m_texture == nullptr)
+    {
+        // create texture
+        m_texture = cTexture3d::create();
+    }
+
+    // allocate image if needed
+    if (m_texture->m_image == nullptr)
+    {
+        // create multi image data structure
+        cMultiImagePtr image = cMultiImage::create();
+
+        // assign volumetric image to texture
+        m_texture->setImage(image);
+    }
+
+    // allocate image data
+    cMultiImagePtr image = dynamic_pointer_cast<cMultiImage>(m_texture->m_image);
+    if (image->allocate(voxelSizeX, voxelSizeY, voxelSizeZ, GL_RGBA) == false)
+    {
+        return C_ERROR;
+    }
+
+    // parse all triangles of mesh
+    unsigned int numTriangles = a_mesh->getNumTriangles();
+    for (unsigned int i = 0; i < numTriangles; i++)
+    {
+        // get vertex indices
+        unsigned int index0 = a_mesh->m_triangles->getVertexIndex0(i);
+        unsigned int index1 = a_mesh->m_triangles->getVertexIndex1(i);
+        unsigned int index2 = a_mesh->m_triangles->getVertexIndex2(i);
+
+        // get vertex positions
+        cVector3d vertex0 = a_mesh->m_vertices->getLocalPos(index0);
+        cVector3d vertex1 = a_mesh->m_vertices->getLocalPos(index1);
+        cVector3d vertex2 = a_mesh->m_vertices->getLocalPos(index2);
+
+        // compute two edge vectors
+        cVector3d vec01 = vertex1 - vertex0;
+        cVector3d vec02 = vertex2 - vertex0;
+
+        // compute length of both edges 
+        double distance01 = cDistance(vertex0, vertex1);
+        double distance02 = cDistance(vertex0, vertex2);
+
+        // compute delta step for each edge vector
+        double numStep01 = distance01 * delta;
+        double numStep02 = distance02 * delta;
+
+        double delta01 = 1.0 / numStep01;
+        double delta02 = 1.0 / numStep02;
+
+        double relPos01 = 0.0;
+        double relPos02 = 0.0;
+
+        while (relPos01 <= 1.0)
+        {
+            double limit02 = 1.0 - relPos01;
+            relPos02 = 0.0;
+
+            while (relPos02 <= limit02)
+            {
+                // compute coordinate
+                cVector3d point = vertex0 + relPos01 * vec01 + relPos02 * vec02;
+
+                // compute relative coordinate
+                cVector3d pointRel = point - meshOrigin;
+
+                // compute voxel coordinate
+                unsigned int voxelX = conversionFactorX * pointRel.x();
+                unsigned int voxelY = conversionFactorY * pointRel.y();
+                unsigned int voxelZ = conversionFactorZ * pointRel.z();
+
+                // write to voxel
+                m_texture->m_image->setVoxelColor(voxelX, voxelY, voxelZ, a_color);
+
+                // increment pos
+                relPos02 = relPos02 + delta02;
+            }
+
+            // increment pos
+            relPos01 = relPos01 + delta01;
+        }
+    }
+
+    // return success
+    return C_SUCCESS;
+}
+
+
+//==============================================================================
+/*!
+    This method fills a voxel object at a given point, with a given color, 
+    and color tolerance in respect to neighbour voxels..\n
+
+    \param  a_x  X coodinate in voxel space.
+    \param  a_y  Y coodinate in voxel space.
+    \param  a_z  Z coodinate in voxel space.
+    \param  a_color  Fill color.
+    \param  a_colorTolerance  Tolerance used to define if neighbour voxel should be painted.
+
+    \return __true__ of the operation succeeds, __false__otherwise.
+*/
+//==============================================================================
+bool cVoxelObject::fill(unsigned int a_x, unsigned int a_y, unsigned int a_z, cColorb& a_color, double a_colorTolerance)
+{
+    // MISSING IMPLEMENTATION
+
+    return false;
 }
 
 

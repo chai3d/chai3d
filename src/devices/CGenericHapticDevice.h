@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2141 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -91,16 +91,18 @@ enum cHapticDeviceModel
     C_HAPTIC_DEVICE_DELTA_3,
     C_HAPTIC_DEVICE_DELTA_6,
     C_HAPTIC_DEVICE_OMEGA_3,
-    C_HAPTIC_DEVICE_OMEGA_6,
-    C_HAPTIC_DEVICE_OMEGA_7,
-    C_HAPTIC_DEVICE_SIGMA_6P,
-    C_HAPTIC_DEVICE_SIGMA_7,
+    C_HAPTIC_DEVICE_OMEGA_6L,
+    C_HAPTIC_DEVICE_OMEGA_6R,
+    C_HAPTIC_DEVICE_OMEGA_7L,
+    C_HAPTIC_DEVICE_OMEGA_7R,
+    C_HAPTIC_DEVICE_SIGMA_6L,
+    C_HAPTIC_DEVICE_SIGMA_6R,
+    C_HAPTIC_DEVICE_SIGMA_7L,
+    C_HAPTIC_DEVICE_SIGMA_7R,
+    C_HAPTIC_DEVICE_LAMBDA_7L,
+    C_HAPTIC_DEVICE_LAMBDA_7R,
     C_HAPTIC_DEVICE_FALCON,
-    C_HAPTIC_DEVICE_XTH_1,
-    C_HAPTIC_DEVICE_XTH_2,
     C_HAPTIC_DEVICE_MPR,
-    C_HAPTIC_DEVICE_KSD_1,
-    C_HAPTIC_DEVICE_VIC_1,
     C_HAPTIC_DEVICE_PHANTOM_TOUCH,
     C_HAPTIC_DEVICE_PHANTOM_OMNI,
     C_HAPTIC_DEVICE_PHANTOM_DESKTOP,
@@ -369,6 +371,9 @@ public:
 
     //! This method sends a force [N], torque [N*m], and gripper force [N] command to the haptic device.
     virtual bool setForceAndTorqueAndGripperForce(const cVector3d& a_force, const cVector3d& a_torque, double a_gripperForce) { cSleepMs(1); return (m_deviceReady); }
+
+    //! This method enables or disables forces.
+    virtual bool enableForces(bool a_value) { return true; }
 
 
     //--------------------------------------------------------------------------

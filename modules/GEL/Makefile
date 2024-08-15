@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,65 +35,187 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-08-22 16:06:31 +0200 (Mon, 22 Aug 2016) $
-#  $Rev: 2093 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# global path
+# Default targets
+all: products
+
+# Project root
 TOP_DIR = .
 
-# commong settings
-include $(TOP_DIR)/Makefile.common
-
-# directories
-OBJ_DIR   = $(TOP_DIR)/obj/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)
-SRC_DIR   = $(TOP_DIR)/src
-VPATH     = $(SRC_DIR)
-
-# main sources
-SOURCES   = $(wildcard $(SRC_DIR)/*.cpp)
-
-# main includes
-INCLUDES  = $(wildcard $(SRC_DIR)/*.h)
-
-# objects
-OBJECTS   = $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(SOURCES))
-OBJ_TREE  = $(sort $(dir $(OBJECTS)))
-
-# optional examples
-ifneq (,$(wildcard examples))
-SUBDIRS += examples
+# Import common settings.
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common))
+    include $(TOP_DIR)/Makefile.common
 endif
 
-# target rules
-all: lib $(SUBDIRS)
+# Directories
+SRC_DIR        = $(TOP_DIR)/src
+OBJ_DIR_STATIC = $(TOP_DIR)/obj/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)/static
+OBJ_DIR_SHARED = $(TOP_DIR)/obj/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)/shared
 
-$(SUBDIRS): chai3d lib | $(BIN_DIR)
-	$(MAKE) -C $@
+# Version
+VERSION_H      = $(SRC_DIR)/version.h
+VERSION_SCRIPT = $(TOP_DIR)/toolchains/scripts/version.sh
 
-lib: $(LIB_TARGET)
+# Find header dependency rules
+DEPS += $(call rwildcard,$(OBJ_DIR_STATIC)/,*.d)
+DEPS += $(call rwildcard,$(OBJ_DIR_SHARED)/,*.d)
 
-$(LIB_TARGET): $(OBJECTS) | $(LIB_DIR)
-	$(AR) $(ARFLAGS) $@ $?
+# Include header dependency rules if they exist,
+# or include all header files if they dont.
+ifneq ($(strip $(DEPS)),)
+    include $(DEPS)
+else
+    INCLUDES += $(LIB_INCLUDES)
+    INCLUDES += $(filter-out $(VERSION_H), $(call rwildcard,$(SRC_DIR)/,*.h *.hh *.hpp *.hxx))
+    INCLUDES += $(VERSION_H)
+endif
 
-$(OBJECTS): $(INCLUDES) | $(OBJ_TREE)
+# Source files
+VPATH      = $(SRC_DIR)
+CSOURCES   = $(call rwildcard,$(SRC_DIR)/,*.c)
+CCSOURCES  = $(call rwildcard,$(SRC_DIR)/,*.cc)
+CPPSOURCES = $(call rwildcard,$(SRC_DIR)/,*.cpp)
+CXXSOURCES = $(call rwildcard,$(SRC_DIR)/,*.cxx)
 
-$(BIN_DIR) $(LIB_DIR) $(OBJ_TREE):
-	mkdir -p $@
+# Compiler flags
+CFLAGS   += -I$(SRC_DIR)
+CXXFLAGS += -I$(SRC_DIR)
 
-chai3d:
-	$(MAKE) -C $(CHAI3D) lib
+# Import project settings.
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.project))
+    include $(TOP_DIR)/Makefile.project
+endif
 
-.PHONY: $(SUBDIRS)
-	
-# object file compilation
-$(OBJ_DIR)/%.o : %.cpp
-	$(CXX) $(FLAGS) $(CXXFLAGS) -fPIC -c -o $@ $<
-$(OBJ_DIR)/%.o : %.c
-	$(CC) $(FLAGS) $(CFLAGS) -fPIC -c -o $@ $<	
+# Import platform-specific project settings.
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.project.$(OS)))
+    include $(TOP_DIR)/Makefile.project.$(OS)
+endif
+
+# Static library object files
+OBJ_STATIC     += $(patsubst %.c, $(OBJ_DIR_STATIC)/%.o, $(CSOURCES))
+OBJ_STATIC     += $(patsubst %.cc, $(OBJ_DIR_STATIC)/%.o, $(CCSOURCES))
+OBJ_STATIC     += $(patsubst %.cpp, $(OBJ_DIR_STATIC)/%.o, $(CPPSOURCES))
+OBJ_STATIC     += $(patsubst %.cxx, $(OBJ_DIR_STATIC)/%.o, $(CXXSOURCES))
+OBJ_TREE_STATIC = $(sort $(dir $(OBJ_STATIC)))
+
+# Shared library object files
+OBJ_SHARED     += $(patsubst %.c, $(OBJ_DIR_SHARED)/%.o, $(CSOURCES))
+OBJ_SHARED     += $(patsubst %.cc, $(OBJ_DIR_SHARED)/%.o, $(CCSOURCES))
+OBJ_SHARED     += $(patsubst %.cpp, $(OBJ_DIR_SHARED)/%.o, $(CPPSOURCES))
+OBJ_SHARED     += $(patsubst %.cxx, $(OBJ_DIR_SHARED)/%.o, $(CXXSOURCES))
+OBJ_TREE_SHARED = $(sort $(dir $(OBJ_SHARED)))
+
+# Project prerequisites
+ifneq (,$(wildcard externals/Makefile))
+    EXTERNALS += externals
+endif
+
+# Extensions and modules
+ifneq (,$(wildcard extensions/Makefile))
+    EXTENSIONS += extensions
+endif
+ifneq (,$(wildcard modules/Makefile))
+    EXTENSIONS += modules
+endif
+
+# Executables
+ifneq (,$(wildcard applications/Makefile))
+    EXECUTABLES += applications
+endif
+ifneq (,$(wildcard examples/Makefile))
+    EXECUTABLES += examples
+endif
+ifneq (,$(wildcard tests/Makefile))
+    EXECUTABLES += tests
+endif
+ifneq (,$(wildcard utils/Makefile))
+    EXECUTABLES += utils
+endif
+
+# Documentation
+ifneq (,$(wildcard doc/Makefile))
+    DOC += doc
+endif
+
+# Global targets
+static: $(LIB_STATIC)
+shared: $(LIB_SHARED)
+lib: $(LIB)
+products: $(LIB) $(EXECUTABLES)
+
+# Version targets (only if a library is built)
+ifneq (,$(wildcard $(VERSION)))
+    $(INCLUDES): Makefile
+    Makefile: build_version
+    build_version:
+        ifeq (,$(wildcard $(VERSION_SCRIPT)))
+            $(info using fixed version)
+            ifneq (,$(wildcard $(SRC_DIR)))
+                ifeq (,$(wildcard $(VERSION_H)))
+                    $(shell touch $(VERSION_H))
+                endif
+            endif
+        else
+			@$(VERSION_SCRIPT) $(VERSION) $(VERSION_H)
+        endif
+endif
+
+# Build rules
+
+.PHONY: all clean build_version lib static shared products $(EXTERNALS) $(EXTENSIONS) $(EXECUTABLES) $(DOC)
+
+$(OBJ_STATIC): $(INCLUDES) | $(OBJ_TREE_STATIC)
+
+$(OBJ_SHARED): $(INCLUDES) | $(OBJ_TREE_SHARED)
+
+$(EXECUTABLES): $(LIB) $(EXTENSIONS) | $(BIN_DIR) $(EXTERNALS)
+
+$(EXTENSIONS): $(LIB) | $(EXTERNALS)
+
+$(LIB_DIR) $(OBJ_TREE_STATIC) $(OBJ_TREE_SHARED) $(BIN_DIR):
+	@mkdir -p $@
+
+$(EXTENSIONS) $(EXTERNALS) $(EXECUTABLES) $(DOC):
+	@$(MAKE) -C $@
+
+$(OBJ_DIR_STATIC)/%.o : %.c
+	$(CC) $(CFLAGS) -fPIC -MMD -c -o $@ $<
+
+$(OBJ_DIR_STATIC)/%.o : %.cc
+	$(CXX) $(CXXFLAGS) -fPIC -MMD -c -o $@ $<
+
+$(OBJ_DIR_STATIC)/%.o : %.cpp
+	$(CXX) $(CXXFLAGS) -fPIC -MMD -c -o $@ $<
+
+$(OBJ_DIR_STATIC)/%.o : %.cxx
+	$(CXX) $(CXXFLAGS) -fPIC -MMD -c -o $@ $<
+
+$(OBJ_DIR_SHARED)/%.o : %.c
+	$(CC) $(CFLAGS) -fPIC -fno-common -MMD -c -o $@ $<
+
+$(OBJ_DIR_SHARED)/%.o : %.cc
+	$(CXX) $(CXXFLAGS) -fPIC -fno-common -MMD -c -o $@ $<
+
+$(OBJ_DIR_SHARED)/%.o : %.cpp
+	$(CXX) $(CXXFLAGS) -fPIC -fno-common -MMD -c -o $@ $<
+
+$(OBJ_DIR_SHARED)/%.o : %.cxx
+	$(CXX) $(CXXFLAGS) -fPIC -fno-common -MMD -c -o $@ $<
+
+$(LIB_STATIC): $(OBJ_STATIC) | $(LIB_DIR) $(EXTERNALS)
+	$(AR) $(ARFLAGS) $(LIB_STATIC) $^
+
+$(LIB_SHARED): $(OBJ_SHARED) | $(LIB_DIR) $(EXTERNALS)
+	$(CXX) $(CXXFLAGS) $(LIB_SHARED_OPT) $^ $(filter-out -L$(LIB_DIR),$(LDFLAGS)) $(filter-out -l$(LIB_ROOT_NAME),$(LDLIBS)) -o $(LIB_SHARED)
 
 clean:
-	@for T in $(SUBDIRS); do make -C $$T $@; done
-	-rm -f $(LIB_TARGET) *~
-	-rm -rf $(LIB_DIR) $(OBJ_DIR)
+	@for T in $(EXTERNALS); do make -C $$T $@; done
+	@for T in $(EXTENSIONS); do make -C $$T $@; done
+	@for T in $(EXECUTABLES); do make -C $$T $@; done
+	@for T in $(DOC); do make -C $$T $@; done
+	-rm -f $(OBJ_STATIC) $(OBJ_SHARED) *~
+	-rm -rf $(LIB_DIR) $(OBJ_DIR_STATIC) $(OBJ_DIR_SHARED)

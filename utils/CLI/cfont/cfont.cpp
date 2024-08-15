@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sebastien Grange
-    \version   3.2.0 $Rev: 2177 $
+    \version   3.3.0
 */
 //===========================================================================
 
@@ -91,14 +91,14 @@ int writeHeader(cFont &font, string fontname, string filename)
 
     ofstream out(filename.c_str());
 
-    out << "//===========================================================================" << endl;
+    out << "//==============================================================================" << endl;
     out << "/*" << endl;
     out << "    Header file containing the \"" << fontname << "\" font." << endl;
     out << endl;
     out << "    Automatically generated using CHAI3D visualization and haptics library." << endl;
     out << "    http://www.chai3d.org" << endl;
     out << "*/" << endl;
-    out << "//===========================================================================" << endl;
+    out << "//==============================================================================" << endl;
 
     // convert filename to root name
     filename = filename.substr(filename.find_last_of('/')+1, filename.length());
@@ -114,21 +114,21 @@ int writeHeader(cFont &font, string fontname, string filename)
 
     // avoid conflicts
     out << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << "#ifndef " << filename << "H" << endl;
     out << "#define " << filename << "H" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << endl;
 
     // include headers (required by convenience functions)
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << "#include \"graphics/CImage.h\"" << endl;
     out << "#include \"graphics/CFont.h\"" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
 
     // namespace
     out << "namespace chai3d {" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << endl;
 
     // print joint info
@@ -200,7 +200,7 @@ int writeHeader(cFont &font, string fontname, string filename)
     out << endl << "};" << endl << endl << endl;
 
     // convenience function: allocate image
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << endl;
     out << endl;
     out << "inline cFontPtr NEW_" << fontname << "()" << endl;
@@ -236,15 +236,15 @@ int writeHeader(cFont &font, string fontname, string filename)
     out << "}" << endl << endl << endl;
 
     // close namespace
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << "} // namespace chai3d" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << endl;
 
     // tidy up
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << "#endif" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
 
     out.close();
 
@@ -281,14 +281,14 @@ int writeHeaderPNG(cFont &font, string fontname, string  filename)
 
     ofstream out(filename.c_str());
 
-    out << "//===========================================================================" << endl;
+    out << "//==============================================================================" << endl;
     out << "/*" << endl;
     out << "    Header file containing the \"" << fontname << "\" font." << endl;
     out << endl;
     out << "    Automatically generated using CHAI3D visualization and haptics library." << endl;
     out << "    http://www.chai3d.org" << endl;
     out << "*/" << endl;
-    out << "//===========================================================================" << endl;
+    out << "//==============================================================================" << endl;
 
     // convert filename to root name
     filename = filename.substr(filename.find_last_of('/')+1, filename.length());
@@ -313,24 +313,24 @@ int writeHeaderPNG(cFont &font, string fontname, string  filename)
 
     // avoid conflicts
     out << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << "#ifndef " << filename << "H" << endl;
     out << "#define " << filename << "H" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << endl;
 
     // include headers (required by convenience functions)
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << "#include \"graphics/CImage.h\"" << endl;
     out << "#include \"graphics/CFont.h\"" << endl;
     out << "#include \"files/CFileImagePNG.h\"" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << endl;
 
     // namespace
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << "namespace chai3d {" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << endl;
 
     // print joint info
@@ -386,7 +386,7 @@ int writeHeaderPNG(cFont &font, string fontname, string  filename)
     out << endl << "};" << endl << endl << endl;
 
     // convenience function: allocate image
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << endl;
     out << endl;
     out << "inline cFontPtr NEW_" << fontname << "()" << endl;
@@ -419,15 +419,15 @@ int writeHeaderPNG(cFont &font, string fontname, string  filename)
     out << "}" << endl << endl << endl;
 
     // close namespace
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << "} // namespace chai3d" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << endl;
 
     // tidy up
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
     out << "#endif" << endl;
-    out << "//---------------------------------------------------------------------------" << endl;
+    out << "//------------------------------------------------------------------------------" << endl;
 
     out.close();
 
@@ -518,7 +518,7 @@ int main(int argc, char* argv[])
     cout << "-----------------------------------" << endl;
     cout << "CHAI3D" << endl;
     cout << "Font Converter" << endl;
-    cout << "Copyright 2003-2016" << endl;
+    cout << "Copyright 2003-2022" << endl;
     cout << "-----------------------------------" << endl;
     cout << endl;
 

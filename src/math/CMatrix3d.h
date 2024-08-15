@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2019, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -56,18 +56,18 @@ namespace chai3d {
 //------------------------------------------------------------------------------
 enum cEulerOrder 
 {
-    C_EULER_ORDER_XYZ, 
+    C_EULER_ORDER_XYZ,
     C_EULER_ORDER_XYX,
-    C_EULER_ORDER_XZY, 
-    C_EULER_ORDER_XZX, 
+    C_EULER_ORDER_XZY,
+    C_EULER_ORDER_XZX,
     C_EULER_ORDER_YZX,
-    C_EULER_ORDER_YZY, 
+    C_EULER_ORDER_YZY,
     C_EULER_ORDER_YXZ,
-    C_EULER_ORDER_YXY, 
-    C_EULER_ORDER_ZXY, 
-    C_EULER_ORDER_ZXZ, 
-    C_EULER_ORDER_ZYX, 
-    C_EULER_ORDER_ZYZ  
+    C_EULER_ORDER_YXY,
+    C_EULER_ORDER_ZXY,
+    C_EULER_ORDER_ZXZ,
+    C_EULER_ORDER_ZYX,
+    C_EULER_ORDER_ZYZ
 };
 //------------------------------------------------------------------------------
 
@@ -861,6 +861,73 @@ public:
         a_result(2,2) = (*this)(2,2) - a_matrix(2,2);
     }
 
+    //--------------------------------------------------------------------------
+    /*!
+        \brief
+        This function computes the multiplication of this matrix by a scalar.
+
+        \details
+        This function computes the multiplication of this matrix by a scalar
+        passed as argument. \n
+        The result of this operation is stored in this matrix overwriting
+        previous values.
+
+        \code
+        this = a_scalar * this
+        \endcode
+
+        \param  a_scalar  Input value.
+    */
+    //--------------------------------------------------------------------------
+    inline void mul(const double& a_scalar)
+    {
+        // compute multiplication between matrix and scalar
+        (*this)(0, 0) = (*this)(0, 0) * a_scalar;
+        (*this)(0, 1) = (*this)(0, 1) * a_scalar;
+        (*this)(0, 2) = (*this)(0, 2) * a_scalar;
+        (*this)(1, 0) = (*this)(1, 0) * a_scalar;
+        (*this)(1, 1) = (*this)(1, 1) * a_scalar;
+        (*this)(1, 2) = (*this)(1, 2) * a_scalar;
+        (*this)(2, 0) = (*this)(2, 0) * a_scalar;
+        (*this)(2, 1) = (*this)(2, 1) * a_scalar;
+        (*this)(2, 2) = (*this)(2, 2) * a_scalar;
+    }
+
+
+    //--------------------------------------------------------------------------
+    /*!
+        \brief
+        This function computes the multiplication of this matrix by a scalar.
+
+        \details
+        This function computes the multiplication of this matrix by a scalar
+        passed as argument. \n
+        The result of this operation is stored in the result matrix \p a_result
+        passed as argument.
+
+        \code
+        a_result = a_scalar * this
+        \endcode
+
+        \param  a_scalar  Input value.
+        \param  a_result  Result of operation.
+    */
+    //--------------------------------------------------------------------------
+    inline void mulr(const double& a_scalar,
+        cMatrix3d& a_result) const
+    {
+        // compute multiplication between matrix and scalar
+        a_result(0, 0) = (*this)(0, 0) * a_scalar;
+        a_result(0, 1) = (*this)(0, 1) * a_scalar;
+        a_result(0, 2) = (*this)(0, 2) * a_scalar;
+        a_result(1, 0) = (*this)(1, 0) * a_scalar;
+        a_result(1, 1) = (*this)(1, 1) * a_scalar;
+        a_result(1, 2) = (*this)(1, 2) * a_scalar;
+        a_result(2, 0) = (*this)(2, 0) * a_scalar;
+        a_result(2, 1) = (*this)(2, 1) * a_scalar;
+        a_result(2, 2) = (*this)(2, 2) * a_scalar;
+    }
+
 
     //--------------------------------------------------------------------------
     /*!
@@ -1189,6 +1256,10 @@ public:
         c0.normalize();
         c1.normalize();
         c2.normalize();
+
+        (*this)(0, 0) = c0(0); (*this)(0, 1) = c1(0);  (*this)(0, 2) = c2(0);
+        (*this)(1, 0) = c0(1); (*this)(1, 1) = c1(1);  (*this)(1, 2) = c2(1);
+        (*this)(2, 0) = c0(2); (*this)(2, 1) = c1(2);  (*this)(2, 2) = c2(2);
     }
 
 
@@ -1451,74 +1522,74 @@ public:
         switch(a_eulerOrder)
         {
             case(C_EULER_ORDER_XYZ):
-                (*this)(0,0) = c2*c3;               (*this)(0,1) =-c2*s3;               (*this)(0,2) = s2; 
-                (*this)(1,0) = c1*s3+c3*s1*s2;      (*this)(1,1) = c1*c3-s1*s2*s3;      (*this)(1,2) =-c2*s1; 
-                (*this)(2,0) = s1*s3-c1*c3*s2;      (*this)(2,1) = c3*s1+c1*s2*s3;      (*this)(2,2) = c1*c2; 
+                (*this)(0,0) = c2*c3;               (*this)(0,1) =-c2*s3;               (*this)(0,2) = s2;
+                (*this)(1,0) = c1*s3+c3*s1*s2;      (*this)(1,1) = c1*c3-s1*s2*s3;      (*this)(1,2) =-c2*s1;
+                (*this)(2,0) = s1*s3-c1*c3*s2;      (*this)(2,1) = c3*s1+c1*s2*s3;      (*this)(2,2) = c1*c2;
                 break;
 
             case(C_EULER_ORDER_XYX):
-                (*this)(0,0) = c2;                  (*this)(0,1) = s2*s3;               (*this)(0,2) = c3*s2; 
-                (*this)(1,0) = s1*s2;               (*this)(1,1) = c1*c3-c2*s1*s3;      (*this)(1,2) =-c1*s3-c2*c3*s1; 
-                (*this)(2,0) =-c1*s2;               (*this)(2,1) = c3*s1+c1*c2*s3;      (*this)(2,2) = c1*c2*c3-s1*s3; 
+                (*this)(0,0) = c2;                  (*this)(0,1) = s2*s3;               (*this)(0,2) = c3*s2;
+                (*this)(1,0) = s1*s2;               (*this)(1,1) = c1*c3-c2*s1*s3;      (*this)(1,2) =-c1*s3-c2*c3*s1;
+                (*this)(2,0) =-c1*s2;               (*this)(2,1) = c3*s1+c1*c2*s3;      (*this)(2,2) = c1*c2*c3-s1*s3;
                 break;
 
             case(C_EULER_ORDER_XZY):
-                (*this)(0,0) = c2*c3;               (*this)(0,1) =-s2;                  (*this)(0,2) = c2*s3; 
-                (*this)(1,0) = s1*s3+c1*c3*s2;      (*this)(1,1) = c1*c2;               (*this)(1,2) = c1*s2*s3-c3*s1; 
+                (*this)(0,0) = c2*c3;               (*this)(0,1) =-s2;                  (*this)(0,2) = c2*s3;
+                (*this)(1,0) = s1*s3+c1*c3*s2;      (*this)(1,1) = c1*c2;               (*this)(1,2) = c1*s2*s3-c3*s1;
                 (*this)(2,0) = c3*s1*s2-c1*s3;      (*this)(2,1) = c2*s1;               (*this)(2,2) = c1*c3+s1*s2*s3;
                 break;
 
             case(C_EULER_ORDER_XZX):
-                (*this)(0,0) = c2;                  (*this)(0,1) =-c3*s2;               (*this)(0,2) = s2*s3; 
-                (*this)(1,0) = c1*s2;               (*this)(1,1) = c1*c2*c3-s1*s3;      (*this)(1,2) =-c3*s1-c1*c2*s3; 
-                (*this)(2,0) = s1*s2;               (*this)(2,1) = c1*s3+c2*c3*s1;      (*this)(2,2) = c1*c3-c2*s1*s3; 
+                (*this)(0,0) = c2;                  (*this)(0,1) =-c3*s2;               (*this)(0,2) = s2*s3;
+                (*this)(1,0) = c1*s2;               (*this)(1,1) = c1*c2*c3-s1*s3;      (*this)(1,2) =-c3*s1-c1*c2*s3;
+                (*this)(2,0) = s1*s2;               (*this)(2,1) = c1*s3+c2*c3*s1;      (*this)(2,2) = c1*c3-c2*s1*s3;
                 break;
 
             case(C_EULER_ORDER_YZX):
-                (*this)(0,0) = c1*c2;               (*this)(0,1) = s1*s3-c1*c3*s2;      (*this)(0,2) = c3*s1+c1*s2*s3; 
-                (*this)(1,0) = s2;                  (*this)(1,1) = c2*c3;               (*this)(1,2) =-c2*s3; 
+                (*this)(0,0) = c1*c2;               (*this)(0,1) = s1*s3-c1*c3*s2;      (*this)(0,2) = c3*s1+c1*s2*s3;
+                (*this)(1,0) = s2;                  (*this)(1,1) = c2*c3;               (*this)(1,2) =-c2*s3;
                 (*this)(2,0) =-c2*s1;               (*this)(2,1) = c1*s3+c3*s1*s2;      (*this)(2,2) = c1*c3-s1*s2*s3;
                 break;
 
             case(C_EULER_ORDER_YZY):
-                (*this)(0,0) = c1*c2*c3-s1*s3;      (*this)(0,1) =-c1*s2;               (*this)(0,2) = c3*s1+c1*c2*s3; 
-                (*this)(1,0) = c3*s2;               (*this)(1,1) = c2;                  (*this)(1,2) = s2*s3; 
-                (*this)(2,0) =-c1*s3-c2*c3*s1;      (*this)(2,1) = s1*s2;               (*this)(2,2) = c1*c3-c2*s1*s3; 
+                (*this)(0,0) = c1*c2*c3-s1*s3;      (*this)(0,1) =-c1*s2;               (*this)(0,2) = c3*s1+c1*c2*s3;
+                (*this)(1,0) = c3*s2;               (*this)(1,1) = c2;                  (*this)(1,2) = s2*s3;
+                (*this)(2,0) =-c1*s3-c2*c3*s1;      (*this)(2,1) = s1*s2;               (*this)(2,2) = c1*c3-c2*s1*s3;
                 break;
 
             case(C_EULER_ORDER_YXZ):
-                (*this)(0,0) = c1*c3+s1*s2*s3;      (*this)(0,1) = c3*s1*s2-c1*s3;       (*this)(0,2) = c2*s1; 
-                (*this)(1,0) = c2*s3;               (*this)(1,1) = c2*c3;                (*this)(1,2) =-s2; 
-                (*this)(2,0) = c1*s2*s3-c3*s1;      (*this)(2,1) = s1*s3+c1*c3*s2;       (*this)(2,2) = c1*c2;
+                (*this)(0,0) = c1*c3+s1*s2*s3;      (*this)(0,1) = c3*s1*s2-c1*s3;       (*this)(0,2) = c2*s1;
+                (*this)(1,0) = c2*s3;               (*this)(1,1) = c2*c3;                (*this)(1,2) =-s2;
+                (*this)(2, 0) = c1*s2*s3 - c3*s1;      (*this)(2, 1) = s1*s3 + c1*c3*s2;       (*this)(2, 2) = c1*c2;
                 break;
 
             case(C_EULER_ORDER_YXY):
-                (*this)(0,0) = c1*c3-c2*s1*s3;      (*this)(0,1) = s1*s2;               (*this)(0,2) = c1*s3+c2*c3*s1; 
-                (*this)(1,0) = s2*s3;               (*this)(1,1) = c2;                  (*this)(1,2) =-c3*s2; 
-                (*this)(2,0) =-c3*s1-c1*c2*s3;      (*this)(2,1) = c1*s2;               (*this)(2,2) = c1*c2*c3-s1*s3;                                                        
+                (*this)(0,0) = c1*c3-c2*s1*s3;      (*this)(0,1) = s1*s2;               (*this)(0,2) = c1*s3+c2*c3*s1;
+                (*this)(1,0) = s2*s3;               (*this)(1,1) = c2;                  (*this)(1,2) =-c3*s2;
+                (*this)(2,0) =-c3*s1-c1*c2*s3;      (*this)(2,1) = c1*s2;               (*this)(2,2) = c1*c2*c3-s1*s3;
                 break;
 
             case(C_EULER_ORDER_ZXY):
-                (*this)(0,0) = c1*c3-s1*s2*s3;      (*this)(0,1) =-c2*s1;               (*this)(0,2) = c1*s3+c3*s1*s2; 
-                (*this)(1,0) = c3*s1+c1*s2*s3;      (*this)(1,1) = c1*c2;               (*this)(1,2) = s1*s3-c1*c3*s2; 
+                (*this)(0,0) = c1*c3-s1*s2*s3;      (*this)(0,1) =-c2*s1;               (*this)(0,2) = c1*s3+c3*s1*s2;
+                (*this)(1,0) = c3*s1+c1*s2*s3;      (*this)(1,1) = c1*c2;               (*this)(1,2) = s1*s3-c1*c3*s2;
                 (*this)(2,0) =-c2*s3;               (*this)(2,1) = s2;                  (*this)(2,2) = c2*c3;
                 break; 
 
             case(C_EULER_ORDER_ZXZ):
-                (*this)(0,0) = c1*c3-c2*s1*s3;      (*this)(0,1) =-c1*s3-c2*c3*s1;      (*this)(0,2) = s1*s2; 
-                (*this)(1,0) = c3*s1+c1*c2*s3;      (*this)(1,1) = c1*c2*c3-s1*s3;      (*this)(1,2) =-c1*s2; 
+                (*this)(0,0) = c1*c3-c2*s1*s3;      (*this)(0,1) =-c1*s3-c2*c3*s1;      (*this)(0,2) = s1*s2;
+                (*this)(1,0) = c3*s1+c1*c2*s3;      (*this)(1,1) = c1*c2*c3-s1*s3;      (*this)(1,2) =-c1*s2;
                 (*this)(2,0) = s2*s3;               (*this)(2,1) = c3*s2;               (*this)(2,2) = c2;
                 break; 
 
             case(C_EULER_ORDER_ZYX):
-                (*this)(0,0) = c1*c2;               (*this)(0,1) = c1*s2*s3-c3*s1;      (*this)(0,2) = s1*s3+c1*c3*s2; 
-                (*this)(1,0) = c2*s1;               (*this)(1,1) = c1*c3+s1*s2*s3;      (*this)(1,2) = c3*s1*s2-c1*s3; 
+                (*this)(0,0) = c1*c2;               (*this)(0,1) = c1*s2*s3-c3*s1;      (*this)(0,2) = s1*s3+c1*c3*s2;
+                (*this)(1,0) = c2*s1;               (*this)(1,1) = c1*c3+s1*s2*s3;      (*this)(1,2) = c3*s1*s2-c1*s3;
                 (*this)(2,0) =-s2;                  (*this)(2,1) = c2*s3;               (*this)(2,2) = c2*c3;
                 break; 
 
             case(C_EULER_ORDER_ZYZ): 
-                (*this)(0,0) = c1*c2*c3-s1*s3;      (*this)(0,1) =-c3*s1-c1*c2*s3;      (*this)(0,2) = c1*s2; 
-                (*this)(1,0) = c1*s3+c2*c3*s1;      (*this)(1,1) = c1*c3-c2*s1*s3;      (*this)(1,2) = s1*s2; 
+                (*this)(0,0) = c1*c2*c3-s1*s3;      (*this)(0,1) =-c3*s1-c1*c2*s3;      (*this)(0,2) = c1*s2;
+                (*this)(1,0) = c1*s3+c2*c3*s1;      (*this)(1,1) = c1*c3-c2*s1*s3;      (*this)(1,2) = s1*s2;
                 (*this)(2,0) =-c3*s2;               (*this)(2,1) = s2*s3;               (*this)(2,2) = c2;
                 break;
         }
@@ -1550,6 +1621,411 @@ public:
                                      C_DEG2RAD * (a_angle2),
                                      C_DEG2RAD * (a_angle3),
                                      a_eulerOrder);
+    }
+
+
+    //--------------------------------------------------------------------------
+    /*!
+        \brief
+        This method computes the extrinsic Euler angle representations for this matrix
+        in radians.
+
+        \details
+        This method computes the extrinsicEuler angle representations for this matrix
+        in radians.
+
+        \param  a_eulerAngles1  Angle in radians of the first, second and third rotation (First solution).
+        \param  a_eulerAngles2  Angle in radians of the first, second and third rotation (Second solution).
+        \param  a_eulerOrder    The order of the axes about which the rotations 
+                                are to be applied.
+
+        \return __true__ if gimble is locked (infinite number of solutions), __false__ otherwise.
+    */
+    //--------------------------------------------------------------------------
+    inline bool getExtrinsicEulerAnglesRad(cVector3d& a_eulerAngles1,
+                                           cVector3d& a_eulerAngles2,
+                                           const cEulerOrder a_eulerOrder)
+    {
+       switch(a_eulerOrder)
+        {
+            case(C_EULER_ORDER_XYZ):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_ZYX);
+                break;
+
+            case(C_EULER_ORDER_XYX):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_XYX);
+                break;
+
+            case(C_EULER_ORDER_XZY):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_YZX);
+                break;
+
+            case(C_EULER_ORDER_XZX):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_XZX);
+                break;
+
+            case(C_EULER_ORDER_YZX):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_XZY);
+                break;
+
+            case(C_EULER_ORDER_YZY):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_YZY);
+                break;
+
+            case(C_EULER_ORDER_YXZ):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_ZXY);
+                break;
+
+            case(C_EULER_ORDER_YXY):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_YXY);
+                break;
+
+            case(C_EULER_ORDER_ZXY):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_YXZ);
+                break; 
+
+            case(C_EULER_ORDER_ZXZ):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_ZXZ);
+                break; 
+
+            case(C_EULER_ORDER_ZYX):
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_XYZ);
+                break; 
+
+            case(C_EULER_ORDER_ZYZ): 
+                return getIntrinsicEulerAnglesRad(a_eulerAngles1, a_eulerAngles2, C_EULER_ORDER_ZYZ);
+                break;
+
+            default:
+                return false;
+        }
+    }
+
+
+    //--------------------------------------------------------------------------
+    /*!
+        \brief
+        This method computes the extrinsic Euler angle representations for this matrix
+        in degrees.
+
+        \details
+        This method computes the extrinsicEuler angle representations for this matrix
+        in degrees.
+
+        \param  a_eulerAngles1  Angle in radians of the first, second and third rotation (First solution).
+        \param  a_eulerAngles2  Angle in radians of the first, second and third rotation (Second solution).
+        \param  a_eulerOrder    The order of the axes about which the rotations 
+                                are to be applied.
+
+        \return __true__ if gimble is locked (infinite number of solutions), __false__ otherwise.
+    */
+    //--------------------------------------------------------------------------
+    inline bool getExtrinsicEulerAnglesDeg(cVector3d& a_eulerAngles1,
+                                           cVector3d& a_eulerAngles2,
+                                           const cEulerOrder a_eulerOrder)
+    {
+        cVector3d eulerAngles1, eulerAngles2;
+        bool locked = getExtrinsicEulerAnglesRad(eulerAngles1,
+                                                 eulerAngles2,
+                                                 a_eulerOrder);
+
+        // convert angles from radians to degrees
+        a_eulerAngles1(0) = C_RAD2DEG * eulerAngles1(0);
+        a_eulerAngles1(1) = C_RAD2DEG * eulerAngles1(1);
+        a_eulerAngles1(2) = C_RAD2DEG * eulerAngles1(2);
+
+        a_eulerAngles2(0) = C_RAD2DEG * eulerAngles2(0);
+        a_eulerAngles2(1) = C_RAD2DEG * eulerAngles2(1);
+        a_eulerAngles2(2) = C_RAD2DEG * eulerAngles2(2);
+
+        return locked;
+    }
+
+
+    //--------------------------------------------------------------------------
+    /*!
+        \brief
+        This method computes the intrinsic Euler angle representations for this matrix
+        in radians.
+
+        \details
+        This method computes the intrinsic angle representations for this matrix
+        in radians.
+
+        \param  a_eulerAngles1  Angle in radians of the first, second and third rotation (First solution).
+        \param  a_eulerAngles2  Angle in radians of the first, second and third rotation (Second solution).
+        \param  a_eulerOrder    The order of the axes about which the rotations 
+                                are to be applied.
+
+        \return __true__ if gimble is locked (infinite number of solutions), __false__ otherwise.
+    */
+    //--------------------------------------------------------------------------
+    inline bool getIntrinsicEulerAnglesRad(cVector3d& a_eulerAngles1,
+                                           cVector3d& a_eulerAngles2,
+                                           const cEulerOrder a_eulerOrder)
+    {
+        double Rs;
+        double Rc1c2;
+        double Rc2s1;
+        double Rc2s3;
+        double Rc2c3;
+        double Rc1s2s3c3s1;
+        double Rs1s3c1c3s2;
+
+        bool locked = false;
+        bool flagUseSin = false;
+        double sign = 1.0;
+
+        switch(a_eulerOrder)
+        {
+
+            case(C_EULER_ORDER_XYZ):
+                /*
+                (*this)(0,0) = c2*c3;               (*this)(0,1) =-c2*s3;               (*this)(0,2) = s2;
+                (*this)(1,0) = c1*s3+c3*s1*s2;      (*this)(1,1) = c1*c3-s1*s2*s3;      (*this)(1,2) =-c2*s1;
+                (*this)(2,0) = s1*s3-c1*c3*s2;      (*this)(2,1) = c3*s1+c1*s2*s3;      (*this)(2,2) = c1*c2;
+                */
+            {
+                Rs = (*this)(0,2);
+                Rc1c2 = (*this)(2, 2);
+                Rc2s1 = (*this)(1, 2);
+                Rc2s3 = (*this)(0, 1);
+                Rc2c3 = (*this)(0, 0);
+                Rc1s2s3c3s1 = (*this)(2, 1);
+                Rs1s3c1c3s2 = (*this)(2, 0);
+                flagUseSin = true;
+                sign = 1.0;
+                break;
+            }
+
+            case(C_EULER_ORDER_XYX):
+                /*
+                (*this)(0,0) = c2;                  (*this)(0,1) = s2*s3;               (*this)(0,2) = c3*s2;
+                (*this)(1,0) = s1*s2;               (*this)(1,1) = c1*c3-c2*s1*s3;      (*this)(1,2) =-c1*s3-c2*c3*s1;
+                (*this)(2,0) =-c1*s2;               (*this)(2,1) = c3*s1+c1*c2*s3;      (*this)(2,2) = c1*c2*c3-s1*s3;
+                */
+                break;
+
+            case(C_EULER_ORDER_XZY):
+                /*
+                (*this)(0,0) = c2*c3;               (*this)(0,1) =-s2;                  (*this)(0,2) = c2*s3;
+                (*this)(1,0) = s1*s3+c1*c3*s2;      (*this)(1,1) = c1*c2;               (*this)(1,2) = c1*s2*s3-c3*s1;
+                (*this)(2,0) = c3*s1*s2-c1*s3;      (*this)(2,1) = c2*s1;               (*this)(2,2) = c1*c3+s1*s2*s3;
+                */
+            {
+                Rs = (*this)(0,1);
+                Rc1c2 = (*this)(1, 1);
+                Rc2s1 = (*this)(2, 1);
+                Rc2s3 = (*this)(0, 2);
+                Rc2c3 = (*this)(0, 0);
+                Rc1s2s3c3s1 = (*this)(1, 2);
+                Rs1s3c1c3s2 = (*this)(1, 0);
+                flagUseSin = true;
+                sign =-1.0;
+                break;
+            }
+
+            case(C_EULER_ORDER_XZX):
+                /*
+                (*this)(0,0) = c2;                  (*this)(0,1) =-c3*s2;               (*this)(0,2) = s2*s3;
+                (*this)(1,0) = c1*s2;               (*this)(1,1) = c1*c2*c3-s1*s3;      (*this)(1,2) =-c3*s1-c1*c2*s3;
+                (*this)(2,0) = s1*s2;               (*this)(2,1) = c1*s3+c2*c3*s1;      (*this)(2,2) = c1*c3-c2*s1*s3;
+                */
+                break;
+
+            case(C_EULER_ORDER_YZX):
+                /*
+                (*this)(0,0) = c1*c2;               (*this)(0,1) = s1*s3-c1*c3*s2;      (*this)(0,2) = c3*s1+c1*s2*s3;
+                (*this)(1,0) = s2;                  (*this)(1,1) = c2*c3;               (*this)(1,2) =-c2*s3;
+                (*this)(2,0) =-c2*s1;               (*this)(2,1) = c1*s3+c3*s1*s2;      (*this)(2,2) = c1*c3-s1*s2*s3;
+                */
+            {
+                Rs = (*this)(1,0);
+                Rc1c2 = (*this)(0, 0);
+                Rc2s1 = (*this)(2, 0);
+                Rc2s3 = (*this)(1, 2);
+                Rc2c3 = (*this)(1, 1);
+                Rc1s2s3c3s1 = (*this)(0, 2);
+                Rs1s3c1c3s2 = (*this)(0, 1);
+                flagUseSin = true;
+                sign = 1.0;
+                break;
+            }
+
+
+            case(C_EULER_ORDER_YZY):
+                /*
+                (*this)(0,0) = c1*c2*c3-s1*s3;      (*this)(0,1) =-c1*s2;               (*this)(0,2) = c3*s1+c1*c2*s3;
+                (*this)(1,0) = c3*s2;               (*this)(1,1) = c2;                  (*this)(1,2) = s2*s3;
+                (*this)(2,0) =-c1*s3-c2*c3*s1;      (*this)(2,1) = s1*s2;               (*this)(2,2) = c1*c3-c2*s1*s3;
+                */
+                break;
+
+            case(C_EULER_ORDER_YXZ):
+                /*
+                (*this)(0,0) = c1*c3+s1*s2*s3;      (*this)(0,1) = c3*s1*s2-c1*s3;       (*this)(0,2) = c2*s1;
+                (*this)(1,0) = c2*s3;               (*this)(1,1) = c2*c3;                (*this)(1,2) =-s2;
+                (*this)(2,0) = c1*s2*s3-c3*s1;      (*this)(2,1) = s1*s3+c1*c3*s2;       (*this)(2,2) = c1*c2
+                */
+            {
+                Rs = (*this)(1,2);
+                Rc1c2 = (*this)(2, 2);
+                Rc2s1 = (*this)(0, 2);
+                Rc2s3 = (*this)(1, 0);
+                Rc2c3 = (*this)(1, 1);
+                Rc1s2s3c3s1 = (*this)(2, 0);
+                Rs1s3c1c3s2 = (*this)(2, 1);
+                flagUseSin = true;
+                sign =-1.0;
+                break;
+            }
+
+            case(C_EULER_ORDER_YXY):
+                /*
+                (*this)(0,0) = c1*c3-c2*s1*s3;      (*this)(0,1) = s1*s2;               (*this)(0,2) = c1*s3+c2*c3*s1;
+                (*this)(1,0) = s2*s3;               (*this)(1,1) = c2;                  (*this)(1,2) =-c3*s2;
+                (*this)(2,0) =-c3*s1-c1*c2*s3;      (*this)(2,1) = c1*s2;               (*this)(2,2) = c1*c2*c3-s1*s3;
+                */
+                break;
+
+            case(C_EULER_ORDER_ZXY):
+                /*
+                (*this)(0,0) = c1*c3-s1*s2*s3;      (*this)(0,1) =-c2*s1;               (*this)(0,2) = c1*s3+c3*s1*s2;
+                (*this)(1,0) = c3*s1+c1*s2*s3;      (*this)(1,1) = c1*c2;               (*this)(1,2) = s1*s3-c1*c3*s2;
+                (*this)(2,0) =-c2*s3;               (*this)(2,1) = s2;                  (*this)(2,2) = c2*c3;
+                */
+            {
+                Rs = (*this)(2,1);
+                Rc1c2 = (*this)(1, 1);
+                Rc2s1 = (*this)(0, 1);
+                Rc2s3 = (*this)(2, 0);
+                Rc2c3 = (*this)(2, 2);
+                Rc1s2s3c3s1 = (*this)(1, 0);
+                Rs1s3c1c3s2 = (*this)(1, 2);
+                flagUseSin = true;
+                sign = 1.0;
+                break;
+            }
+
+            case(C_EULER_ORDER_ZXZ):
+                /*
+                (*this)(0,0) = c1*c3-c2*s1*s3;      (*this)(0,1) =-c1*s3-c2*c3*s1;      (*this)(0,2) = s1*s2;
+                (*this)(1,0) = c3*s1+c1*c2*s3;      (*this)(1,1) = c1*c2*c3-s1*s3;      (*this)(1,2) =-c1*s2;
+                (*this)(2,0) = s2*s3;               (*this)(2,1) = c3*s2;               (*this)(2,2) = c2;
+                */
+                break; 
+
+            case(C_EULER_ORDER_ZYX):
+                /*
+                (*this)(0,0) = c1*c2;               (*this)(0,1) = c1*s2*s3-c3*s1;      (*this)(0,2) = s1*s3+c1*c3*s2;
+                (*this)(1,0) = c2*s1;               (*this)(1,1) = c1*c3+s1*s2*s3;      (*this)(1,2) = c3*s1*s2-c1*s3;
+                (*this)(2,0) =-s2;                  (*this)(2,1) = c2*s3;               (*this)(2,2) = c2*c3;
+                */
+            {
+                Rs = (*this)(2,0);
+                Rc1c2 = (*this)(0, 0);
+                Rc2s1 = (*this)(1, 0);
+                Rc2s3 = (*this)(2, 1);
+                Rc2c3 = (*this)(2, 2);
+                Rc1s2s3c3s1 = (*this)(0, 1);
+                Rs1s3c1c3s2 = (*this)(0, 2);
+                flagUseSin = true;
+                sign =-1.0;
+                break;
+            }
+
+            case(C_EULER_ORDER_ZYZ):
+                /*
+                (*this)(0,0) = c1*c2*c3-s1*s3;      (*this)(0,1) =-c3*s1-c1*c2*s3;      (*this)(0,2) = c1*s2;
+                (*this)(1,0) = c1*s3+c2*c3*s1;      (*this)(1,1) = c1*c3-c2*s1*s3;      (*this)(1,2) = s1*s2;
+                (*this)(2,0) =-c3*s2;               (*this)(2,1) = s2*s3;               (*this)(2,2) = c2;
+                */
+                break;
+        }
+
+
+        if (flagUseSin)
+        {
+                if ((Rs != 1.0) && (Rs != -1.0))
+                {
+                    a_eulerAngles1(1) = sign * asin(Rs);
+                    a_eulerAngles2(1) = C_PI - a_eulerAngles1(1);
+
+                    double cosAng1 = cos(a_eulerAngles1(1));
+                    double cosAng2 = cos(a_eulerAngles2(1));
+
+                    a_eulerAngles1(0) = -sign * atan2(Rc2s1 / cosAng1, Rc1c2 / cosAng1);
+                    a_eulerAngles2(0) = -sign * atan2(Rc2s1 / cosAng2, Rc1c2 / cosAng2);
+                    a_eulerAngles1(2) = -sign * atan2(Rc2s3 / cosAng1, Rc2c3 / cosAng1);
+                    a_eulerAngles2(2) = -sign * atan2(Rc2s3 / cosAng2, Rc2c3 / cosAng2);
+                }
+                else
+                {
+                    locked = true;
+                    a_eulerAngles1(0) = 0.0;
+                    a_eulerAngles2(0) = 0.0;
+
+                    if (Rs > 0)
+                    {
+                        a_eulerAngles1(1) = sign * C_PI_DIV_2;
+                        a_eulerAngles2(1) = sign * C_PI_DIV_2;
+                        double value = atan2(-Rc1s2s3c3s1,-Rs1s3c1c3s2);
+                        a_eulerAngles1(2) =-sign * (a_eulerAngles1(0) + value);
+                        a_eulerAngles2(2) =-sign * (a_eulerAngles2(0) + value);
+                    }
+                    else
+                    {
+                        a_eulerAngles1(1) = sign * (-C_PI_DIV_2);
+                        a_eulerAngles2(1) = sign * (-C_PI_DIV_2);
+                        double value = atan2(Rc1s2s3c3s1, Rs1s3c1c3s2);
+                        a_eulerAngles1(2) =-sign * (a_eulerAngles1(0) + value);
+                        a_eulerAngles2(2) =-sign * (a_eulerAngles2(0) + value);
+                    }
+                }
+        }
+
+        return locked;
+    }
+
+
+    //--------------------------------------------------------------------------
+    /*!
+        \brief
+        This method computes the intrinsic Euler angle representations for this matrix
+        in degrees.
+
+        \details
+        This method computes the intrinsic angle representations for this matrix
+        in degrees.
+
+        \param  a_eulerAngles1  Angle in radians of the first, second and third rotation (First solution).
+        \param  a_eulerAngles2  Angle in radians of the first, second and third rotation (Second solution).
+        \param  a_eulerOrder    The order of the axes about which the rotations 
+                                are to be applied.
+
+        \return __true__ if gimble is locked (infinite number of solutions), __false__ otherwise.
+    */
+    //--------------------------------------------------------------------------
+    inline bool getIntrinsicEulerAnglesDeg(cVector3d& a_eulerAngles1,
+                                           cVector3d& a_eulerAngles2,
+                                           const cEulerOrder a_eulerOrder)
+
+    {
+        cVector3d eulerAngles1, eulerAngles2;
+        bool locked = getIntrinsicEulerAnglesRad(eulerAngles1,
+                                                 eulerAngles2,
+                                                 a_eulerOrder);
+
+        // convert angles from radians to degrees
+        a_eulerAngles1(0) = C_RAD2DEG * eulerAngles1(0);
+        a_eulerAngles1(1) = C_RAD2DEG * eulerAngles1(1);
+        a_eulerAngles1(2) = C_RAD2DEG * eulerAngles1(2);
+
+        a_eulerAngles2(0) = C_RAD2DEG * eulerAngles2(0);
+        a_eulerAngles2(1) = C_RAD2DEG * eulerAngles2(1);
+        a_eulerAngles2(2) = C_RAD2DEG * eulerAngles2(2);
+
+        return locked;
     }
 
 
@@ -2090,6 +2566,35 @@ inline cMatrix3d operator*(const cMatrix3d& a_matrix1,
 {
     cMatrix3d result;
     a_matrix1.mulr(a_matrix2, result);
+    return (result);
+}
+
+//! An overloaded <b> * </b> operator for scalar/matrix multiplication.
+inline cMatrix3d operator*(const double& a_scalar,
+    const cMatrix3d& a_matrix)
+{
+    cMatrix3d result;
+    a_matrix.mulr(a_scalar, result);
+    return (result);
+}
+
+
+//! An overloaded <b> + </b> operator for matrix/matrix addition.
+inline cMatrix3d operator+(const cMatrix3d& a_matrix1,
+    const cMatrix3d& a_matrix2)
+{
+    cMatrix3d result;
+    a_matrix1.addr(a_matrix2, result);
+    return (result);
+}
+
+
+//! An overloaded <b> - </b> operator for matrix/matrix addition.
+inline cMatrix3d operator-(const cMatrix3d& a_matrix1,
+    const cMatrix3d& a_matrix2)
+{
+    cMatrix3d result;
+    a_matrix1.subr(a_matrix2, result);
     return (result);
 }
 

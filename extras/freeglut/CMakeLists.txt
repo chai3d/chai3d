@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,68 +35,69 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-08-16 23:22:03 +0200 (Tue, 16 Aug 2016) $
-#  $Rev: 2089 $
+################################################################################
 
-
+################################################################################
 #
-# project configuration
+# Project configuration
 #
+################################################################################
 
 cmake_minimum_required (VERSION 3.0.0)
 project (FreeGLUT)
 
-# project version
+# Project version
 set (PROJECT_VERSION 2.0)
 
 # OpenGL dependency
 find_package (OpenGL REQUIRED)
 include_directories (OPENGL_INCLUDE_DIR)
 
-# enforce build type
+# Enforce build type.
 if (NOT CMAKE_BUILD_TYPE)
-  set (CMAKE_BUILD_TYPE Release CACHE STRING "Setting build mode to Release" FORCE)
+    set (CMAKE_BUILD_TYPE Release CACHE STRING "Setting build mode to Release" FORCE)
 endif()
 
-
+################################################################################
 # 
-# build products
+# Build products
 # 
+################################################################################
 
-# header search path
+# Header search path
 include_directories (${PROJECT_SOURCE_DIR}/include)
 
-# static library source files
+# Static library source files
 file (GLOB_RECURSE source ${PROJECT_SOURCE_DIR}/src/*.c)
 
-# build flags
+# Build flags
 add_definitions (${PROJECT_DEFINITIONS} -DFREEGLUT_STATIC -DHAVE_FCNTL_H)
 
-# static library
+# Static library
 add_library (freeglut STATIC ${source})
 
-# library dependencies and paths
+# Library dependencies and paths
 set (FREEGLUT_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
 set (FREEGLUT_LIBRARIES freeglut ${OPENGL_LIBRARIES})
 
-# export to encompassing project
+# Export to encompassing project
 set (FREEGLUT_INCLUDE_DIRS ${FREEGLUT_INCLUDE_DIRS} PARENT_SCOPE)
 set (FREEGLUT_LIBRARIES ${FREEGLUT_LIBRARIES} PARENT_SCOPE)
 
-
+################################################################################
 # 
-# export package
+# Export package
 # 
+################################################################################
 
-# export package for use from the build tree
+# Export package for use from the build tree.
 export (TARGETS freeglut FILE ${PROJECT_BINARY_DIR}/FreeGLUTTargets.cmake)
 export (PACKAGE FreeGLUT)
 
-# package definitions
+# Package definitions
 set (CONF_INCLUDE_DIRS ${FREEGLUT_INCLUDE_DIRS})
 set (CONF_LIBRARIES ${FREEGLUT_LIBRARIES})
 
-# package configuration and version files
+# Package configuration and version files
 configure_file (FreeGLUTConfig.cmake.in "${PROJECT_BINARY_DIR}/FreeGLUTConfig.cmake" @ONLY)
 configure_file (FreeGLUTConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/FreeGLUTConfigVersion.cmake" @ONLY)

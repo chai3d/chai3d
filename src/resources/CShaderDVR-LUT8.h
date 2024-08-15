@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Sonny Chan
-    \version   3.2.0 $Rev: 2015 $
+    \version   3.3.0
  */
 //==============================================================================
 
@@ -77,6 +77,8 @@ const std::string C_SHADER_DVR_LUT8_VERT =
 
 const std::string C_SHADER_DVR_LUT8_FRAG = 
 "                                                                                                                       \n"
+"   varying vec4 vPosition;                                                                                             \n"
+"                                                                                                                       \n"
 "   uniform vec3 uMinCorner;              // lower bounding corner, model space                                         \n"
 "   uniform vec3 uMaxCorner;              // upper bounding corner, model space                                         \n"
 "   uniform vec3 uTextureScale;           // convert model to texture coordinates                                       \n"
@@ -87,8 +89,6 @@ const std::string C_SHADER_DVR_LUT8_FRAG =
 "   uniform float uOpacityThreshold;      // opacity threshold                                                          \n"
 "   uniform float uOpticalDensityFactor;  // Optical density factor                                                     \n"
 "   uniform float uResolution;            // max samples to take on ray traversal                                       \n"
-"                                                                                                                       \n"
-"   varying vec4 vPosition;                                                                                             \n"
 "                                                                                                                       \n"
 "   // deltas for gradient estimation along each axis in texture space                                                  \n"
 "   vec3 dx = vec3(uGradientDelta.x, 0.0, 0.0);                                                                         \n"

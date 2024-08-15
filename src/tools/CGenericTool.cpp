@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2174 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -647,6 +647,9 @@ bool cGenericTool::start()
         return (C_ERROR);
     }
 
+    // calibrate haptic device; do not force calibration if device is already calibrated
+    m_hapticDevice->calibrate(false);
+
     // reset startup variables
     m_smallForceCounter     = 0;
     m_forceRiseClock.reset();
@@ -1159,41 +1162,6 @@ bool cGenericTool::setWorkspaceScaleFactor(const double& a_workspaceScaleFactor)
 
     // return success
     return (C_SUCCESS);
-}
-
-
-//==============================================================================
-/*!
-    This method assigns a shader program to this tool and all the haptic
-    points associated with the tool. \n
-
-    If \p a_affectChildren is set to __true__ then all children are assigned
-    with the shader program.
-
-    \param  a_shaderProgram   Shader program to be assigned to object.
-    \param  a_affectChildren  If __true__ then children are updated too.
-*/
-//==============================================================================
-void cGenericTool::setShaderProgram(cShaderProgramPtr a_shaderProgram,
-    const bool a_affectChildren)
-{
-    m_shaderProgram = a_shaderProgram;
-
-    for (unsigned int i = 0; i<m_hapticPoints.size(); i++)
-    {
-        m_hapticPoints[i]->m_sphereGoal->setShaderProgram(a_shaderProgram, true);
-        m_hapticPoints[i]->m_sphereProxy->setShaderProgram(a_shaderProgram, true);
-    }
-
-    // apply change to children
-    if (a_affectChildren)
-    {
-        vector<cGenericObject*>::iterator it;
-        for (it = m_children.begin(); it < m_children.end(); it++)
-        {
-            (*it)->setShaderProgram(a_shaderProgram, true);
-        }
-    }
 }
 
 

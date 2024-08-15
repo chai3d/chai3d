@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2050 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -107,64 +107,37 @@ void cScope::setSignalValues(const double a_signalValue0,
                              const double a_signalValue2,
                              const double a_signalValue3)
 {
+    // temp variable
+    double clampedValue;
+
+    // increment index point
     m_index1 = (m_index1 + 1) % C_SCOPE_MAX_SAMPLES;
 
+    // forward index 
     if (m_index1 == m_index0)
     {
         m_index0 = (m_index0 + 1) % C_SCOPE_MAX_SAMPLES;
     }
-    
 
     // set signal 0
-    if (m_signalEnabled[0])
-    {
-        double value = cClamp(a_signalValue0, m_minValue, m_maxValue);
-        m_signals[0][m_index1] = (int)((double)(m_scopeHeight) * (value - m_minValue) / (m_maxValue - m_minValue));
-    }
-    else
-    {
-        m_signals[0][m_index1] = 0;
-    }
-
+    m_signalValues[0][m_index1] = a_signalValue0;
+    clampedValue = cClamp(a_signalValue0, m_minValue, m_maxValue);
+    m_signalPoints[0][m_index1] = (int)((double)(m_scopeHeight) * (clampedValue - m_minValue) / (m_maxValue - m_minValue));
+ 
     // set signal 1
-    if (m_signalEnabled[1])
-    {
-        double value = cClamp(a_signalValue1, m_minValue, m_maxValue);
-        m_signals[1][m_index1] = (int)((double)(m_scopeHeight) * (value - m_minValue) / (m_maxValue - m_minValue));
-    }
-    else
-    {
-        m_signals[1][m_index1] = 0;
-    }
+    m_signalValues[1][m_index1] = a_signalValue0;
+    clampedValue = cClamp(a_signalValue1, m_minValue, m_maxValue);
+    m_signalPoints[1][m_index1] = (int)((double)(m_scopeHeight) * (clampedValue - m_minValue) / (m_maxValue - m_minValue));
 
     // set signal 2
-    if (m_signalEnabled[2])
-    {
-        double value = cClamp(a_signalValue2, m_minValue, m_maxValue);
-        m_signals[2][m_index1] = (int)((double)(m_scopeHeight) * (value - m_minValue) / (m_maxValue - m_minValue));
-    }
-    else
-    {
-        m_signals[2][m_index1] = 0;
-    }
+    m_signalValues[2][m_index1] = a_signalValue0;
+    clampedValue = cClamp(a_signalValue2, m_minValue, m_maxValue);
+    m_signalPoints[2][m_index1] = (int)((double)(m_scopeHeight) * (clampedValue - m_minValue) / (m_maxValue - m_minValue));
 
     // set signal 3
-    if (m_signalEnabled[3])
-    {
-        double value = cClamp(a_signalValue3, m_minValue, m_maxValue);
-        m_signals[3][m_index1] = (int)((double)(m_scopeHeight) * (value - m_minValue) / (m_maxValue - m_minValue));
-    }
-    else
-    {
-        m_signals[3][m_index1] = 0;
-    }
-
-    // initialization case
-    if ((m_index0 == 0) && (m_index1 == 1))
-    {
-        for (int i=0; i<4; i++)
-        m_signals[i][0] = m_signals[i][1];
-    }
+    m_signalValues[3][m_index1] = a_signalValue0;
+    clampedValue = cClamp(a_signalValue3, m_minValue, m_maxValue);
+    m_signalPoints[3][m_index1] = (int)((double)(m_scopeHeight) * (clampedValue - m_minValue) / (m_maxValue - m_minValue));
 }
 
 
@@ -222,6 +195,15 @@ void cScope::setRange(const double a_minValue,
     // store values
     m_minValue = cMin(a_minValue, a_maxValue);
     m_maxValue = cMax(a_minValue, a_maxValue);
+
+    // update all data points
+    for (unsigned int i = 0; i < C_SCOPE_MAX_SAMPLES; i++)
+    {
+        m_signalPoints[0][i] = (int)((double)(m_scopeHeight) * (cClamp(m_signalValues[0][i], m_minValue, m_maxValue) - m_minValue) / (m_maxValue - m_minValue));
+        m_signalPoints[1][i] = (int)((double)(m_scopeHeight) * (cClamp(m_signalValues[1][i], m_minValue, m_maxValue) - m_minValue) / (m_maxValue - m_minValue));
+        m_signalPoints[2][i] = (int)((double)(m_scopeHeight) * (cClamp(m_signalValues[2][i], m_minValue, m_maxValue) - m_minValue) / (m_maxValue - m_minValue));
+        m_signalPoints[3][i] = (int)((double)(m_scopeHeight) * (cClamp(m_signalValues[3][i], m_minValue, m_maxValue) - m_minValue) / (m_maxValue - m_minValue));
+    }
 }
 
 
@@ -235,6 +217,9 @@ void cScope::setRange(const double a_minValue,
 //==============================================================================
 void cScope::setSize(const double& a_width, const double& a_height)
 {
+    // check if new size
+    if ((a_width == m_width) && (a_height == m_height)) { return; }
+
     // set width
     m_width = a_width;
     m_height = a_height;
@@ -258,6 +243,15 @@ void cScope::setSize(const double& a_width, const double& a_height)
 
     // set position of scope within panel
     m_scopePosition.set(m_marginLeft, m_marginBottom, 0.0);
+
+    // update all data points
+    for (unsigned int i = 0; i < C_SCOPE_MAX_SAMPLES; i++)
+    {
+        m_signalPoints[0][i] = (int)((double)(m_scopeHeight) * (cClamp(m_signalValues[0][i], m_minValue, m_maxValue) - m_minValue) / (m_maxValue - m_minValue));
+        m_signalPoints[1][i] = (int)((double)(m_scopeHeight) * (cClamp(m_signalValues[1][i], m_minValue, m_maxValue) - m_minValue) / (m_maxValue - m_minValue));
+        m_signalPoints[2][i] = (int)((double)(m_scopeHeight) * (cClamp(m_signalValues[2][i], m_minValue, m_maxValue) - m_minValue) / (m_maxValue - m_minValue));
+        m_signalPoints[3][i] = (int)((double)(m_scopeHeight) * (cClamp(m_signalValues[3][i], m_minValue, m_maxValue) - m_minValue) / (m_maxValue - m_minValue));
+    }
 }
 
 
@@ -319,8 +313,8 @@ void cScope::render(cRenderOptions& a_options)
                 glBegin(GL_LINES);
                 while ((i0 != m_index0) && (x>0))
                 {
-                    glVertex3d(x, m_signals[i][i0], 0.0);
-                    glVertex3d(x-1, m_signals[i][i1], 0.0);  
+                    glVertex3d(x, m_signalPoints[i][i0], 0.0);
+                    glVertex3d(x-1, m_signalPoints[i][i1], 0.0);
                     i0 = i1;
                     i1--;
                     if (i1 < 0)

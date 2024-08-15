@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -39,7 +39,7 @@
     \author    Francois Conti
     \author    Dan Morris
     \author    Chris Sewell
-    \version   3.2.0 $Rev: 2167 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -367,7 +367,7 @@ unsigned int cMesh::newTriangle(const unsigned int a_indexVertex0,
     int index = m_triangles->newTriangle(a_indexVertex0, a_indexVertex1, a_indexVertex2);
 
     // mark mesh for update
-    markForUpdate(false);
+    markForUpdate(false, false);
 
     // return the index at which I inserted this triangle in my triangle array
     return (index);
@@ -432,7 +432,7 @@ unsigned int cMesh::newTriangle(const cVector3d& a_vertex0,
     m_vertices->setColor(indexVertex2, a_colorVertex2);
 
     // mark mesh for update
-    markForUpdate(false);
+    markForUpdate(false, false);
 
     // return result
     return (index);
@@ -456,7 +456,7 @@ bool cMesh::removeTriangle(const unsigned int a_index)
     clearAllEdges();
 
     // mark mesh for update
-    markForUpdate(false);
+    markForUpdate(false, false);
 
     // return success
     return (true);
@@ -480,7 +480,7 @@ void cMesh::clear()
     m_edges.clear();
 
     // mark for update
-    markForUpdate(false);
+    markForUpdate(false, false);
 }
 
 
@@ -573,7 +573,7 @@ void cMesh::scaleXYZ(const double a_scaleX, const double a_scaleY, const double 
     m_boundaryBoxMin.mul(a_scaleX, a_scaleY, a_scaleZ);
 
     // mark for update
-    markForUpdate(false);
+    markForUpdate(false, false);
 }
 
 
@@ -603,20 +603,20 @@ void cMesh::updateGlobalPositions(const bool a_frameOnly)
     if you are using display lists and you modify mesh options, vertex 
     positions, etc.
 
-    \param  a_affectChildren  If __true__, then children are updated too.
+    \param  a_affectChildren    If __true__, then children are updated too.
+    \param  a_affectComponents  If __true__, then components are updated too.
 */
 //==============================================================================
-void cMesh::markForUpdate(const bool a_affectChildren)
+void cMesh::markForUpdate(const bool a_affectChildren, const bool a_affectComponents)
 {
     // mark triangles for update
     m_triangles->m_flagMarkForUpdate = true;
 
-    // invalidate display list
-    m_displayList.invalidate();
+    // invalidate edge display list
     m_displayListEdges.invalidate();
 
     // update display list of cGenericObject and children
-    cGenericObject::markForUpdate(a_affectChildren);
+    cGenericObject::markForUpdate(a_affectChildren, a_affectComponents);
 }
 
 
@@ -625,18 +625,20 @@ void cMesh::markForUpdate(const bool a_affectChildren)
     This method sets the alpha value at each vertex, in all of its material 
     colors, optionally propagating the operation to my children.
 
-    \param  a_level            Level of transparency ranging from 0.0 to 1.0.
-    \param  a_applyToVertices  If __true__, then apply changes to vertex colors.
-    \param  a_applyToTextures  If __true__, then apply changes to texture.
-    \param  a_affectChildren   If __true__, then children are updated too.
+    \param  a_level              Level of transparency ranging from 0.0 to 1.0.
+    \param  a_applyToVertices    If __true__, then apply changes to vertex colors.
+    \param  a_applyToTextures    If __true__, then apply changes to texture.
+    \param  a_affectChildren     If __true__, then children are updated too.
+    \param  a_affectComponents   If __true__, then components are updated too.
 */
 //==============================================================================
 void cMesh::setTransparencyLevel(const float a_level,
     const bool a_applyToVertices,
     const bool a_applyToTextures,
-    const bool a_affectChildren)
+    const bool a_affectChildren,
+    const bool a_affectComponents)
 {
-    cGenericObject::setTransparencyLevel(a_level, a_applyToVertices, a_applyToTextures, a_affectChildren);
+    cGenericObject::setTransparencyLevel(a_level, a_applyToVertices, a_applyToTextures, a_affectChildren, a_affectComponents);
 
     // apply the new value to all vertex colors
     if (a_applyToVertices)
@@ -697,6 +699,40 @@ void cMesh::offsetVertices(const cVector3d& a_offset,
     // update boundary box
     m_boundaryBoxMin+=a_offset;
     m_boundaryBoxMax+=a_offset;
+
+    // update collision detector if requested
+    if (a_updateCollisionDetector && m_collisionDetector)
+    {
+        m_collisionDetector->update();
+    }
+
+    // mark for update
+    markForUpdate(false);
+}
+
+
+//==============================================================================
+/*!
+    This method rotates all vertex positions by applying a local rotation matrix.
+
+    \param  a_rotation                 Rotation matrix.
+    \param  a_updateCollisionDetector  If __true__, then update collision detector.
+*/
+//==============================================================================
+void cMesh::rotateVertices(const cMatrix3d& a_rotation,
+    const bool a_updateCollisionDetector)
+{
+    // offset all vertices
+    int numVertices = m_vertices->getNumElements();
+
+    for (int i = 0; i < numVertices; i++)
+    {
+        m_vertices->m_localPos[i] = a_rotation * m_vertices->m_localPos[i];
+    }
+
+    // update boundary box
+    m_boundaryBoxMin = a_rotation * m_boundaryBoxMin;
+    m_boundaryBoxMax = a_rotation * m_boundaryBoxMax;
 
     // update collision detector if requested
     if (a_updateCollisionDetector && m_collisionDetector)
@@ -1148,26 +1184,50 @@ void cMesh::renderNormals(cRenderOptions& a_options)
             // normal 0
             v = m_vertices->getLocalPos(m_triangles->getVertexIndex0(i));
             n = m_vertices->getNormal(m_triangles->getVertexIndex0(i));
+#if defined C_USE_OPENGL_DOUBLES
             glVertex3d(v(0) ,v(1) ,v(2) );
+#else
+            glVertex3f(v(0), v(1), v(2));
+#endif
             n.mul(m_normalsLength);
             n.add(v);
+#if defined C_USE_OPENGL_DOUBLES
             glVertex3d(n(0) ,n(1) ,n(2) );
+#else
+            glVertex3f(n(0), n(1), n(2));
+#endif
 
             // normal 1
             v = m_vertices->getLocalPos(m_triangles->getVertexIndex1(i));
             n = m_vertices->getNormal(m_triangles->getVertexIndex1(i));
+#if defined C_USE_OPENGL_DOUBLES
             glVertex3d(v(0) ,v(1) ,v(2) );
+#else
+            glVertex3f(v(0), v(1), v(2));
+#endif
             n.mul(m_normalsLength);
             n.add(v);
+#if defined C_USE_OPENGL_DOUBLES
             glVertex3d(n(0) ,n(1) ,n(2) );
+#else
+            glVertex3f(n(0), n(1), n(2));
+#endif
 
             // normal 2
             v = m_vertices->getLocalPos(m_triangles->getVertexIndex2(i));
             n = m_vertices->getNormal(m_triangles->getVertexIndex2(i));
+#if defined C_USE_OPENGL_DOUBLES
             glVertex3d(v(0) ,v(1) ,v(2) );
+#else
+            glVertex3f(v(0), v(1), v(2));
+#endif
             n.mul(m_normalsLength);
             n.add(v);
+#if defined C_USE_OPENGL_DOUBLES
             glVertex3d(n(0) ,n(1) ,n(2) );
+#else
+            glVertex3f(n(0), n(1), n(2));
+#endif
         }
     }
     glEnd();
@@ -1530,7 +1590,7 @@ void cMesh::renderMesh(cRenderOptions& a_options)
     //--------------------------------------------------------------------------
     // RENDER OBJECT (OLD METHOD)
     //--------------------------------------------------------------------------
-    else if (!m_displayList.render(m_useDisplayList))   
+    else if (!m_displayList.render(m_useDisplayList))
     {
         // get texture unit
         GLenum textureUnit = GL_TEXTURE1_ARB;
@@ -1564,6 +1624,7 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                         unsigned int index1 = m_triangles->getVertexIndex1(i);
                         unsigned int index2 = m_triangles->getVertexIndex2(i);
 
+#if defined C_USE_OPENGL_DOUBLES
                         // render vertex 0
                         glNormal3dv(&m_vertices->m_normal[index0](0));
                         glVertex3dv(&m_vertices->m_localPos[index0](0));
@@ -1575,6 +1636,19 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                         // render vertex 2
                         glNormal3dv(&m_vertices->m_normal[index2](0));
                         glVertex3dv(&m_vertices->m_localPos[index2](0));
+#else
+                        // render vertex 0
+                        glNormal3f(m_vertices->m_normal[index0](0), m_vertices->m_normal[index0](1), m_vertices->m_normal[index0](2));
+                        glVertex3f(m_vertices->m_localPos[index0](0), m_vertices->m_localPos[index0](1), m_vertices->m_localPos[index0](2));
+
+                        // render vertex 1
+                        glNormal3f(m_vertices->m_normal[index1](0), m_vertices->m_normal[index1](1), m_vertices->m_normal[index1](2));
+                        glVertex3f(m_vertices->m_localPos[index1](0), m_vertices->m_localPos[index1](1), m_vertices->m_localPos[index1](2));
+
+                        // render vertex 2
+                        glNormal3f(m_vertices->m_normal[index2](0), m_vertices->m_normal[index2](1), m_vertices->m_normal[index2](2));
+                        glVertex3f(m_vertices->m_localPos[index2](0), m_vertices->m_localPos[index2](1), m_vertices->m_localPos[index2](2));
+#endif
                     }
                 }
             }
@@ -1590,6 +1664,7 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                             unsigned int index1 = m_triangles->getVertexIndex1(i);
                             unsigned int index2 = m_triangles->getVertexIndex2(i);
 
+#if defined C_USE_OPENGL_DOUBLES
                             // render vertex 0
                             glNormal3dv(&m_vertices->m_normal[index0](0));
                             glMultiTexCoord3dv(textureUnit, &m_vertices->m_texCoord[index0](0));
@@ -1604,6 +1679,22 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                             glNormal3dv(&m_vertices->m_normal[index2](0));
                             glMultiTexCoord3dv(textureUnit, &m_vertices->m_texCoord[index2](0));
                             glVertex3dv(&m_vertices->m_localPos[index2](0));
+#else
+                            // render vertex 0
+                            glNormal3f(m_vertices->m_normal[index0](0), m_vertices->m_normal[index0](1), m_vertices->m_normal[index0](2));
+                            glMultiTexCoord3f(textureUnit, m_vertices->m_texCoord[index0](0), m_vertices->m_texCoord[index0](1), m_vertices->m_texCoord[index0](2));
+                            glVertex3f(m_vertices->m_localPos[index0](0), m_vertices->m_localPos[index0](1), m_vertices->m_localPos[index0](2));
+
+                            // render vertex 1
+                            glNormal3f(m_vertices->m_normal[index1](0), m_vertices->m_normal[index1](1), m_vertices->m_normal[index1](2));
+                            glMultiTexCoord3f(textureUnit, m_vertices->m_texCoord[index1](0), m_vertices->m_texCoord[index1](1), m_vertices->m_texCoord[index1](2));
+                            glVertex3f(m_vertices->m_localPos[index1](0), m_vertices->m_localPos[index1](1), m_vertices->m_localPos[index1](2));
+
+                            // render vertex 2
+                            glNormal3f(m_vertices->m_normal[index2](0), m_vertices->m_normal[index2](1), m_vertices->m_normal[index2](2));
+                            glMultiTexCoord3f(textureUnit, m_vertices->m_texCoord[index2](0), m_vertices->m_texCoord[index2](1), m_vertices->m_texCoord[index2](2));
+                            glVertex3f(m_vertices->m_localPos[index2](0), m_vertices->m_localPos[index2](1), m_vertices->m_localPos[index2](2));
+#endif
                         }
                     }
                 }
@@ -1617,6 +1708,7 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                             unsigned int index1 = m_triangles->getVertexIndex1(i);
                             unsigned int index2 = m_triangles->getVertexIndex2(i);
 
+#if defined C_USE_OPENGL_DOUBLES
                             // render vertex 0
                             glNormal3dv(&m_vertices->m_normal[index0](0));
                             glMultiTexCoord2dv(textureUnit, &m_vertices->m_texCoord[index0](0));
@@ -1631,6 +1723,22 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                             glNormal3dv(&m_vertices->m_normal[index2](0));
                             glMultiTexCoord2dv(textureUnit, &m_vertices->m_texCoord[index2](0));
                             glVertex3dv(&m_vertices->m_localPos[index2](0));
+#else
+                            // render vertex 0
+                            glNormal3f(m_vertices->m_normal[index0](0), m_vertices->m_normal[index0](1), m_vertices->m_normal[index0](2));
+                            glMultiTexCoord2f(textureUnit, m_vertices->m_texCoord[index0](0), m_vertices->m_texCoord[index0](1));
+                            glVertex3f(m_vertices->m_localPos[index0](0), m_vertices->m_localPos[index0](1), m_vertices->m_localPos[index0](2));
+
+                            // render vertex 1
+                            glNormal3f(m_vertices->m_normal[index1](0), m_vertices->m_normal[index1](1), m_vertices->m_normal[index1](2));
+                            glMultiTexCoord2f(textureUnit, m_vertices->m_texCoord[index1](0), m_vertices->m_texCoord[index1](1));
+                            glVertex3f(m_vertices->m_localPos[index1](0), m_vertices->m_localPos[index1](1), m_vertices->m_localPos[index1](2));
+
+                            // render vertex 2
+                            glNormal3f(m_vertices->m_normal[index2](0), m_vertices->m_normal[index2](1), m_vertices->m_normal[index2](2));
+                            glMultiTexCoord2f(textureUnit, m_vertices->m_texCoord[index2](0), m_vertices->m_texCoord[index2](1));
+                            glVertex3f(m_vertices->m_localPos[index2](0), m_vertices->m_localPos[index2](1), m_vertices->m_localPos[index2](2));
+#endif
                         }
                     }
                 }
@@ -1646,6 +1754,7 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                         unsigned int index1 = m_triangles->getVertexIndex1(i);
                         unsigned int index2 = m_triangles->getVertexIndex2(i);
 
+#if defined C_USE_OPENGL_DOUBLES
                         // render vertex 0
                         glNormal3dv(&m_vertices->m_normal[index0](0));
                         glColor4fv(m_vertices->m_color[index0].getData());
@@ -1660,6 +1769,24 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                         glNormal3dv(&m_vertices->m_normal[index2](0));
                         glColor4fv(m_vertices->m_color[index2].getData());
                         glVertex3dv(&m_vertices->m_localPos[index2](0));
+
+#else
+                        // render vertex 0
+                        glNormal3f(m_vertices->m_normal[index0](0), m_vertices->m_normal[index0](1), m_vertices->m_normal[index0](2));
+                        glColor4fv(m_vertices->m_color[index0].getData());
+                        glVertex3f(m_vertices->m_localPos[index0](0), m_vertices->m_localPos[index0](1), m_vertices->m_localPos[index0](2));
+
+                        // render vertex 1
+                        glNormal3f(m_vertices->m_normal[index1](0), m_vertices->m_normal[index1](1), m_vertices->m_normal[index1](2));
+                        glColor4fv(m_vertices->m_color[index1].getData());
+                        glVertex3f(m_vertices->m_localPos[index1](0), m_vertices->m_localPos[index1](1), m_vertices->m_localPos[index1](2));
+
+                        // render vertex 2
+                        glNormal3f(m_vertices->m_normal[index2](0), m_vertices->m_normal[index2](1), m_vertices->m_normal[index2](2));
+                        glColor4fv(m_vertices->m_color[index2].getData());
+                        glVertex3f(m_vertices->m_localPos[index2](0), m_vertices->m_localPos[index2](1), m_vertices->m_localPos[index2](2));
+#endif
+
                     }
                 }
             }
@@ -1675,6 +1802,7 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                             unsigned int index1 = m_triangles->getVertexIndex1(i);
                             unsigned int index2 = m_triangles->getVertexIndex2(i);
 
+#if defined C_USE_OPENGL_DOUBLES
                             // render vertex 0
                             glNormal3dv(&m_vertices->m_normal[index0](0));
                             glColor4fv(m_vertices->m_color[index0].getData());
@@ -1692,6 +1820,25 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                             glColor4fv(m_vertices->m_color[index2].getData());
                             glMultiTexCoord3dv(textureUnit, &m_vertices->m_texCoord[index2](0));
                             glVertex3dv(&m_vertices->m_localPos[index2](0));
+#else
+                            // render vertex 0
+                            glNormal3f(m_vertices->m_normal[index0](0), m_vertices->m_normal[index0](1), m_vertices->m_normal[index0](2));
+                            glColor4fv(m_vertices->m_color[index0].getData());
+                            glMultiTexCoord3f(textureUnit, m_vertices->m_texCoord[index0](0), m_vertices->m_texCoord[index0](1), m_vertices->m_texCoord[index0](2));
+                            glVertex3f(m_vertices->m_localPos[index0](0), m_vertices->m_localPos[index0](1), m_vertices->m_localPos[index0](2));
+
+                            // render vertex 1
+                            glNormal3f(m_vertices->m_normal[index1](0), m_vertices->m_normal[index1](1), m_vertices->m_normal[index1](2));
+                            glColor4fv(m_vertices->m_color[index1].getData());
+                            glMultiTexCoord3f(textureUnit, m_vertices->m_texCoord[index1](0), m_vertices->m_texCoord[index1](1), m_vertices->m_texCoord[index1](2));
+                            glVertex3f(m_vertices->m_localPos[index1](0), m_vertices->m_localPos[index1](1), m_vertices->m_localPos[index1](2));
+
+                            // render vertex 2
+                            glNormal3f(m_vertices->m_normal[index2](0), m_vertices->m_normal[index2](1), m_vertices->m_normal[index2](2));
+                            glColor4fv(m_vertices->m_color[index2].getData());
+                            glMultiTexCoord3f(textureUnit, m_vertices->m_texCoord[index1](0), m_vertices->m_texCoord[index1](1), m_vertices->m_texCoord[index2](2));
+                            glVertex3f(m_vertices->m_localPos[index2](0), m_vertices->m_localPos[index2](1), m_vertices->m_localPos[index2](2));
+#endif
                         }
                     }
                 }
@@ -1705,6 +1852,7 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                             unsigned int index1 = m_triangles->getVertexIndex1(i);
                             unsigned int index2 = m_triangles->getVertexIndex2(i);
 
+#if defined C_USE_OPENGL_DOUBLES
                             // render vertex 0
                             glNormal3dv(&m_vertices->m_normal[index0](0));
                             glColor4fv(m_vertices->m_color[index0].getData());
@@ -1722,6 +1870,26 @@ void cMesh::renderMesh(cRenderOptions& a_options)
                             glColor4fv(m_vertices->m_color[index2].getData());
                             glMultiTexCoord2dv(textureUnit, &m_vertices->m_texCoord[index2](0));
                             glVertex3dv(&m_vertices->m_localPos[index2](0));
+
+#else
+                            // render vertex 0
+                            glNormal3f(m_vertices->m_normal[index0](0), m_vertices->m_normal[index0](1), m_vertices->m_normal[index0](2));
+                            glColor4fv(m_vertices->m_color[index0].getData());
+                            glMultiTexCoord2f(textureUnit, m_vertices->m_texCoord[index0](0), m_vertices->m_texCoord[index0](1));
+                            glVertex3f(m_vertices->m_localPos[index0](0), m_vertices->m_localPos[index0](1), m_vertices->m_localPos[index0](2));
+
+                            // render vertex 1
+                            glNormal3f(m_vertices->m_normal[index1](0), m_vertices->m_normal[index1](1), m_vertices->m_normal[index1](2));
+                            glColor4fv(m_vertices->m_color[index1].getData());
+                            glMultiTexCoord2f(textureUnit, m_vertices->m_texCoord[index1](0), m_vertices->m_texCoord[index1](1));
+                            glVertex3f(m_vertices->m_localPos[index1](0), m_vertices->m_localPos[index1](1), m_vertices->m_localPos[index1](2));
+
+                            // render vertex 2
+                            glNormal3f(m_vertices->m_normal[index2](0), m_vertices->m_normal[index2](1), m_vertices->m_normal[index2](2));
+                            glColor4fv(m_vertices->m_color[index2].getData());
+                            glMultiTexCoord2f(textureUnit, m_vertices->m_texCoord[index1](0), m_vertices->m_texCoord[index1](1));
+                            glVertex3f(m_vertices->m_localPos[index2](0), m_vertices->m_localPos[index2](1), m_vertices->m_localPos[index2](2));
+#endif
                         }
                     }
                 }

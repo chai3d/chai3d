@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['max_5fcontacts_5fper_5fbody',['MAX_CONTACTS_PER_BODY',['../_c_o_d_e_world_8cpp.html#a9b85379c6dbe7f0fc71b00d11487a040',1,'CODEWorld.cpp']]]
+  ['ddouble_0',['ddouble',['../_c_o_d_e_8h.html#aa036922b1299ba81a9e42631235f43c7',1,'dDOUBLE:&#160;CODE.h'],['../_c_o_d_e_generic_body_8h.html#aa036922b1299ba81a9e42631235f43c7',1,'dDOUBLE:&#160;CODEGenericBody.h']]]
 ];

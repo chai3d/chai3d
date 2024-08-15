@@ -1,3 +1,5 @@
 <map id="chai3d::cFrameBuffer" name="chai3d::cFrameBuffer">
-<area shape="rect" id="node2" href="$classchai3d_1_1c_shadow_map.html" title="This class implements a shadow map for spot lights (cSpotLight). " alt="" coords="5,80,152,107"/>
+<area shape="rect" id="Node000001" title="This class implements an OpenGL framebuffer." alt="" coords="5,5,152,31"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_shadow_map.html" title="This class implements a shadow map for spot lights (cSpotLight)." alt="" coords="5,79,152,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,44,81,79,76,79,76,44"/>
 </map>

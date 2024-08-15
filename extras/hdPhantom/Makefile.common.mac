@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,21 +35,30 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: conti $
-#  $Date: 2015-12-17 06:26:05 +0100 (Thu, 17 Dec 2015) $
-#  $Rev: 1869 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# compiler
+# Compiler
 CC      ?= clang
 CXX     ?= clang++
 COMPILER = $(CC)
 
-# common compiler flags
-CFLAGS   += -DMACOSX -arch $(ARCH)
-CXXFLAGS += -DMACOSX -arch $(ARCH) -std=c++0x -stdlib=libc++
+# Adjust target architecture to include universal (fat) binaries
+ifeq ($(ARCH),universal)
+    ARCHFLAGS := -arch x86_64 -arch arm64
+else
+    ARCHFLAGS := -arch $(ARCH)
+endif
 
-# shared library definition
-SHARED_NAME = lib$(ROOT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE).dylib
-SHARED_OPT  = -dynamiclib -Wl,-dylib_install_name -Wl,$(SHARED_NAME) -framework IOKit -framework CoreFoundation
-LIB_SHARED  = $(LIB_DIR)/$(SHARED_NAME)
+# Define shared library target if required
+ifneq (0,$(BUILD_LIB))
+    LIB_SHARED_NAME = lib$(LIB_ROOT_NAME).$(MAJOR).$(MINOR).$(PATCH)$(PRERELEASE).dylib
+    LIB_SHARED_OPT  = -dynamiclib -Wl,-dylib_install_name -Wl,$(LIB_SHARED_NAME)
+    LIB_SHARED      = $(LIB_DIR)/$(LIB_SHARED_NAME)
+endif
+
+# Common compiler flags
+CFLAGS   += -DMACOSX $(ARCHFLAGS) 
+CXXFLAGS += -DMACOSX $(ARCHFLAGS) -std=c++17

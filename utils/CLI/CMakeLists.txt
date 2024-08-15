@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,21 +35,18 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-11-17 19:56:04 +0100 (Thu, 17 Nov 2016) $
-#  $Rev: 2175 $
+################################################################################
 
-
-# build all targets
+# Build all targets.
 foreach (utility cfont cimage cshader)
 
-  file (GLOB source ${utility}/*.cpp)
-  add_executable (${utility} ${source})
-  target_link_libraries (${utility} ${CHAI3D_LIBRARIES})
+    file (GLOB source ${utility}/*.cpp)
+    add_executable (${utility} ${source})
+    target_link_libraries (${utility} ${CHAI3D_LIBRARIES})
 
-  # OS specific adjustments
-  if (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
-    add_custom_command (TARGET ${utility} POST_BUILD COMMAND Rez -append ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../resources/icons/chai3d.rsrc -o ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${utility} COMMAND SetFile -a C ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${utility} VERBATIM)
-  endif ()
+    # OS specific adjustments
+    if (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
+        add_custom_command (TARGET ${utility} POST_BUILD COMMAND Rez -append ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../resources/icons/chai3d.rsrc -o ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${utility} COMMAND SetFile -a C ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${utility} VERBATIM)
+    endif ()
 
 endforeach ()

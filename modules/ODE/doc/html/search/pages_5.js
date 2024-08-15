@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['introduction',['Introduction',['../../../../../doc/html/chapter1-introduction.html',1,'']]],
-  ['installation',['Installation',['../../../../../doc/html/chapter2-installation.html',1,'']]],
-  ['introduction',['Introduction',['../index.html',1,'']]]
+  ['haptic_20devices_0',['Haptic Devices',['../../../../../doc/html/chapter6-haptic-devices.html',1,'overview']]],
+  ['haptic_20rendering_1',['Haptic Rendering',['../../../../../doc/html/chapter17-haptics.html',1,'overview']]]
 ];

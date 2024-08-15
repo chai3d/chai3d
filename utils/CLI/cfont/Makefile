@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,31 +35,49 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-01-21 16:13:27 +0100 (Thu, 21 Jan 2016) $
-#  $Rev: 1906 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# project layout
+# Default target
+all: project
+
+# Common settings
 TOP_DIR = ../../..
-include $(TOP_DIR)/Makefile.common
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common))
+    include $(TOP_DIR)/Makefile.common
+endif
 
-# local configuration
-SRC_DIR   = .
-HDR_DIR   = .
-OBJ_DIR   = ./obj/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)
-PROG      = $(notdir $(shell pwd)) 
-SOURCES   = $(wildcard $(SRC_DIR)/*.cpp)
-INCLUDES  = $(wildcard $(HDR_DIR)/*.h)
-OBJECTS   = $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(notdir $(SOURCES)))
-OUTPUT    = $(BIN_DIR)/$(PROG)
+# Directories
+SRC_DIR = .
+OBJ_DIR = ./obj/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)
 
-all: $(OUTPUT)
+# Files
+SOURCES  = $(wildcard $(SRC_DIR)/*.cpp)
+INCLUDES = $(wildcard $(SRC_DIR)/*.h)
+OBJECTS  = $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(notdir $(SOURCES)))
+NAME     = $(notdir $(shell pwd)) 
+TARGET   = $(BIN_DIR)/$(NAME)
 
-$(OBJECTS): $(INCLUDES)
+# Import project settings.
+ifneq (,$(wildcard ./Makefile.project))
+    include ./Makefile.project
+endif
 
-$(OUTPUT): $(OBJ_DIR) $(LIB_TARGET) $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -I$(HDR_DIR) $(OBJECTS) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT)
+# Import platform-specific project settings.
+ifneq (,$(wildcard ./Makefile.project.$(OS)))
+    include ./Makefile.project.$(OS)
+endif
+
+# Build rules
+
+project: $(TARGET)
+
+$(OBJECTS): $(INCLUDES) $(LIB_INCLUDES) | $(OBJ_DIR)
+
+$(TARGET): $(LIB_STATIC) $(OBJECTS) | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) $(OBJECTS) $(LDFLAGS) $(LDLIBS) -o $(TARGET)
 
 $(OBJ_DIR):
 	mkdir -p $@
@@ -65,6 +85,8 @@ $(OBJ_DIR):
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+.PHONY: project
+
 clean:
-	rm -f $(OUTPUT) $(OBJECTS) *~
-	-rm -rf $(OBJ_DIR)
+	rm -f $(TARGET) $(OBJECTS) *~ TAGS core *.bak #*#
+	-rmdir $(OBJ_DIR)

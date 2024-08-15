@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Francois Conti
     \author    Dan Morris
-    \version   3.2.0 $Rev: 2181 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -72,6 +72,10 @@ namespace chai3d {
 //==============================================================================
 cCamera::cCamera(cWorld* a_parentWorld)
 {
+    // init members
+    m_lastDisplayWidth = 0;
+    m_lastDisplayHeight = 0;
+
     // set parent world
     m_parentWorld = a_parentWorld;
     
@@ -1694,6 +1698,8 @@ void cCamera::renderView(const int a_windowWidth,
         m_markForUpdate = false;
     }
 
+#ifndef CHAI3D_OPENAL_DISABLED
+
     //-----------------------------------------------------------------------
     // (5) AUDIO DEVICE
     //-----------------------------------------------------------------------
@@ -1704,8 +1710,9 @@ void cCamera::renderView(const int a_windowWidth,
         m_audioDevice->setListenerPos(m_globalPos);
         m_audioDevice->setListenerRot(m_globalRot);
     }
+#endif  // CHAI3D_OPENAL_DISABLED
 
-#endif
+#endif  // USE_OPENGL
 }
 
 

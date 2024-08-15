@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Francois Conti
     \author    Federico Barbagli
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -62,6 +62,10 @@ cToolCursor::cToolCursor(cWorld* a_parentWorld):cGenericTool(a_parentWorld)
 {
     // create a single point contact
     m_hapticPoint = new cHapticPoint(this);
+
+    // add point elements as components
+    addComponent(m_hapticPoint->m_sphereGoal);
+    addComponent(m_hapticPoint->m_sphereProxy);
 
     // add point to list
     m_hapticPoints.push_back(m_hapticPoint);

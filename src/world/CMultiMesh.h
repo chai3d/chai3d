@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2161 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -98,9 +98,8 @@ public:
 
 public:
 
-    //! This method enables or disables this object. When an object is disabled, both haptic and graphic rendering no longer occur.
-    virtual void setEnabled(bool a_enabled,
-                            const bool a_affectChildren = false);
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("MultiMesh"); }
 
     //! This method creates a copy of itself.
     virtual cMultiMesh* copy(const bool a_duplicateMaterialData = false,
@@ -110,162 +109,16 @@ public:
 
 
     //-----------------------------------------------------------------------
-    // PUBLIC METHODS - HAPTIC PROPERTIES:
-    //-----------------------------------------------------------------------
-
-public:
-
-    //! This method enables or disables haptic perception of this object, optionally propagating the change to children.
-    virtual void setHapticEnabled(const bool a_hapticEnabled, 
-                                  const bool a_affectChildren = false);
-
-    //! This method sets the haptic stiffness of the object, optionally recursively affecting children.
-    virtual void setStiffness(const double a_stiffness, 
-                              const bool a_affectChildren = false);
-
-    //! This method sets the static and dynamic friction properties (polygonal models only), optionally recursively affecting children.
-    virtual void setFriction(double a_staticFriction, 
-                             double a_dynamicFriction, 
-                             const bool a_affectChildren = false);
-
-
-    //-----------------------------------------------------------------------
-    // PUBLIC METHODS - GRAPHIC PROPERTIES:
-    //-----------------------------------------------------------------------
-
-public:
-
-    //! This method enables or disables the graphic display of this object, optionally propagating the change to children.
-    virtual void setShowEnabled(const bool a_show, const bool a_affectChildren = false);
-
-    //! This method returns whether wireframe rendering is enabled.
-    virtual void setWireMode(const bool a_showWireMode, 
-        const bool a_affectChildren = true);
-
-    //! Enable or disabling face-culling, optionally propagating the operation to my children.
-    virtual void setUseCulling(const bool a_useCulling, 
-        const bool a_affectChildren=true);
-
-    //! This method enables or disables transparency.
-    virtual void setUseTransparency(const bool a_useTransparency, const bool a_affectChildren = false);
-
-    //! This method sets the transparency level of the object.
-    virtual void setTransparencyLevel(const float a_level,
-        const bool a_applyToVertices = false,
-        const bool a_applyToTextures = false,
-        const bool a_affectChildren = false);
-
-
-    //-----------------------------------------------------------------------
-    // PUBLIC METHODS - DISPLAY LISTS:
-    //-----------------------------------------------------------------------
-
-public:
-
-    //! This method enabled or disables the use of a display list for rendering, optionally propagating the operation to its children.
-    virtual void setUseDisplayList(const bool a_useDisplayList, const bool a_affectChildren = false);
-
-    //! This method invalidates any existing display lists, optionally propagating the operation to its children.
-    virtual void markForUpdate(const bool a_affectChildren = false);
-
-
-    //-----------------------------------------------------------------------
-    // PUBLIC METHODS - MATERIAL PROPERTIES:
-    //-----------------------------------------------------------------------
-
-public:
-
-    //! This method enables or disables the use of material properties, optionally propagating the operation to its children.
-    virtual void setUseMaterial(const bool a_useMaterial, const bool a_affectChildren = true);
-
-    //! This method sets the material properties of this object, optionally propagating the operation to its children.
-    virtual void setMaterial(cMaterialPtr a_material, const bool a_affectChildren = false);
-
-    //! This method setd the material properties of this object, optionally propagating the operation to its children.
-    virtual void setMaterial(cMaterial& a_material, const bool a_affectChildren = false);
-
-    //! This method creates a backup of the material colors of this object, optionally propagating the operation to its children.
-    virtual void backupMaterialColors(const bool a_affectChildren = false);
-
-    //! This method restores the material color properties of this object from a previous backup, optionally propagating the operation to its children.
-    virtual void restoreMaterialColors(const bool a_affectChildren = false);
-
-
-    //--------------------------------------------------------------------------
-    // PUBLIC METHODS - TEXTURE PROPERTIES:
-    //-----------------------------------------------------------------------
-
-public:
-
-    //! This method enables or disables the use of texture-mapping, optionally propagating the operation to its children.
-    virtual void setUseTexture(const bool a_useTexture, const bool a_affectChildren = true);
-
-    //! This method sets a texture to this object, optionally propagating the operation to its children.
-    virtual void setTexture(cTexture1dPtr, const bool a_affectChildren = false);
-
-
-    //-----------------------------------------------------------------------
-    // PUBLIC METHODS - SHADERS:
-    //-----------------------------------------------------------------------
-
-public:
-
-    //! Set shader program.
-    virtual void setShaderProgram(cShaderProgramPtr a_shaderProgram, const bool a_affectChildren = false);
-
-
-    //-----------------------------------------------------------------------
-    // PUBLIC METHODS - BOUNDARY BOX:
-    //-----------------------------------------------------------------------
-
-public:
-
-    //! This method enables or disabled the graphic display of the boundary box for this object, optionally propagating the change to its children.
-    virtual void setShowBoundaryBox(const bool a_showBoundaryBox, const bool a_affectChildren = false);
-
-
-    //-----------------------------------------------------------------------
     // PUBLIC METHODS - COLLISION DETECTION:
     //-----------------------------------------------------------------------
 
 public:
-
-    //! This method deletes any existing collision detector.
-    virtual void deleteCollisionDetector(const bool a_affectChildren = false);
-
-    //! This method computes any collision between a segment and this object.
-    virtual bool computeCollisionDetection(const cVector3d& a_segmentPointA,
-                                           const cVector3d& a_segmentPointB,
-                                           cCollisionRecorder& a_recorder,
-                                           cCollisionSettings& a_settings);
-
-    //! This method enables or disables the display of the collision detector, optionally propagating the change to its children.
-    virtual void setShowCollisionDetector(const bool a_showCollisionDetector, 
-                                          const bool a_affectChildren = false);
-
-    //! This method sets the collision detector graphic display properties.
-    virtual void setCollisionDetectorProperties(unsigned int a_displayDepth, 
-                                                cColorf& a_color, 
-                                                const bool a_affectChildren = false);
 
     //! Set up a brute force collision detector for this mesh and (optionally) for its children.
     virtual void createBruteForceCollisionDetector();
 
     //! Set up an AABB collision detector for this mesh.
     virtual void createAABBCollisionDetector(const double a_radius);
-
-
-    //-----------------------------------------------------------------------
-    // PUBLIC VIRTUAL METHODS - INTERACTIONS
-    //-----------------------------------------------------------------------
-
-public:
-
-    //! Computer haptic interaction.
-    virtual cVector3d computeInteractions(const cVector3d& a_toolPos,
-        const cVector3d& a_toolVel,
-        const unsigned int a_IDN,
-        cInteractionRecorder& a_interactions);
 
 
     //--------------------------------------------------------------------------
@@ -318,7 +171,7 @@ public:
     unsigned int getNumVertices() const;
 
     //! This method enables or disables the use of per-vertex colors, optionally propagating the operation to its children.
-    virtual void setUseVertexColors(const bool a_useColors, const bool a_affectChildren=true);
+    virtual void setUseVertexColors(const bool a_useColors, const bool a_affectChildren=true, const bool a_affectComponents=true);
 
     //! This method sets the color of each vertex.
     void setVertexColor(const cColorf& a_color);
@@ -335,9 +188,6 @@ public:
 
     //! This method returns the the number of stored triangles.
     unsigned int getNumTriangles() const;
-
-    //! This method clears all triangles and vertices of multi-mesh.
-    void clear();
 
     //! This method enables or disables the rendering of triangles.
     void setShowTriangles(const bool a_showTriangles);
@@ -413,9 +263,6 @@ public:
 
 public:
 
-    //! This method scales this object by a_scaleFactor (uniform scale).
-    virtual void scale(const double& a_scaleFactor, const bool a_affectChildren = true);
-
     //! This method scales this object by using different factors along X,Y and Z axes.
     void scaleXYZ(const double a_scaleX, const double a_scaleY, const double a_scaleZ);
 
@@ -425,15 +272,6 @@ public:
     //--------------------------------------------------------------------------
 
 protected:
-
-    //! This method renders this object graphically using OpenGL.
-    virtual void render(cRenderOptions& a_options);
-
-    //! This method update the global position information about this object.
-    virtual void updateGlobalPositions(const bool a_frameOnly);
-
-    //! This method updates the boundary box of this object.
-    virtual void updateBoundaryBox();
 
     //! This method copies all properties of this multi-mesh object to another.
     void copyMultiMeshProperties(cMultiMesh* a_obj,
@@ -451,7 +289,6 @@ public:
 
     //! Array of meshes.
     std::vector<cMesh*> *m_meshes;
-
 };
 
 //------------------------------------------------------------------------------

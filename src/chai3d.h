@@ -1,7 +1,7 @@
 //===========================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2174 $
+    \version   3.3.0
 */
 //===========================================================================
 
@@ -77,6 +77,7 @@
 #include "devices/CLeapDevices.h"
 #include "devices/CPhantomDevices.h"
 #include "devices/CSixenseDevices.h"
+#include "devices/CXTouchController.h"
 
 
 //---------------------------------------------------------------------------
@@ -138,6 +139,13 @@
 
 
 //---------------------------------------------------------------------------
+//! \defgroup   network  Network
+//! \brief      Implements TCP and UDP socket communication.
+//---------------------------------------------------------------------------
+#include "network/CSocket.h"
+
+
+//---------------------------------------------------------------------------
 //! \defgroup   widgets  Widgets
 //! \brief      Implements a collection of 2D widgets.
 //---------------------------------------------------------------------------
@@ -145,6 +153,7 @@
 #include "widgets/CBackground.h"
 #include "widgets/CBitmap.h"
 #include "widgets/CDial.h"
+#include "widgets/CHistogram.h"
 #include "widgets/CLabel.h"
 #include "widgets/CLevel.h"
 #include "widgets/CPanel.h"
@@ -172,11 +181,12 @@
 
 
 //---------------------------------------------------------------------------
-//! \defgroup   display  Camera
-//! \brief      Implements camera and framebuffer display.
+//! \defgroup   display  Display
+//! \brief      Implements camera, viewport and framebuffer display.
 //---------------------------------------------------------------------------  
 #include "display/CCamera.h"
 #include "display/CFrameBuffer.h"
+#include "display/CViewport.h"
 
 
 //---------------------------------------------------------------------------
@@ -244,6 +254,7 @@
 //! \defgroup   files  Files
 //! \brief      Implements support for files.
 //---------------------------------------------------------------------------
+#include "files/CFileAudioMP3.h"
 #include "files/CFileAudioWAV.h"
 #include "files/CFileImageBMP.h"
 #include "files/CFileImageGIF.h"
@@ -254,6 +265,7 @@
 #include "files/CFileModel3DS.h"
 #include "files/CFileModelOBJ.h"
 #include "files/CFileModelSTL.h"
+#include "files/CFileModelTRI.h"
 #include "files/CFileXML.h"
 
 
@@ -285,6 +297,13 @@
 #include "resources/CFontCalibri40.h"
 #include "resources/CFontCalibri72.h"
 #include "resources/CFontCalibri144.h"
+#include "resources/CFontConsolas16.h"
+#include "resources/CFontConsolas18.h"
+#include "resources/CFontConsolas20.h"
+#include "resources/CFontConsolas22.h"
+#include "resources/CFontConsolas24.h"
+#include "resources/CFontConsolas28.h"
+#include "resources/CFontConsolas32.h"
 #include "resources/CShaderBasicVoxel-LUT8.h"
 #include "resources/CShaderBasicVoxel-RGBA8.h"
 #include "resources/CShaderDVR-LUT8.h"

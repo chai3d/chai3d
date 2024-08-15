@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['val',['val',['../structchai3d_1_1c_marching_cube_grid_cell.html#abc8c6f180c89d92b64ee1e91743b1371',1,'chai3d::cMarchingCubeGridCell']]]
+  ['nodelay_0',['NODELAY',['../classchai3d_1_1c_socket.html#a5d843b2dfe59e5df5a8826f385f3d328',1,'chai3d::cSocket']]]
 ];

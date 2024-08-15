@@ -1,5 +1,11 @@
 <map id="chai3d::cNormalMap" name="chai3d::cNormalMap">
-<area shape="rect" id="node2" href="$classchai3d_1_1c_texture2d.html" title="This class implements a 2D texture map. " alt="" coords="21,155,154,181"/>
-<area shape="rect" id="node3" href="$classchai3d_1_1c_texture1d.html" title="This class implements a 1D texture map. " alt="" coords="21,80,154,107"/>
-<area shape="rect" id="node4" href="$classchai3d_1_1c_generic_texture.html" title="This class implements a base class for textures. " alt="" coords="5,5,169,32"/>
+<area shape="rect" id="Node000001" title="This class implements a normal map." alt="" coords="15,299,158,324"/>
+<area shape="rect" id="Node000002" href="$classchai3d_1_1c_texture2d.html" title="This class implements a 2D texture map." alt="" coords="21,225,153,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,264,89,299,84,299,84,264"/>
+<area shape="rect" id="Node000003" href="$classchai3d_1_1c_texture1d.html" title="This class implements a 1D texture map." alt="" coords="21,152,153,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,191,89,225,84,225,84,191"/>
+<area shape="rect" id="Node000004" href="$classchai3d_1_1c_generic_texture.html" title="This class implements a base class for textures." alt="" coords="5,79,168,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="89,118,89,152,84,152,84,118"/>
+<area shape="rect" id="Node000005" href="$classchai3d_1_1c_generic_type.html" title="This class implements an abstract type." alt="" coords="13,5,161,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="89,44,89,79,84,79,84,44"/>
 </map>

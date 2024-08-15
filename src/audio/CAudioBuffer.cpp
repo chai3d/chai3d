@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2181 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -46,6 +46,7 @@
 #include "AL/alc.h"
 //------------------------------------------------------------------------------
 #include "audio/CAudioBuffer.h"
+#include "files/CFileAudioMP3.h"
 #include "files/CFileAudioWAV.h"
 #include "math/CMaths.h"
 //------------------------------------------------------------------------------
@@ -69,13 +70,17 @@ cAudioBuffer::cAudioBuffer()
     m_data = NULL;
     m_flagDeleteData = false;
     m_buffer = 0;
-    m_size = 0;
-    m_frequency = 0;
+    m_sizeInBytes = 0;
+    m_samplingRate = 0;
     m_stereo = false;
     m_bitsPerSample = 8;
 
+#ifdef C_USE_OPENAL
+
     // generate OpenAL buffer
     alGenBuffers(1, &m_buffer);
+
+#endif
 
     // check for any errors
     checkError();
@@ -92,7 +97,9 @@ cAudioBuffer::~cAudioBuffer()
     // delete current buffer
     if (m_buffer != 0)
     {
+#ifdef C_USE_OPENAL
         alDeleteBuffers(1, &m_buffer);
+#endif
     }
 
     // cleanup memory
@@ -106,15 +113,15 @@ cAudioBuffer::~cAudioBuffer()
     defines the data specifications which are passed by argument.
 
     \param  a_data           Pointer to the audio data.
-    \param  a_size           Audio data size in bytes.
-    \param  a_frequency      Audio data frequency.
+    \param  a_sizeInBytes    Audio data size in bytes.
+    \param  a_samplingRate   Audio data sampling rate.
     \param  a_stereo         __true__ for stereo, __false__ for mono.
     \param  a_bitsPerSample  Number of bits per sample (8 or 16).
 
     \return __true__ if the operation succeeds, __false__ otherwise.
 */
 //==============================================================================
-bool cAudioBuffer::setup(unsigned char* a_data, const unsigned int a_size, int a_frequency, bool a_stereo, unsigned short a_bitsPerSample)
+bool cAudioBuffer::setup(unsigned char* a_data, const unsigned int a_sizeInBytes, int a_samplingRate, bool a_stereo, unsigned short a_bitsPerSample)
 {
     // sanity check
     if (a_data == NULL)
@@ -130,8 +137,8 @@ bool cAudioBuffer::setup(unsigned char* a_data, const unsigned int a_size, int a
 
     // store new properties
     m_data = a_data;
-    m_size = a_size;
-    m_frequency = a_frequency;
+    m_sizeInBytes = a_sizeInBytes;
+    m_samplingRate = a_samplingRate;
     m_stereo = a_stereo;
     m_bitsPerSample = a_bitsPerSample;
 
@@ -145,6 +152,8 @@ bool cAudioBuffer::setup(unsigned char* a_data, const unsigned int a_size, int a
         cleanup();
         return (C_ERROR);
     }
+
+#ifdef C_USE_OPENAL
 
     // determine format
     ALenum format;
@@ -167,8 +176,13 @@ bool cAudioBuffer::setup(unsigned char* a_data, const unsigned int a_size, int a
     alBufferData(m_buffer,
                  format,
                  m_data,
-                 m_size,
-                 m_frequency);
+                 m_sizeInBytes,
+                 a_samplingRate);
+
+#endif
+
+    // compute number of samples and duration of audio signal
+    computeNumSamplesAndDuration();
 
     // check error
     return (checkError());
@@ -213,24 +227,39 @@ bool cAudioBuffer::loadFromFile(const std::string& a_filename)
     //--------------------------------------------------------------------
     if (fileType == "wav")
     {
-        result = cLoadFileWAV(a_filename, 
-                              m_data,
-                              &m_size, 
-                              &m_frequency,
-                              &m_stereo,
-                              &m_bitsPerSample);
+        result = cLoadFileWAV(a_filename,
+            m_data,
+            &m_sizeInBytes,
+            &m_bitsPerSample,
+            &m_samplingRate,
+            &m_numSamples,
+            &m_stereo);
+    }
+    else if (fileType == "mp3")
+    {
+        result = cLoadFileMP3(a_filename,
+            m_data,
+            &m_sizeInBytes,
+            &m_bitsPerSample,
+            &m_samplingRate,
+            &m_numSamples,
+            &m_stereo);
     }
 
     // mark the audio buffer as being owned internally,
     // and therefore requiring deletion upon destruction
     m_flagDeleteData = true;
 
+    // compute number of samples and duration
+    computeNumSamplesAndDuration();
 
     //--------------------------------------------------------------------
     // CREATE BUFFER
     //--------------------------------------------------------------------
     if (result)
     {
+#ifdef C_USE_OPENAL
+
         // retrieve format
         ALenum format;
         if (m_stereo)
@@ -251,11 +280,13 @@ bool cAudioBuffer::loadFromFile(const std::string& a_filename)
         alBufferData(m_buffer, 
                      format,
                      m_data,
-                     m_size, 
-                     m_frequency);
+                     m_sizeInBytes, 
+                     m_samplingRate);
 
         // check for errors
-        result = checkError();
+        // result = checkError();
+
+#endif
     }
 
     // return result
@@ -272,6 +303,7 @@ bool cAudioBuffer::loadFromFile(const std::string& a_filename)
 //==============================================================================
 bool cAudioBuffer::convertToMono()
 {
+#ifdef C_USE_OPENAL
     // wrong format
     if (!m_stereo)
     {
@@ -281,47 +313,49 @@ bool cAudioBuffer::convertToMono()
     if (m_bitsPerSample == 8)
     {
         ALbyte* data = (ALbyte*)m_data;
-        int size = m_size / 2;
-        int numSamples = size / sizeof(ALbyte);
+        unsigned int sizeInBytes = m_sizeInBytes / 2;
+        unsigned int numSamples = sizeInBytes / sizeof(ALbyte);
 
-        for (int i=0; i<numSamples; i++)
+        for (unsigned int i=0; i<numSamples; i++)
         {
-            data[i] = (ALbyte)(0.5 * (data[2*i] + data[2*i]+1));
+            data[i] = (ALbyte)(0.5f * ((float)data[2*i] + (float)data[2*i]+1));
         }
 
-        m_size = size;
+        m_sizeInBytes = sizeInBytes;
         m_stereo = false;
 
         alBufferData(m_buffer, 
                      AL_FORMAT_MONO8,
                      m_data,
-                     m_size, 
-                     m_frequency);
+                     m_sizeInBytes,
+                     m_samplingRate);
 
         return (checkError());
     }
     else if (m_bitsPerSample == 16)
     {
         ALshort* data = (ALshort*)m_data;
-        int size = m_size / 2;
-        int numSamples = size / sizeof(ALshort);
+        unsigned int sizeInBytes = m_sizeInBytes / 2;
+        unsigned int numSamples = sizeInBytes / sizeof(ALshort);
 
-        for (int i=0; i<numSamples; i++)
+        for (unsigned int i=0; i<numSamples; i++)
         {
             data[i] = ALshort(0.5 * (data[2*i] + data[2*i]+1));
         }
 
-        m_size = size;
+        m_sizeInBytes = sizeInBytes;
         m_stereo = false;
 
         alBufferData(m_buffer,
                      AL_FORMAT_MONO16,
                      m_data,
-                     m_size, 
-                     m_frequency);
+                     m_sizeInBytes,
+                     m_samplingRate);
 
         return (checkError());
     }
+
+#endif
 
     // wrong format
     return (C_ERROR);
@@ -346,10 +380,12 @@ bool cAudioBuffer::cleanup()
 
     // reset properties (to mono 8 bits-per-sample)
     m_filename = "";
-    m_size = 0;
-    m_frequency = 0;
+    m_sizeInBytes = 0;
+    m_samplingRate = 0;
     m_stereo = false;
     m_bitsPerSample = 8;
+    m_numSamples = 0;
+    m_duration = 0.0;
 
     // return success
     return (C_SUCCESS);
@@ -358,70 +394,127 @@ bool cAudioBuffer::cleanup()
 
 //==============================================================================
 /*!
-    This method returns the number of samples of the audio data. Please note that
-    this value does not correspond to the number of bytes of the audio buffer.
-
-    \return Number of audio samples stored in this buffer.
+    This method computes the number of samples stored in the audio buffer and
+    the duration of the audio signal.
 */
 //==============================================================================
-int cAudioBuffer::getNumSamples()
+void cAudioBuffer::computeNumSamplesAndDuration()
 {
-    int result = 0;
+    unsigned int numSamples = 0;
 
     if (m_stereo)
     {
         if (m_bitsPerSample == 8)
         {
-            result = m_size / 2;
+            numSamples = m_sizeInBytes / 2;
         }
         else if (m_bitsPerSample == 16)
         {
-            result = m_size / 4;
+            numSamples = m_sizeInBytes / 4;
         }
     }
     else
     {
         if (m_bitsPerSample == 8)
         {
-            result = m_size;
+            numSamples = m_sizeInBytes;
         }
         else if (m_bitsPerSample == 16)
         {
-            result = m_size / 2;
+            numSamples = m_sizeInBytes / 2;
         }
     }
 
-    return (result);
+    m_numSamples = numSamples;
+
+    // compute  duration
+    if (m_samplingRate > 0.0)
+    {
+        m_duration = (double)(m_numSamples) / m_samplingRate;
+    }
+    else
+    {
+        m_duration = 0.0;
+    }
 }
 
 
 //==============================================================================
 /*!
-    This method returns the left sample at a given time. If the a_loop argument
-    is set to __true__ then audiobuffer will return a sample value as it was 
-    playing in loop mode.
+    This method returns the audio sample of the left channel given a time
+    value passed as argument. \n
 
-    \param  a_time  Sample time.
+    If the a_loop argument is set to __true__ then audiobuffer will return a
+    sample value as it was playing in loop mode.
+
+    \param  a_time  Time.
     \param  a_loop  Loop mode.
 
-    \return Current playing position time in seconds.
+    \return Left channel audio sample.
 */
 //==============================================================================
-short cAudioBuffer::getSampleLeft(const double a_time, const bool a_loop)
+short cAudioBuffer::getSampleByTimeL(const double a_time, const bool a_loop)
 {
-    int numSamples = getNumSamples ();
-    int sample = (int)((double)(m_frequency) * a_time);
+    // compute sample index
+    unsigned int index = (int)((double)(m_samplingRate)*a_time);
+
+    // return sample
+    return getSampleByIndexL(index, a_loop);
+}
+
+
+//==============================================================================
+/*!
+    This method returns the audio sample of the right channel given a time
+    value passed as argument. \n
+
+    If the a_loop argument is set to __true__ then audiobuffer will return a
+    sample value as it was playing in loop mode.
+
+    \param  a_time  Time.
+    \param  a_loop  Loop mode.
+
+    \return Right channel audio sample.
+*/
+//==============================================================================
+short cAudioBuffer::getSampleByTimeR(const double a_time, const bool a_loop)
+{
+    // compute sample index
+    unsigned int index = (int)((double)(m_samplingRate) * a_time);
+
+    // return sample
+    return getSampleByIndexR(index, a_loop);
+}
+
+
+//==============================================================================
+/*!
+    This method returns the audio sample of the left channel given its index 
+    number passed as argument. \n
+
+    If the a_loop argument is set to __true__ then audiobuffer will return a
+    sample value as it was playing in loop mode.
+
+    \param  a_index  Sample index number.
+    \param  a_loop  Loop mode.
+
+    \return Left channel audio sample.
+*/
+//==============================================================================
+short cAudioBuffer::getSampleByIndexL(const unsigned int a_index, const bool a_loop)
+{
+    unsigned int sample = a_index;
 
     if (a_loop)
     {
-        sample = sample % numSamples;
+        sample = sample % m_numSamples;
     }
-    else if (sample >= numSamples)
+    else if (sample >= m_numSamples)
     {
         return 0;
     }
 
-    int index = 0;
+    unsigned int index = 0;
     if (m_stereo)
     {
         if (m_bitsPerSample == 8)
@@ -445,7 +538,7 @@ short cAudioBuffer::getSampleLeft(const double a_time, const bool a_loop)
         }
     }
 
-    if (index >= m_size)
+    if (index >= m_sizeInBytes)
     {
         return (0);
     }
@@ -453,11 +546,11 @@ short cAudioBuffer::getSampleLeft(const double a_time, const bool a_loop)
     {
         if (m_bitsPerSample == 8)
         {
-            return (short)(*((unsigned char*)(m_data+index)));
+            return (short)(*((unsigned char*)(m_data + index)));
         }
         else if (m_bitsPerSample == 16)
         {
-            return (short)(*((short*)(m_data+index)));
+            return (short)(*((short*)(m_data + index)));
         }
     }
 
@@ -467,68 +560,69 @@ short cAudioBuffer::getSampleLeft(const double a_time, const bool a_loop)
 
 //==============================================================================
 /*!
-    This method returns the right sample at a given time. If the a_loop argument
-    is set to __true__ then audiobuffer will return a sample value as it was 
-    playing in loop mode.
+    This method returns the audio sample of the right channel given its index
+    number passed as argument. \n
 
-    \param  a_time  Sample time.
+    If the a_loop argument is set to __true__ then audiobuffer will return a
+    sample value as it was playing in loop mode.
+
+    \param  a_index  Sample index number.
     \param  a_loop  Loop mode.
 
-    \return Current playing position time in seconds.
+    \return Right channel audio sample.
 */
 //==============================================================================
-short cAudioBuffer::getSampleRight(const double a_time, const bool a_loop)
+short cAudioBuffer::getSampleByIndexR(const unsigned int a_index, const bool a_loop)
 {
-    int numSamples = getNumSamples ();
-    int sample = (int)((double)(m_frequency) * a_time);
+    unsigned int sample = a_index;
 
     if (a_loop)
     {
-      sample = sample % numSamples;
+        sample = sample % m_numSamples;
     }
-    else if (sample >= numSamples)
+    else if (sample >= m_numSamples)
     {
-      return 0;
+        return 0;
     }
 
-    int index = 0;
+    unsigned int index = 0;
     if (m_stereo)
     {
-      if (m_bitsPerSample == 8)
-      {
-        index = 2 * sample + 1;
-      }
-      else if (m_bitsPerSample == 16)
-      {
-        index = 4 * sample + 2;
-      }
+        if (m_bitsPerSample == 8)
+        {
+            index = 2 * sample + 1;
+        }
+        else if (m_bitsPerSample == 16)
+        {
+            index = 4 * sample + 2;
+        }
     }
     else
     {
-      if (m_bitsPerSample == 8)
-      {
-        index = sample;
-      }
-      else if (m_bitsPerSample == 16)
-      {
-        index = 2 * sample;
-      }
+        if (m_bitsPerSample == 8)
+        {
+            index = sample;
+        }
+        else if (m_bitsPerSample == 16)
+        {
+            index = 2 * sample;
+        }
     }
 
-    if (index >= m_size)
+    if (index >= m_sizeInBytes)
     {
-      return (0);
+        return (0);
     }
     else
     {
-      if (m_bitsPerSample == 8)
-      {
-        return (short)(*((unsigned char*)(m_data+index)));
-      }
-      else if (m_bitsPerSample == 16)
-      {
-        return (short)(*((short*)(m_data+index)));
-      }
+        if (m_bitsPerSample == 8)
+        {
+            return (short)(*((unsigned char*)(m_data + index)));
+        }
+        else if (m_bitsPerSample == 16)
+        {
+            return (short)(*((short*)(m_data + index)));
+        }
     }
 
     return (0);
@@ -544,6 +638,7 @@ short cAudioBuffer::getSampleRight(const double a_time, const bool a_loop)
 //==============================================================================
 bool cAudioBuffer::checkError()
 {
+#ifdef C_USE_OPENAL
     int result = alGetError();
     if(result == AL_NO_ERROR)
     {
@@ -553,6 +648,9 @@ bool cAudioBuffer::checkError()
     {
         return (C_ERROR);
     }
+#else
+    return C_ERROR;
+#endif
 }
 
 

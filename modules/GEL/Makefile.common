@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,98 +35,96 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-01-21 16:13:27 +0100 (Thu, 21 Jan 2016) $
-#  $Rev: 1906 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# target library name
-LIB_NAME = chai3d-GEL
+# Helper functions
+rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
-# target library
-LIB_TARGET = $(LIB_DIR)/lib$(LIB_NAME).a
+# Version
+VERSION    = $(TOP_DIR)/project
+PROJECT    = $(shell cat $(VERSION) | grep PROJECT\=    | awk 'BEGIN { FS = "=" } { print $$2 }' )
+MAJOR      = $(shell cat $(VERSION) | grep MAJOR\=      | awk 'BEGIN { FS = "=" } { print $$2 }' )
+MINOR      = $(shell cat $(VERSION) | grep MINOR\=      | awk 'BEGIN { FS = "=" } { print $$2 }' )
+PATCH      = $(shell cat $(VERSION) | grep PATCH\=      | awk 'BEGIN { FS = "=" } { print $$2 }' )
+PRERELEASE = $(shell cat $(VERSION) | grep PRERELEASE\= | awk 'BEGIN { FS = "=" } { print $$2 }' )
 
-# common linker flags
-LDFLAGS += -L$(LIB_DIR)
-LDLIBS  += -l$(LIB_NAME)
-
-# determine build configuration
+# Determine the build configuration.
 ifneq ($(CFG),debug)
-CFG = release
+    CFG = release
 endif
 
-# determine platform
+# Determine the platform.
 ARCH   ?= $(shell echo `uname -m`)
 SYSTEM ?= $(shell echo `uname -s`)
 ifeq ($(SYSTEM), Linux)
-OS      = lin
+    OS = lin
 endif
 ifeq ($(SYSTEM), Darwin)
-OS      = mac
+    OS = mac
+endif
+ifeq ($(SYSTEM), QNX)
+    OS   = qnx
+    ARCH = $(subst pc,,$(ARCH))
 endif
 
-# common paths
-BIN_DIR = $(TOP_DIR)/bin/$(OS)-$(ARCH)
+# Common paths
+BIN_DIR = $(TOP_DIR)/bin
 LIB_DIR = $(TOP_DIR)/lib/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)
-INC_DIR = $(TOP_DIR)/src
+INC_DIR = $(TOP_DIR)/include
 
-# common compiler flags
+# Common compiler flags
+CFLAGS   += -I$(INC_DIR) -fsigned-char
 CXXFLAGS += -I$(INC_DIR) -fsigned-char
 
-# chai3d dependency
-CHAI3D     = $(TOP_DIR)/../..
-LIB_CHAI3D = $(CHAI3D)/lib/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)/libchai3d.a
-CXXFLAGS  += -I$(CHAI3D)/src
-LDFLAGS   += -L$(CHAI3D)/lib/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)
-LDLIBS    += -lchai3d
+# Target library headers
+LIB_INCLUDES = $(call rwildcard,$(INC_DIR)/,*.h *.hh *.hpp *.hxx)
 
-# global chai3d config settings
-include $(CHAI3D)/Makefile.config
+# Check for target library source files.
+BUILD_LIB = $(words $(call rwildcard,$(TOP_DIR)/src,*.c *.cc *.cpp))
 
-# optional linker flags (see Makefile.config)
-ifeq ($(USE_EXTERNAL_LIBPNG), yes)
-LDLIBS += -lpng -lz
-endif
-ifeq ($(USE_EXTERNAL_LIBJPEG), yes)
-LDLIBS += -ljpeg
-endif
-ifeq ($(USE_EXTERNAL_GIFLIB), yes)
-LDLIBS += -lgif
-endif
-ifeq ($(USE_EXTERNAL_LIB3DS), yes)
-LDLIBS += -l3ds
-endif
-ifeq ($(USE_EXTERNAL_OPENAL), yes)
-LDLIBS += -lopenal
-endif
-ifeq ($(USE_EXTERNAL_THEORAPLAYER), yes)
-LDLIBS += -ltheoraplayer
+# Define static library target if required.
+ifneq (0,$(BUILD_LIB))
+    LIB_ROOT_NAME = $(PROJECT)
+    LIB_STATIC = $(LIB_DIR)/lib$(LIB_ROOT_NAME).a
+    LDFLAGS += -L$(LIB_DIR)
+    LDLIBS += -l$(LIB_ROOT_NAME)
 endif
 
-# Eigen dependency
-EIGEN_DIR = $(CHAI3D)/external/Eigen
-CXXFLAGS += -I$(EIGEN_DIR)
+# Common librarian flags
+ARFLAGS = rs
 
-# GLEW dependency
-GLEW_DIR = $(CHAI3D)/external/glew
-CXXFLAGS += -I$(GLEW_DIR)/include
-
-# DHD dependency
-DHD_EXT  ?= $(TOP_DIR)/../../external/DHD
-DHD_LIB  ?= $(DHD_EXT)/lib/$(OS)-$(ARCH)
-CXXFLAGS += -I$(DHD_EXT)/include
-LDFLAGS  += -L$(DHD_LIB)
-LDLIBS   += -ldrd
-
-# build configuration specific flags
+# Build configuration specific flags
 ifneq ($(CFG),debug)
-CXXFLAGS += -O3
+    CFLAGS   += -O3
+    CXXFLAGS += -O3
 else
-CXXFLAGS += -O0 -g -DDEBUG
+    CFLAGS   += -O0 -g -DDEBUG -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual
+    CXXFLAGS += -O0 -g -DDEBUG -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual
 endif
 
-# common librarian flags
-ARFLAGS  = rs
+# Optional build flags
+ifneq ($(OPTIONS), )
+    CFLAGS   += $(OPTIONS)
+    CXXFLAGS += $(OPTIONS)
+endif
 
-# platform-specific macros
-include $(TOP_DIR)/Makefile.common.$(OS)
+# Library files (include both static and platform-specific shared library files)
+LIB = $(LIB_STATIC) $(LIB_SHARED)
+
+# Import common platform-specific settings.
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common.$(OS)))
+    include $(TOP_DIR)/Makefile.common.$(OS)
+endif
+
+# Import project settings.
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.project.common))
+    include $(TOP_DIR)/Makefile.project.common
+endif
+
+# Import platform-specific project settings.
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.project.common.$(OS)))
+    include $(TOP_DIR)/Makefile.project.common.$(OS)
+endif

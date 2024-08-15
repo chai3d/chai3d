@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -39,7 +39,7 @@
     \author    Francois Conti
     \author    Dan Morris
     \author    Chris Sewell
-    \version   3.2.0 $Rev: 2161 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -126,6 +126,9 @@ public:
 
 public:
 
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("Mesh"); }
+
     //! This method creates a copy of itself.
     virtual cMesh* copy(const bool a_duplicateMaterialData = false,
                         const bool a_duplicateTextureData = false, 
@@ -143,7 +146,8 @@ public:
     virtual void setTransparencyLevel(const float a_level,
         const bool a_applyToVertices = false,
         const bool a_applyToTextures = false,
-        const bool a_affectChildren = false);
+        const bool a_affectChildren = false,
+        const bool a_affectComponents = true);
 
 
     //-----------------------------------------------------------------------
@@ -153,7 +157,7 @@ public:
 public:
 
     //! This method invalidates any existing display lists and marks the mesh for update.
-    virtual void markForUpdate(const bool a_affectChildren = false);
+    virtual void markForUpdate(const bool a_affectChildren = false, const bool a_affectComponents = true);
 
 
     //--------------------------------------------------------------------------
@@ -313,6 +317,10 @@ public:
     virtual void offsetVertices(const cVector3d& a_offset, 
                                 const bool a_updateCollisionDetector = true);
 
+    //! This method rotates all vertex positions by applying a local rotation matrix.
+    virtual void rotateVertices(const cMatrix3d& a_rotation,
+                                const bool a_updateCollisionDetector = true);
+
     //! This method computes the center of mass of this mesh, based on vertex positions.
     virtual cVector3d getCenterOfMass();
 
@@ -451,7 +459,7 @@ public:
           int a_vertex1);
    
     //! Destructor of cEdge.
-    ~cEdge() {};
+    virtual ~cEdge() {};
 
 
     //--------------------------------------------------------------------------

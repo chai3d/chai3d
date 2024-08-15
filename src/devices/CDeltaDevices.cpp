@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2022, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Francois Conti
     \author    Force Dimension - www.forcedimension.com
-    \version   3.2.0 $Rev: 2144 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -53,21 +53,118 @@ namespace chai3d {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 //------------------------------------------------------------------------------
 
-// Internal device definitions.
-#define DHD_DEVICE_DLR331       102
-#define DHD_DEVICE_DLR331_LEFT  103
-#define DHD_CASE_101            101
-#define DHD_CASE_102            102
-#define DHD_CASE_103            103
-#define DHD_CASE_110            110
+#if defined(WIN32) | defined(WIN64)
+
+// This section redefines the constants used by the Force Dimension SDK
+// to avoid having to include dhdc.h in the header search path.
+
+// devices
+#define DHD_DEVICE_NONE             0
+#define DHD_DEVICE_DELTA3          63
+#define DHD_DEVICE_OMEGA3          33
+#define DHD_DEVICE_OMEGA6_RIGHT    34
+#define DHD_DEVICE_OMEGA6_LEFT     36
+#define DHD_DEVICE_OMEGA7_RIGHT    35
+#define DHD_DEVICE_OMEGA7_LEFT     37
+#define DHD_DEVICE_CONTROLLER      81
+#define DHD_DEVICE_CONTROLLER_HR   82
+#define DHD_DEVICE_SIGMA3         206
+#define DHD_DEVICE_SIGMA7_RIGHT   104
+#define DHD_DEVICE_SIGMA7_LEFT    105
+#define DHD_DEVICE_LAMBDA3        203
+#define DHD_DEVICE_LAMBDA6_RIGHT  131
+#define DHD_DEVICE_LAMBDA6_LEFT   132
+#define DHD_DEVICE_LAMBDA7_RIGHT  108
+#define DHD_DEVICE_LAMBDA7_LEFT   109
+#define DHD_DEVICE_LAMBDA6_RIGHT  131
+#define DHD_DEVICE_LAMBDA6_LEFT   132
+#define DHD_DEVICE_FALCON          60
+
+// status
+#define DHD_ON                     1
+#define DHD_OFF                    0
+
+// device count
+#define DHD_MAX_DEVICE             4
+
+// TimeGuard return value
+#define DHD_TIMEGUARD              1
+
+// status count
+#define DHD_MAX_STATUS            17
+
+// status codes
+#define DHD_STATUS_POWER           0
+#define DHD_STATUS_CONNECTED       1
+#define DHD_STATUS_STARTED         2
+#define DHD_STATUS_RESET           3
+#define DHD_STATUS_IDLE            4
+#define DHD_STATUS_FORCE           5
+#define DHD_STATUS_BRAKE           6
+#define DHD_STATUS_TORQUE          7
+#define DHD_STATUS_WRIST_DETECTED  8
+#define DHD_STATUS_ERROR           9
+#define DHD_STATUS_GRAVITY        10
+#define DHD_STATUS_TIMEGUARD      11
+#define DHD_STATUS_ROTATOR_RESET  12
+#define DHD_STATUS_REDUNDANCY     13
+#define DHD_STATUS_FORCEOFFCAUSE  14
+#define DHD_STATUS_LOCKS          15
+#define DHD_STATUS_AXISCHECKED    16
+
+// velocity estimator computation mode
+#define DHD_VELOCITY_WINDOWING     0
+#define DHD_VELOCITY_AVERAGING     1
+
+#endif
+
+// This section defines internal device definitions that are not included
+// in the Force Dimension SDK dhdc.h header.
+
+// delta.3
 #define DHD_CASE_111            111
-#define DHD_CASE_112            112
+
+// omega.3
+#define DHD_CASE_110            110
+
+// sigma.3
+#define DHD_CASE_133            133
+
+// sigma.6L
+#define DHD_CASE_116            116
+
+// sigma.6R
+#define DHD_CASE_115            115
+
+// sigma.7L
+#define DHD_CASE_103            103
+
+// sigma.7R
+#define DHD_CASE_102            102
+#define DHD_CASE_209            209
+
+// lambda.7L
 #define DHD_CASE_113            113
+#define DHD_CASE_118            118
+#define DHD_CASE_120            120
+#define DHD_CASE_122            122
+#define DHD_CASE_124            124
+#define DHD_CASE_126            126
+#define DHD_CASE_128            128
+#define DHD_CASE_130            130
+#define DHD_CASE_211            211
+
+// lambda.7R
+#define DHD_CASE_112            112
 #define DHD_CASE_114            114
-#define DHD_CASE_200            200
-#define DHD_CASE_201            201
-#define DHD_CASE_204            204
-#define DHD_CASE_205            205
+#define DHD_CASE_117            117
+#define DHD_CASE_119            119
+#define DHD_CASE_121            121
+#define DHD_CASE_123            123
+#define DHD_CASE_125            125
+#define DHD_CASE_127            127
+#define DHD_CASE_129            129
+#define DHD_CASE_210            210
 
 // Number of instances for this class of devices currently using the libraries.
 unsigned int cDeltaDevice::s_libraryCounter = 0;
@@ -109,6 +206,15 @@ bool cDeltaDevice::s_dhdSetWatchdog                          = true;
 bool cDeltaDevice::s_dhdSetDeviceAngleDeg                    = true;
 bool cDeltaDevice::s_dhdGetJointAngles                       = true;
 bool cDeltaDevice::s_dhdSetVibration                         = true;
+bool cDeltaDevice::s_dhdEnableSimulator                      = true;
+bool cDeltaDevice::s_dhdPreset                               = true;
+bool cDeltaDevice::s_dhdGetEnc                               = true;
+bool cDeltaDevice::s_dhdGetEncVelocities                     = true;
+bool cDeltaDevice::s_dhdSetMot                               = true;
+bool cDeltaDevice::s_dhdGetDeltaJacobian                     = true;
+bool cDeltaDevice::s_dhdGetWristJacobian                     = true;
+bool cDeltaDevice::s_dhdSetJointTorques                      = true;
+bool cDeltaDevice::s_dhdJointAnglesToGravityJointTorques     = true;
 
 // DRD function availability
 bool cDeltaDevice::s_drdOpenID                               = true;
@@ -158,6 +264,16 @@ int  (__stdcall *drdStop)                             (bool frc, char ID);
 int  (__stdcall *dhdSetDeviceAngleDeg)                (double angle, char ID);
 int  (__stdcall *dhdGetJointAngles)                   (double j[DHD_MAX_DOF], char ID);
 int  (__stdcall *dhdSetVibration)                     (double freq, double amplitude, int type, char ID);
+int  (__stdcall *dhdEnableSimulator)                  (bool on);
+int  (__stdcall* dhdPreset)                           (int enc[DHD_MAX_DOF], unsigned char mask, char ID);
+int  (__stdcall* dhdGetEnc)                           (int enc[DHD_MAX_DOF], unsigned char mask, char ID);
+int  (__stdcall* dhdGetEncVelocities)                 (double v[DHD_MAX_DOF], char ID);
+int  (__stdcall* dhdSetMot)                           (unsigned short mot[DHD_MAX_DOF], unsigned char mask, char ID);
+int  (__stdcall* dhdGetDeltaJacobian)                 (double jcb[3][3], char ID);
+int  (__stdcall* dhdGetWristJacobian)                 (double jcb[3][3], char ID);
+int  (__stdcall* dhdJointAnglesToGravityJointTorques) (double j[DHD_MAX_DOF], double q[DHD_MAX_DOF], unsigned char mask, char ID);
+int  (__stdcall* dhdSetJointTorques)                  (double q[DHD_MAX_DOF], unsigned char mask, char ID);
+
 
 #else
 #include "drdc.h"
@@ -322,6 +438,33 @@ bool cDeltaDevice::openLibraries()
 
     dhdSetVibration = (int(__stdcall*)(double freq, double amplitude, int type, char ID))GetProcAddress(fdDLL, "dhdSetVibration");
     if (dhdSetVibration == NULL) { s_dhdSetVibration = false; }
+
+    dhdEnableSimulator = (int(__stdcall*)(bool on))GetProcAddress(fdDLL, "dhdEnableSimulator");
+    if (dhdEnableSimulator == NULL) { s_dhdEnableSimulator = false; }
+
+    dhdPreset = (int(__stdcall*)(int enc[DHD_MAX_DOF], unsigned char mask, char ID))GetProcAddress(fdDLL, "dhdPreset");
+    if (dhdPreset == NULL) { s_dhdPreset = false; }
+
+    dhdGetEnc = (int(__stdcall*)(int enc[DHD_MAX_DOF], unsigned char mask, char ID))GetProcAddress(fdDLL, "dhdGetEnc");
+    if (dhdGetEnc == NULL) { s_dhdGetEnc = false; }
+
+    dhdGetEncVelocities = (int(__stdcall*)(double v[DHD_MAX_DOF], char ID))GetProcAddress(fdDLL, "dhdGetEncVelocities");
+    if (s_dhdGetEncVelocities == NULL) { s_dhdGetEncVelocities = false; }
+
+    dhdSetMot = (int(__stdcall*)(unsigned short mot[DHD_MAX_DOF], unsigned char mask, char ID))GetProcAddress(fdDLL, "dhdSetMot");
+    if (dhdSetMot == NULL) { s_dhdSetMot = false; }
+
+    dhdGetDeltaJacobian = (int(__stdcall*)(double jcb[3][3], char ID))GetProcAddress(fdDLL, "dhdGetDeltaJacobian");
+    if (dhdGetDeltaJacobian == NULL) { s_dhdGetDeltaJacobian = false; }
+
+    dhdGetWristJacobian = (int(__stdcall*)(double jcb[3][3], char ID))GetProcAddress(fdDLL, "dhdGetWristJacobian");
+    if (dhdGetWristJacobian == NULL) { s_dhdGetWristJacobian = false; }
+
+    dhdJointAnglesToGravityJointTorques = (int(__stdcall*)(double j[DHD_MAX_DOF], double q[DHD_MAX_DOF], unsigned char mask, char ID))GetProcAddress(fdDLL, "dhdJointAnglesToGravityJointTorques");
+    if (dhdJointAnglesToGravityJointTorques == NULL) { s_dhdJointAnglesToGravityJointTorques = false; }
+
+    dhdSetJointTorques = (int(__stdcall*)(double q[DHD_MAX_DOF], unsigned char mask, char ID))GetProcAddress(fdDLL, "dhdSetJointTorques");
+    if (dhdSetJointTorques == NULL) { s_dhdSetJointTorques = false; }
 
 #endif
 
@@ -571,6 +714,12 @@ bool cDeltaDevice::open()
     if (s_drdOpenID) result = drdOpenID(m_deviceNumber);
     else             result = dhdOpenID(m_deviceNumber);
 
+    // if available, enable simulator support for good measure
+    if (s_dhdEnableSimulator)
+    {
+      dhdEnableSimulator(true);
+    }
+
     // update device status
     if (result < 0)
     {
@@ -588,20 +737,13 @@ bool cDeltaDevice::open()
     m_statusEnableForcesFirstTime = true;
 
     // read the device type
-    m_deviceType = DHD_DEVICE_OMEGA;
+    m_deviceType = DHD_DEVICE_OMEGA3;
     if (s_dhdGetSystemType)
     {
         m_deviceType = dhdGetSystemType(m_deviceID);
     }
 
-    // left/right hand
-    bool leftHandOnly = false;
-    if (s_dhdIsLeftHanded)
-    {
-        leftHandOnly = dhdIsLeftHanded(m_deviceID);
-    }
-
-    // default information
+    // default configuration
     m_specifications.m_model                         = C_HAPTIC_DEVICE_OMEGA_3;
     m_specifications.m_manufacturerName              = "Force Dimension";
     m_specifications.m_modelName                     = "default";
@@ -631,10 +773,10 @@ bool cDeltaDevice::open()
     switch (m_deviceType)
     {
         //------------------------------------------------------------------
-        // delta.x devices
+        // delta.3 devices
         //------------------------------------------------------------------
-        case (DHD_DEVICE_3DOF):
         case (DHD_DEVICE_DELTA3):
+        case (DHD_CASE_111):
         {
             m_specifications.m_model                         = C_HAPTIC_DEVICE_DELTA_3;
             m_specifications.m_manufacturerName              = "Force Dimension";
@@ -662,42 +804,10 @@ bool cDeltaDevice::open()
         }
         break;
 
-        case (DHD_DEVICE_6DOF):
-        case (DHD_DEVICE_6DOF_500):
-        case (DHD_DEVICE_DELTA6):
-        {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_DELTA_6;
-            m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "delta.6";
-            m_specifications.m_maxLinearForce                =   20.0;   // [N]
-            m_specifications.m_maxAngularTorque              =    0.2;   // [N*m]
-            m_specifications.m_maxGripperForce               =    0.0;   // [N]
-            m_specifications.m_maxLinearStiffness            = 5000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness           =    1.0;   // [N*m/Rad]
-            m_specifications.m_maxGripperLinearStiffness     =    0.0;   // [N*m/Rad]
-            m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
-            m_specifications.m_maxAngularDamping             =    0.0;   // [N*m/(Rad/s)]
-            m_specifications.m_maxGripperAngularDamping      =    0.0;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius               =    0.15;  // [m]
-            m_specifications.m_gripperMaxAngleRad            = cDegToRad(0.0);
-            m_specifications.m_sensedPosition                = true;
-            m_specifications.m_sensedRotation                = true;
-            m_specifications.m_sensedGripper                 = false;
-            m_specifications.m_actuatedPosition              = true;
-            m_specifications.m_actuatedRotation              = true;
-            m_specifications.m_actuatedGripper               = false;
-            m_specifications.m_leftHand                      = true;
-            m_specifications.m_rightHand                     = true;
-            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
-        }
-        break;
-
         //------------------------------------------------------------------
-        // omega.x devices
+        // omega.3 devices
         //------------------------------------------------------------------
-        case (DHD_DEVICE_OMEGA):
         case (DHD_DEVICE_OMEGA3):
-        case (DHD_CASE_101):
         case (DHD_CASE_110):
         {
             m_specifications.m_model                         = C_HAPTIC_DEVICE_OMEGA_3;
@@ -726,12 +836,14 @@ bool cDeltaDevice::open()
         }
         break;
 
-        case (DHD_DEVICE_OMEGA33):
-        case (DHD_DEVICE_OMEGA33_LEFT):
+        //------------------------------------------------------------------
+        // omega.6L devices
+        //------------------------------------------------------------------
+        case (DHD_DEVICE_OMEGA6_LEFT):
         {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_OMEGA_6;
+            m_specifications.m_model                         = C_HAPTIC_DEVICE_OMEGA_6L;
             m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "omega.6";
+            m_specifications.m_modelName                     = "omega.6R";
             m_specifications.m_maxLinearForce                =   12.0;   // [N]
             m_specifications.m_maxAngularTorque              =    0.0;   // [N*m]
             m_specifications.m_maxGripperForce               =    0.0;   // [N]
@@ -749,18 +861,51 @@ bool cDeltaDevice::open()
             m_specifications.m_actuatedPosition              = true;
             m_specifications.m_actuatedRotation              = false;
             m_specifications.m_actuatedGripper               = false;
-            m_specifications.m_leftHand                      = leftHandOnly;
-            m_specifications.m_rightHand                     = !leftHandOnly;
+            m_specifications.m_leftHand                      = true;
+            m_specifications.m_rightHand                     = false;
             m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
         }
         break;
 
-        case (DHD_DEVICE_OMEGA331):
-        case (DHD_DEVICE_OMEGA331_LEFT):
+        //------------------------------------------------------------------
+        // omega.6R devices
+        //------------------------------------------------------------------
+        case (DHD_DEVICE_OMEGA6_RIGHT):
         {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_OMEGA_7;
+            m_specifications.m_model                         = C_HAPTIC_DEVICE_OMEGA_6R;
             m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "omega.7";
+            m_specifications.m_modelName                     = "omega.6R";
+            m_specifications.m_maxLinearForce                =   12.0;   // [N]
+            m_specifications.m_maxAngularTorque              =    0.0;   // [N*m]
+            m_specifications.m_maxGripperForce               =    0.0;   // [N]
+            m_specifications.m_maxLinearStiffness            = 5000.0;   // [N/m]
+            m_specifications.m_maxAngularStiffness           =    0.0;   // [N*m/Rad]
+            m_specifications.m_maxGripperLinearStiffness     =    0.0;   // [N*m/Rad]
+            m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
+            m_specifications.m_maxAngularDamping             =    0.0;   // [N*m/(Rad/s)]
+            m_specifications.m_maxGripperAngularDamping      =    0.0;   // [N*m/(Rad/s)]
+            m_specifications.m_workspaceRadius               =    0.075; // [m]
+            m_specifications.m_gripperMaxAngleRad            = cDegToRad(0.0);
+            m_specifications.m_sensedPosition                = true;
+            m_specifications.m_sensedRotation                = true;
+            m_specifications.m_sensedGripper                 = false;
+            m_specifications.m_actuatedPosition              = true;
+            m_specifications.m_actuatedRotation              = false;
+            m_specifications.m_actuatedGripper               = false;
+            m_specifications.m_leftHand                      = false;
+            m_specifications.m_rightHand                     = true;
+            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
+        }
+        break;
+
+        //------------------------------------------------------------------
+        // omega.7R devices
+        //------------------------------------------------------------------
+        case (DHD_DEVICE_OMEGA7_LEFT):
+        {
+            m_specifications.m_model                         = C_HAPTIC_DEVICE_OMEGA_7R;
+            m_specifications.m_manufacturerName              = "Force Dimension";
+            m_specifications.m_modelName                     = "omega.7L";
             m_specifications.m_maxLinearForce                =   12.0;   // [N]
             m_specifications.m_maxAngularTorque              =    0.0;   // [N*m]
             m_specifications.m_maxGripperForce               =    8.0;   // [N]
@@ -778,75 +923,92 @@ bool cDeltaDevice::open()
             m_specifications.m_actuatedPosition              = true;
             m_specifications.m_actuatedRotation              = false;
             m_specifications.m_actuatedGripper               = true;
-            m_specifications.m_leftHand                      = leftHandOnly;
-            m_specifications.m_rightHand                     = !leftHandOnly;
+            m_specifications.m_leftHand                      = true;
+            m_specifications.m_rightHand                     = false;
             m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
         }
         break;
 
-        //------------------------------------------------------------------
-        // sigma.6+ devices
-        //------------------------------------------------------------------
 
-        case(DHD_DEVICE_SIGMA33P):
+        //------------------------------------------------------------------
+        // omega.7R devices
+        //------------------------------------------------------------------
+        case (DHD_DEVICE_OMEGA7_RIGHT):
         {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_SIGMA_6P;
+            m_specifications.m_model                         = C_HAPTIC_DEVICE_OMEGA_7R;
             m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "sigma.6+";
+            m_specifications.m_modelName                     = "omega.7R";
             m_specifications.m_maxLinearForce                =   12.0;   // [N]
-            m_specifications.m_maxAngularTorque              =    0.2;   // [N*m]
-            m_specifications.m_maxLinearStiffness            = 4000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness           =    1.0;   // [N*m/Rad]
+            m_specifications.m_maxAngularTorque              =    0.0;   // [N*m]
+            m_specifications.m_maxGripperForce               =    8.0;   // [N]
+            m_specifications.m_maxLinearStiffness            = 5000.0;   // [N/m]
+            m_specifications.m_maxAngularStiffness           =    0.0;   // [N*m/Rad]
+            m_specifications.m_maxGripperLinearStiffness     = 2000.0;   // [N*m/Rad]
             m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
-            m_specifications.m_maxAngularDamping             =  0.070;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius               =  0.090;   // [m]
-            m_specifications.m_gripperMaxAngleRad            = cDegToRad(0.0);
+            m_specifications.m_maxAngularDamping             =    0.0;   // [N*m/(Rad/s)]
+            m_specifications.m_maxGripperAngularDamping      =    0.5;   // [N/(Rad/s)]
+            m_specifications.m_workspaceRadius               =    0.075; // [m]
+            m_specifications.m_gripperMaxAngleRad            = cDegToRad(30.0);
             m_specifications.m_sensedPosition                = true;
             m_specifications.m_sensedRotation                = true;
-            m_specifications.m_sensedGripper                 = false;
+            m_specifications.m_sensedGripper                 = true;
             m_specifications.m_actuatedPosition              = true;
-            m_specifications.m_actuatedRotation              = true;
-            m_specifications.m_actuatedGripper               = false;
+            m_specifications.m_actuatedRotation              = false;
+            m_specifications.m_actuatedGripper               = true;
             m_specifications.m_leftHand                      = false;
             m_specifications.m_rightHand                     = true;
             m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
-            m_posWorkspaceOffset.set(-0.01, 0.02, 0.00);
         }
         break;
 
-        case(DHD_DEVICE_SIGMA33P_LEFT):
+
+        //------------------------------------------------------------------
+        // sigma.7L devices
+        //------------------------------------------------------------------
+        case(DHD_CASE_103):
+        case(DHD_DEVICE_SIGMA7_LEFT):
         {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_SIGMA_6P;
+            m_specifications.m_model                         = C_HAPTIC_DEVICE_SIGMA_7L;
             m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "sigma.6+";
+            m_specifications.m_modelName                     = "sigma.7L";
             m_specifications.m_maxLinearForce                =   12.0;   // [N]
             m_specifications.m_maxAngularTorque              =    0.2;   // [N*m]
+            m_specifications.m_maxGripperForce               =    8.0;   // [N]
             m_specifications.m_maxLinearStiffness            = 4000.0;   // [N/m]
             m_specifications.m_maxAngularStiffness           =    1.0;   // [N*m/Rad]
+            m_specifications.m_maxGripperLinearStiffness     = 2000.0;   // [N*m/Rad]
             m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
             m_specifications.m_maxAngularDamping             =  0.070;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius               =  0.090;   // [m]
+            m_specifications.m_maxGripperAngularDamping      =  0.500;   // [N*m/(Rad/s)]
+            m_specifications.m_workspaceRadius               =  0.075;   // [m]
+            m_specifications.m_gripperMaxAngleRad            = cDegToRad(30.0);
             m_specifications.m_sensedPosition                = true;
             m_specifications.m_sensedRotation                = true;
-            m_specifications.m_sensedGripper                 = false;
+            m_specifications.m_sensedGripper                 = true;
             m_specifications.m_actuatedPosition              = true;
             m_specifications.m_actuatedRotation              = true;
-            m_specifications.m_actuatedGripper               = false;
+            m_specifications.m_actuatedGripper               = true;
             m_specifications.m_leftHand                      = true;
             m_specifications.m_rightHand                     = false;
-            m_posWorkspaceOffset.set(-0.01,-0.02, 0.00);
+            m_posWorkspaceOffset.set(-0.01, -0.02, 0.00);
+            m_gripperUserSwitchAngleStart                    = 10;
+            m_gripperUserSwitchAngleClick                    = 7;
+            m_gripperUserSwitchForceClick                    = 3;
+            m_gripperUserSwitchForceEngaged                  = 2;
         }
         break;
 
+
         //------------------------------------------------------------------
-        // sigma.7 devices
+        // sigma.7R devices
         //------------------------------------------------------------------
-        case(DHD_DEVICE_DLR331):
-        case(DHD_DEVICE_SIGMA331):
+        case(DHD_CASE_102):
+        case(DHD_CASE_209):
+        case(DHD_DEVICE_SIGMA7_RIGHT):
         {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_SIGMA_7;
+            m_specifications.m_model                         = C_HAPTIC_DEVICE_SIGMA_7R;
             m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "sigma.7";
+            m_specifications.m_modelName                     = "sigma.7R";
             m_specifications.m_maxLinearForce                =   12.0;   // [N]
             m_specifications.m_maxAngularTorque              =    0.2;   // [N*m]
             m_specifications.m_maxGripperForce               =    8.0;   // [N]
@@ -867,37 +1029,102 @@ bool cDeltaDevice::open()
             m_specifications.m_leftHand                      = false;
             m_specifications.m_rightHand                     = true;
             m_posWorkspaceOffset.set(-0.01, 0.02, 0.00);
+            m_gripperUserSwitchAngleStart                    = 10;
+            m_gripperUserSwitchAngleClick                    = 7;
+            m_gripperUserSwitchForceClick                    = 3;
+            m_gripperUserSwitchForceEngaged                  = 2;
         }
         break;
 
-        case(DHD_DEVICE_DLR331_LEFT):
-        case(DHD_DEVICE_SIGMA331_LEFT):
+        //------------------------------------------------------------------
+        // lambda.7L devices
+        //------------------------------------------------------------------
+        case(DHD_CASE_113):
+        case(DHD_CASE_118):
+        case(DHD_CASE_120):
+        case(DHD_CASE_122):
+        case(DHD_CASE_124):
+        case(DHD_CASE_126):
+        case(DHD_CASE_128):
+        case(DHD_CASE_130):
+        case(DHD_CASE_211):
+        case(DHD_DEVICE_LAMBDA7_LEFT):
         {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_SIGMA_7;
-            m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "sigma.7";
-            m_specifications.m_maxLinearForce                =   12.0;   // [N]
-            m_specifications.m_maxAngularTorque              =    0.2;   // [N*m]
-            m_specifications.m_maxGripperForce               =    8.0;   // [N]
-            m_specifications.m_maxLinearStiffness            = 4000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness           =    1.0;   // [N*m/Rad]
-            m_specifications.m_maxGripperLinearStiffness     = 2000.0;   // [N*m/Rad]
-            m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
-            m_specifications.m_maxAngularDamping             =  0.070;   // [N*m/(Rad/s)]
-            m_specifications.m_maxGripperAngularDamping      =  0.500;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius               =  0.075;   // [m]
-            m_specifications.m_gripperMaxAngleRad            = cDegToRad(30.0);
-            m_specifications.m_sensedPosition                = true;
-            m_specifications.m_sensedRotation                = true;
-            m_specifications.m_sensedGripper                 = true;
-            m_specifications.m_actuatedPosition              = true;
-            m_specifications.m_actuatedRotation              = true;
-            m_specifications.m_actuatedGripper               = true;
-            m_specifications.m_leftHand                      = true;
-            m_specifications.m_rightHand                     = false;
-            m_posWorkspaceOffset.set(-0.01,-0.02, 0.00);
+            m_specifications.m_model                            = C_HAPTIC_DEVICE_LAMBDA_7L;
+            m_specifications.m_manufacturerName                 = "Force Dimension";
+            m_specifications.m_modelName                        = "lambda.7L";
+            m_specifications.m_maxLinearForce                   = 12.0;     // [N]
+            m_specifications.m_maxAngularTorque                 = 0.2;      // [N*m]
+            m_specifications.m_maxGripperForce                  = 8.0;      // [N]
+            m_specifications.m_maxLinearStiffness               = 8000.0;   // [N/m]
+            m_specifications.m_maxAngularStiffness              = 1.0;      // [N*m/Rad]
+            m_specifications.m_maxGripperLinearStiffness        = 2000.0;   // [N*m/Rad]
+            m_specifications.m_maxLinearDamping                 = 30.0;     // [N/(m/s)]
+            m_specifications.m_maxAngularDamping                = 0.070;    // [N*m/(Rad/s)]
+            m_specifications.m_maxGripperAngularDamping         = 0.500;    // [N*m/(Rad/s)]
+            m_specifications.m_workspaceRadius                  = 0.1125;    // [m]
+            m_specifications.m_gripperMaxAngleRad               = cDegToRad(15.0);
+            m_specifications.m_sensedPosition                   = true;
+            m_specifications.m_sensedRotation                   = true;
+            m_specifications.m_sensedGripper                    = true;
+            m_specifications.m_actuatedPosition                 = true;
+            m_specifications.m_actuatedRotation                 = true;
+            m_specifications.m_actuatedGripper                  = true;
+            m_specifications.m_leftHand                         = true;
+            m_specifications.m_rightHand                        = false;
+            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
+            m_gripperUserSwitchAngleStart                       = 5;
+            m_gripperUserSwitchAngleClick                       = 3.5;
+            m_gripperUserSwitchForceClick                       = 1.5;
+            m_gripperUserSwitchForceEngaged                     = 2;
         }
         break;
+
+        //------------------------------------------------------------------
+        // lambda.7R devices
+        //------------------------------------------------------------------
+        case(DHD_CASE_112):
+        case(DHD_CASE_114):
+        case(DHD_CASE_117):
+        case(DHD_CASE_119):
+        case(DHD_CASE_121):
+        case(DHD_CASE_123):
+        case(DHD_CASE_125):
+        case(DHD_CASE_127):
+        case(DHD_CASE_129):
+        case(DHD_CASE_210):
+        case(DHD_DEVICE_LAMBDA7_RIGHT):
+        {
+            m_specifications.m_model                            = C_HAPTIC_DEVICE_LAMBDA_7R;
+            m_specifications.m_manufacturerName                 = "Force Dimension";
+            m_specifications.m_modelName                        = "lambda.7R";
+            m_specifications.m_maxLinearForce                   = 12.0;     // [N]
+            m_specifications.m_maxAngularTorque                 = 0.2;      // [N*m]
+            m_specifications.m_maxGripperForce                  = 8.0;      // [N]
+            m_specifications.m_maxLinearStiffness               = 8000.0;   // [N/m]
+            m_specifications.m_maxAngularStiffness              = 1.0;      // [N*m/Rad]
+            m_specifications.m_maxGripperLinearStiffness        = 2000.0;   // [N*m/Rad]
+            m_specifications.m_maxLinearDamping                 = 30.0;     // [N/(m/s)]
+            m_specifications.m_maxAngularDamping                = 0.070;    // [N*m/(Rad/s)]
+            m_specifications.m_maxGripperAngularDamping         = 0.500;    // [N*m/(Rad/s)]
+            m_specifications.m_workspaceRadius                  = 0.1125;    // [m]
+            m_specifications.m_gripperMaxAngleRad               = cDegToRad(15.0);
+            m_specifications.m_sensedPosition                   = true;
+            m_specifications.m_sensedRotation                   = true;
+            m_specifications.m_sensedGripper                    = true;
+            m_specifications.m_actuatedPosition                 = true;
+            m_specifications.m_actuatedRotation                 = true;
+            m_specifications.m_actuatedGripper                  = true;
+            m_specifications.m_leftHand                         = false;
+            m_specifications.m_rightHand                        = true;
+            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
+            m_gripperUserSwitchAngleStart = 5;
+            m_gripperUserSwitchAngleClick = 3.5;
+            m_gripperUserSwitchForceClick = 1.5;
+            m_gripperUserSwitchForceEngaged = 2;
+        }
+        break;
+
 
         //------------------------------------------------------------------
         // falcon device
@@ -929,222 +1156,7 @@ bool cDeltaDevice::open()
             m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
         }
         break;
-
-        //------------------------------------------------------------------
-        // special device - MPR
-        //------------------------------------------------------------------
-        case (DHD_CASE_111):
-        {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_MPR;
-            m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "mpr";
-            m_specifications.m_maxLinearForce                =   20.0;   // [N]
-            m_specifications.m_maxAngularTorque              =    0.0;   // [N*m]
-            m_specifications.m_maxGripperForce               =    0.0;   // [N]
-            m_specifications.m_maxLinearStiffness            = 5000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness           =    0.0;   // [N*m/Rad]
-            m_specifications.m_maxGripperLinearStiffness     =    0.0;   // [N*m/Rad]
-            m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
-            m_specifications.m_maxAngularDamping             =    0.0;   // [N*m/(Rad/s)]
-            m_specifications.m_maxGripperAngularDamping      =    0.0;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius               =    0.15;  // [m]
-            m_specifications.m_gripperMaxAngleRad            = cDegToRad(0.0);
-            m_specifications.m_sensedPosition                = true;
-            m_specifications.m_sensedRotation                = true;
-            m_specifications.m_sensedGripper                 = false;
-            m_specifications.m_actuatedPosition              = true;
-            m_specifications.m_actuatedRotation              = false;
-            m_specifications.m_actuatedGripper               = false;
-            m_specifications.m_leftHand                      = true;
-            m_specifications.m_rightHand                     = true;
-            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
-        }
-        break;
-
-        //------------------------------------------------------------------
-        // special device - XTH-1
-        //------------------------------------------------------------------
-        case (DHD_CASE_200):
-        {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_XTH_1;
-            m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "xth-1";
-            m_specifications.m_maxLinearForce                =   20.0;   // [N]
-            m_specifications.m_maxAngularTorque              =    0.0;   // [N*m]
-            m_specifications.m_maxGripperForce               =    0.0;   // [N]
-            m_specifications.m_maxLinearStiffness            = 5000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness           =    0.0;   // [N*m/Rad]
-            m_specifications.m_maxGripperLinearStiffness     =    0.0;   // [N*m/Rad]
-            m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
-            m_specifications.m_maxAngularDamping             =    0.0;   // [N*m/(Rad/s)]
-            m_specifications.m_maxGripperAngularDamping      =    0.0;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius               =    0.15;  // [m]
-            m_specifications.m_gripperMaxAngleRad            = cDegToRad(0.0);
-            m_specifications.m_sensedPosition                = true;
-            m_specifications.m_sensedRotation                = true;
-            m_specifications.m_sensedGripper                 = false;
-            m_specifications.m_actuatedPosition              = true;
-            m_specifications.m_actuatedRotation              = false;
-            m_specifications.m_actuatedGripper               = false;
-            m_specifications.m_leftHand                      = false;
-            m_specifications.m_rightHand                     = true;
-            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
-        }
-        break;
-
-        case (DHD_CASE_201):
-        {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_XTH_1;
-            m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "xth-1";
-            m_specifications.m_maxLinearForce                =   20.0;   // [N]
-            m_specifications.m_maxAngularTorque              =    0.0;   // [N*m]
-            m_specifications.m_maxGripperForce               =    0.0;   // [N]
-            m_specifications.m_maxLinearStiffness            = 5000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness           =    0.0;   // [N*m/Rad]
-            m_specifications.m_maxGripperLinearStiffness     =    0.0;   // [N*m/Rad]
-            m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
-            m_specifications.m_maxAngularDamping             =    0.0;   // [N*m/(Rad/s)]
-            m_specifications.m_maxGripperAngularDamping      =    0.0;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius               =    0.15;  // [m]
-            m_specifications.m_gripperMaxAngleRad            = cDegToRad(0.0);
-            m_specifications.m_sensedPosition                = true;
-            m_specifications.m_sensedRotation                = true;
-            m_specifications.m_sensedGripper                 = false;
-            m_specifications.m_actuatedPosition              = true;
-            m_specifications.m_actuatedRotation              = false;
-            m_specifications.m_actuatedGripper               = false;
-            m_specifications.m_leftHand                      = true;
-            m_specifications.m_rightHand                     = false;
-            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
-        }
-        break;
-
-        //------------------------------------------------------------------
-        // special device - XTH-2
-        //------------------------------------------------------------------
-        case(DHD_CASE_112):
-        {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_XTH_2;
-            m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "xth-2";
-            m_specifications.m_maxLinearForce                =   12.0;   // [N]
-            m_specifications.m_maxAngularTorque              =    0.2;   // [N*m]
-            m_specifications.m_maxGripperForce               =    0.0;   // [N]
-            m_specifications.m_maxLinearStiffness            = 8000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness           =    1.0;   // [N*m/Rad]
-            m_specifications.m_maxGripperLinearStiffness     = 2000.0;   // [N*m/Rad]
-            m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
-            m_specifications.m_maxAngularDamping             =  0.070;   // [N*m/(Rad/s)]
-            m_specifications.m_maxGripperAngularDamping      =  0.500;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius               = 0.1125;   // [m]
-            m_specifications.m_gripperMaxAngleRad            = cDegToRad(25.0);
-            m_specifications.m_sensedPosition                = true;
-            m_specifications.m_sensedRotation                = true;
-            m_specifications.m_sensedGripper                 = true;
-            m_specifications.m_actuatedPosition              = true;
-            m_specifications.m_actuatedRotation              = true;
-            m_specifications.m_actuatedGripper               = false;
-            m_specifications.m_leftHand                      = false;
-            m_specifications.m_rightHand                     = true;
-            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
-        }
-        break;
-
-        case(DHD_CASE_113):
-        {
-            m_specifications.m_model                         = C_HAPTIC_DEVICE_XTH_2;
-            m_specifications.m_manufacturerName              = "Force Dimension";
-            m_specifications.m_modelName                     = "xth-2";
-            m_specifications.m_maxLinearForce                =   12.0;   // [N]
-            m_specifications.m_maxAngularTorque              =    0.2;   // [N*m]
-            m_specifications.m_maxGripperForce               =    0.0;   // [N]
-            m_specifications.m_maxLinearStiffness            = 8000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness           =    1.0;   // [N*m/Rad]
-            m_specifications.m_maxGripperLinearStiffness     = 2000.0;   // [N*m/Rad]
-            m_specifications.m_maxLinearDamping              =   30.0;   // [N/(m/s)]
-            m_specifications.m_maxAngularDamping             =  0.070;   // [N*m/(Rad/s)]
-            m_specifications.m_maxGripperAngularDamping      =  0.500;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius               = 0.1125;   // [m]
-            m_specifications.m_gripperMaxAngleRad            = cDegToRad(25.0);
-            m_specifications.m_sensedPosition                = true;
-            m_specifications.m_sensedRotation                = true;
-            m_specifications.m_sensedGripper                 = true;
-            m_specifications.m_actuatedPosition              = true;
-            m_specifications.m_actuatedRotation              = true;
-            m_specifications.m_actuatedGripper               = false;
-            m_specifications.m_leftHand                      = true;
-            m_specifications.m_rightHand                     = false;
-            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
-        }
-        break;
-
-        //------------------------------------------------------------------
-        // special device - KSD-1
-        //------------------------------------------------------------------
-
-        case(DHD_CASE_114) :
-        case(DHD_CASE_204) :
-        {
-            m_specifications.m_model                        = C_HAPTIC_DEVICE_KSD_1;
-            m_specifications.m_manufacturerName             = "Force Dimension";
-            m_specifications.m_modelName                    = "ksd-1";
-            m_specifications.m_maxLinearForce               = 12.0;   // [N]
-            m_specifications.m_maxAngularTorque             = 0.2;   // [N*m]
-            m_specifications.m_maxGripperForce              = 0.0;   // [N]
-            m_specifications.m_maxLinearStiffness           = 8000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness          = 1.0;   // [N*m/Rad]
-            m_specifications.m_maxGripperLinearStiffness    = 2000.0;   // [N*m/Rad]
-            m_specifications.m_maxLinearDamping             = 30.0;   // [N/(m/s)]
-            m_specifications.m_maxAngularDamping            = 0.070;   // [N*m/(Rad/s)]
-            m_specifications.m_maxGripperAngularDamping     = 0.500;   // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius              = 0.1125;   // [m]
-            m_specifications.m_gripperMaxAngleRad           = cDegToRad(30.0);
-            m_specifications.m_sensedPosition               = true;
-            m_specifications.m_sensedRotation               = true;
-            m_specifications.m_sensedGripper                = true;
-            m_specifications.m_actuatedPosition             = true;
-            m_specifications.m_actuatedRotation             = true;
-            m_specifications.m_actuatedGripper              = false;
-            m_specifications.m_leftHand                     = true;
-            m_specifications.m_rightHand                    = true;
-            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
-        }
-        break;
-
-        //------------------------------------------------------------------
-        // special device - VIC 1:
-        //------------------------------------------------------------------
-
-        case(DHD_CASE_205) :
-        {
-            m_specifications.m_model                        = C_HAPTIC_DEVICE_VIC_1;
-            m_specifications.m_manufacturerName             = "Force Dimension";
-            m_specifications.m_modelName                    = "vic-1";
-            m_specifications.m_maxLinearForce               = 12.0;     // [N]
-            m_specifications.m_maxAngularTorque             = 0.2;      // [N*m]
-            m_specifications.m_maxGripperForce              = 0.0;      // [N]
-            m_specifications.m_maxLinearStiffness           = 8000.0;   // [N/m]
-            m_specifications.m_maxAngularStiffness          = 1.0;      // [N*m/Rad]
-            m_specifications.m_maxGripperLinearStiffness    = 2000.0;   // [N*m/Rad]
-            m_specifications.m_maxLinearDamping             = 30.0;     // [N/(m/s)]
-            m_specifications.m_maxAngularDamping            = 0.070;    // [N*m/(Rad/s)]
-            m_specifications.m_maxGripperAngularDamping     = 0.500;    // [N*m/(Rad/s)]
-            m_specifications.m_workspaceRadius              = 0.1125;   // [m]
-            m_specifications.m_gripperMaxAngleRad           = cDegToRad(0.0);
-            m_specifications.m_sensedPosition               = true;
-            m_specifications.m_sensedRotation               = true;
-            m_specifications.m_sensedGripper                = false;
-            m_specifications.m_actuatedPosition             = true;
-            m_specifications.m_actuatedRotation             = true;
-            m_specifications.m_actuatedGripper              = false;
-            m_specifications.m_leftHand                     = false;
-            m_specifications.m_rightHand                    = true;
-            m_posWorkspaceOffset.set(0.0, 0.0, 0.0);
-        }
-        break;
     }
-
 
     if (s_dhdEnableExpertMode)
     {
@@ -1247,7 +1259,7 @@ bool cDeltaDevice::calibrate(bool a_forceCalibration)
         return (C_SUCCESS);
     }
 
-    // auto-calibrate is necessary
+    // auto-calibrate if necessary
     if (a_forceCalibration || (drdIsInitialized(m_deviceID) == false))
     {
         if (0 > drdAutoInit(m_deviceID))   return (C_ERROR);
@@ -1363,62 +1375,28 @@ bool cDeltaDevice::getRotation(cMatrix3d& a_rotation)
     cMatrix3d frame;
     frame.identity();
 
-    switch (m_deviceType)
+    // read rotation matrix
+    double rot[3][3];
+    rot[0][0] = 1.0; rot[0][1] = 0.0; rot[0][2] = 0.0;
+    rot[1][0] = 0.0; rot[1][1] = 1.0; rot[1][2] = 0.0;
+    rot[2][0] = 0.0; rot[2][1] = 0.0; rot[2][2] = 1.0;
+
+    if (s_dhdGetOrientationFrame)
     {
-        // first generation
-        case (DHD_DEVICE_3DOF):
-        case (DHD_DEVICE_6DOF):
-        case (DHD_DEVICE_6DOF_500):
-        case (DHD_DEVICE_DELTA6):
-        {
-            // read angles
-            cVector3d angles;
-            angles.set(0,0,0);
+        error = dhdGetOrientationFrame(rot, m_deviceID);
+    }
 
-            // check if DHD-API call is available
-            if (s_dhdGetOrientationRad)
-            {
-                error = dhdGetOrientationRad(&angles(0) , &angles(1) , &angles(2) , m_deviceID);
-            }
-
-            // compute rotation matrix
-            if (error != -1)
-            {
-                angles.mul(1.5);
-                frame.rotateAboutGlobalAxisRad(cVector3d(1,0,0), angles(0) );
-                frame.rotateAboutGlobalAxisRad(cVector3d(0,1,0), angles(1) );
-                frame.rotateAboutGlobalAxisRad(cVector3d(0,0,1), angles(2) );
-            }
-        }
-        break;
-
-        // second generation
-        default:
-        {
-            // read rotation matrix
-            double rot[3][3];
-            rot[0][0] = 1.0; rot[0][1] = 0.0; rot[0][2] = 0.0;
-            rot[1][0] = 0.0; rot[1][1] = 1.0; rot[1][2] = 0.0;
-            rot[2][0] = 0.0; rot[2][1] = 0.0; rot[2][2] = 1.0;
-
-            if (s_dhdGetOrientationFrame)
-            {
-                error = dhdGetOrientationFrame(rot, m_deviceID);
-            }
-
-            if (error != -1)
-            {
-                frame(0,0) = rot[0][0];
-                frame(0,1) = rot[0][1];
-                frame(0,2) = rot[0][2];
-                frame(1,0) = rot[1][0];
-                frame(1,1) = rot[1][1];
-                frame(1,2) = rot[1][2];
-                frame(2,0) = rot[2][0];
-                frame(2,1) = rot[2][1];
-                frame(2,2) = rot[2][2];
-            }
-        }
+    if (error != -1)
+    {
+        frame(0,0) = rot[0][0];
+        frame(0,1) = rot[0][1];
+        frame(0,2) = rot[0][2];
+        frame(1,0) = rot[1][0];
+        frame(1,1) = rot[1][1];
+        frame(1,2) = rot[1][2];
+        frame(2,0) = rot[2][0];
+        frame(2,1) = rot[2][1];
+        frame(2,2) = rot[2][2];
     }
 
     // retrieve rotation frame
@@ -1503,20 +1481,13 @@ bool cDeltaDevice::getGripperAngleRad(double& a_angle)
             double angle = 0.0;
             error = dhdGetGripperAngleRad(&angle, m_deviceID);
 
-            if (m_specifications.m_model == C_HAPTIC_DEVICE_XTH_2)
+            if (m_specifications.m_rightHand)
             {
-                a_angle = angle;
+                a_angle = cClamp0(angle);
             }
-            else
+            else if (m_specifications.m_leftHand)
             {
-                if (m_specifications.m_rightHand)
-                {
-                    a_angle = cClamp0(angle);
-                }
-                else if (m_specifications.m_leftHand)
-                {
-                    a_angle = cClamp0(-angle);
-                }
+                a_angle = cClamp0(-angle);
             }
         }
         else
@@ -1575,6 +1546,13 @@ bool cDeltaDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force,
 
     // adjust gripper command for left or right hand device
     double gripperForce = a_gripperForce + gripperUserSwitchForce;
+
+    // add force offset for devices without strap
+    if ((m_deviceType == DHD_CASE_117) || (m_deviceType == DHD_CASE_118))
+    {
+        gripperForce = gripperForce + 0.7;
+    }
+
     if (m_specifications.m_leftHand)
     {
         gripperForce =-gripperForce;
@@ -1819,6 +1797,347 @@ bool cDeltaDevice::setVibration(double a_freq, double a_amplitude, int a_type)
     }
 }
 
+
+//! 
+//==============================================================================
+/*!
+    This method presets the encoder values given a table of values.
+
+    \param   a_encPreset  Encoder preset value.
+    \param   a_mask  Motor selection mask.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cDeltaDevice::presetEnc(int a_encPreset[DHD_MAX_DOF], unsigned short a_mask)
+{
+    // check if the system is available
+    if (!m_deviceReady) return (C_ERROR);
+
+    // sanity check
+    if (!s_dhdPreset) return (C_ERROR);
+
+    // preset encoder values
+    dhdEnableExpertMode();
+    int error = dhdPreset(a_encPreset, a_mask, m_deviceID);
+    dhdDisableExpertMode();
+
+    // return result
+    if (error >= 0)
+    {
+        return (C_SUCCESS);
+    }
+    else
+    {
+        return (C_ERROR);
+    }
+}
+
+
+//==============================================================================
+/*!
+    This method presets all encoder values to given value.
+
+    \param   a_encPreset  Encoder preset value.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cDeltaDevice::presetEncAll(int a_encPreset)
+{
+    // check if the system is available
+    if (!m_deviceReady) return (C_ERROR);
+
+    // sanity check
+    if (!s_dhdPreset) return (C_ERROR);
+
+    // preset encoder values
+    int encPreset[DHD_MAX_DOF];
+    for (int i=0; i<DHD_MAX_DOF; i++)
+    {
+        encPreset[i] = a_encPreset;
+    }
+
+    dhdEnableExpertMode();
+    int error = dhdPreset(encPreset, 0xff, m_deviceID);
+    dhdDisableExpertMode();
+
+    // return result
+    if (error >= 0)
+    {
+        return (C_SUCCESS);
+    }
+    else
+    {
+        return (C_ERROR);
+    }
+}
+
+
+//==============================================================================
+/*!
+    This method returns the encoder position values of the device.
+
+    \param   a_encPos  Encoder position values.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cDeltaDevice::getEncPos(int a_encPos[DHD_MAX_DOF])
+{
+    // check if the system is available
+    if (!m_deviceReady) return (C_ERROR);
+
+    // sanity check
+    if (!s_dhdGetEnc) return (C_ERROR);
+
+    // get encoder positions
+    dhdEnableExpertMode();
+    int error = dhdGetEnc(a_encPos, 0xff, m_deviceID);
+    dhdDisableExpertMode();
+
+    // return result
+    if (error >= 0)
+    {
+        return (C_SUCCESS);
+    }
+    else
+    {
+        return (C_ERROR);
+    }
+}
+
+
+//==============================================================================
+/*!
+    This method returns the encoder velocity values of the device.
+
+    \param   a_encVel  Encoder velocity values.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cDeltaDevice::getEncVel(double a_encVel[DHD_MAX_DOF])
+{
+    // check if the system is available
+    if (!m_deviceReady) return (C_ERROR);
+
+    // sanity check
+    if (!s_dhdGetEncVelocities) return (C_ERROR);
+
+    // get encoder velocities
+    dhdEnableExpertMode();
+    int error = dhdGetEncVelocities(a_encVel, m_deviceID);
+    dhdDisableExpertMode();
+
+    // return result
+    if (error >= 0)
+    {
+        return (C_SUCCESS);
+    }
+    else
+    {
+        return (C_ERROR);
+    }
+}
+
+
+//==============================================================================
+/*!
+    This method sets motor commands to the device.
+
+    \param   a_mot  Motor values.
+    \param   a_mask  Motor selection mask.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cDeltaDevice::setMot(unsigned short a_mot[DHD_MAX_DOF], unsigned short a_mask)
+{
+    // check if the system is available
+    if (!m_deviceReady) return (C_ERROR);
+
+    // sanity check
+    if (!s_dhdSetMot) return (C_ERROR);
+
+    // set motor values
+    dhdEnableExpertMode();
+    int error = dhdSetMot(a_mot, a_mask, m_deviceID);
+    dhdDisableExpertMode();
+
+    // return result
+    if (error >= 0)
+    {
+        return (C_SUCCESS);
+    }
+    else
+    {
+        return (C_ERROR);
+    }
+}
+
+
+//==============================================================================
+/*!
+    This method returns the jacobian of the delta kinematics.
+
+    \param  a_jacobian  Returned jacobian matrix.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cDeltaDevice::getJacobianDelta(cMatrix3d& a_jacobian)
+{
+    // set default return value
+    a_jacobian.identity();
+
+    // check if the system is available
+    if (!m_deviceReady) return (C_ERROR);
+
+    // sanity check
+    if (!s_dhdGetDeltaJacobian) return (C_ERROR);
+
+    // get jacobian
+    double jac[3][3];
+    jac[0][0] = 1.0; jac[0][1] = 0.0; jac[0][2] = 0.0;
+    jac[1][0] = 0.0; jac[1][1] = 1.0; jac[1][2] = 0.0;
+    jac[2][0] = 0.0; jac[2][1] = 0.0; jac[2][2] = 1.0;
+
+    dhdEnableExpertMode();
+    int error = dhdGetDeltaJacobian(jac, m_deviceID);
+    dhdDisableExpertMode();
+
+    a_jacobian.set(jac);
+
+    // return result
+    if (error >= 0)
+    {
+        return (C_SUCCESS);
+    }
+    else
+    {
+        return (C_ERROR);
+    }
+}
+
+
+//==============================================================================
+/*!
+    This method returns the jacobian of the wrist kinematics.
+
+    \param  a_jacobian  Returned jacobian matrix.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cDeltaDevice::getJacobianWrist(cMatrix3d& a_jacobian)
+{
+    // check if the system is available
+    if (!m_deviceReady) return (C_ERROR);
+
+    // sanity check
+    if (!s_dhdGetWristJacobian) return (C_ERROR);
+
+    // get jacobian
+    double jac[3][3];
+    jac[0][0] = 1.0; jac[0][1] = 0.0; jac[0][2] = 0.0;
+    jac[1][0] = 0.0; jac[1][1] = 1.0; jac[1][2] = 0.0;
+    jac[2][0] = 0.0; jac[2][1] = 0.0; jac[2][2] = 1.0;
+
+    dhdEnableExpertMode();
+    int error = dhdGetWristJacobian(jac, m_deviceID);
+    dhdDisableExpertMode();
+
+    a_jacobian.set(jac);
+
+    // return result
+    if (error >= 0)
+    {
+        return (C_SUCCESS);
+    }
+    else
+    {
+        return (C_ERROR);
+    }
+
+}
+
+
+//==============================================================================
+/*!
+    This method applies joint torques on each active degree of freedom of the 
+    haptic device.
+
+    \param  a_jointTorques  Joint torques.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cDeltaDevice::setJointTorques(double a_jointTorques[DHD_MAX_DOF])
+{
+    // check if the system is available
+    if (!m_deviceReady) return (C_ERROR);
+
+    // sanity check
+    if (!s_dhdSetJointTorques) return (C_ERROR);
+
+    // set motor values
+    dhdEnableExpertMode();
+    int error = dhdSetJointTorques(a_jointTorques, 255, m_deviceID);
+    dhdDisableExpertMode();
+
+    // return result
+    if (error >= 0)
+    {
+        return (C_SUCCESS);
+    }
+    else
+    {
+        return (C_ERROR);
+    }
+}
+
+
+//==============================================================================
+/*!
+    This method returns the required joints torques used for gravity compensation.
+
+    \param  a_jointTorques  Joint torques.
+
+    \return __true__ if the operation succeeds, __false__ otherwise.
+*/
+//==============================================================================
+bool cDeltaDevice::getJointTorquesGravityCompensation(double a_jointTorques[DHD_MAX_DOF])
+{
+    // check if the system is available
+    if (!m_deviceReady) return (C_ERROR);
+
+    // sanity check
+    if (!s_dhdJointAnglesToGravityJointTorques) return (C_ERROR);
+
+    // get gravity torques
+    dhdEnableExpertMode();
+
+    double jointPos[DHD_MAX_DOF];
+    int error1 = dhdGetJointAngles(jointPos, m_deviceID);
+    int error2 = dhdJointAnglesToGravityJointTorques(jointPos, a_jointTorques, 255, m_deviceID);
+
+    dhdDisableExpertMode();
+
+    // return result
+    if ((error1 >= 0) && (error2 >= 0))
+    {
+        return (C_SUCCESS);
+    }
+    else
+    {
+        for (int i = 0; i < DHD_MAX_DOF; ++i)
+        {
+            a_jointTorques[i] = 0.0;
+        }
+        return (C_ERROR);
+    }
+}
 
 //------------------------------------------------------------------------------
 } // namespace chai3d

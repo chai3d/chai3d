@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Tim Schroder
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2146 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -90,9 +90,9 @@ bool cSaveFileOBJ(cMultiMesh* a_object, const std::string& a_filename);
     per triangle, with no vertex re-use.
 */
 //------------------------------------------------------------------------------
+extern bool g_objLoaderUnifyVerticesWithSamePosition;
 extern bool g_objLoaderShouldGenerateExtraVertices;
-
-
+extern bool g_objLoaderMinimizeNumberOfMeshes;
 //------------------------------------------------------------------------------
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 //------------------------------------------------------------------------------
@@ -112,17 +112,17 @@ struct vertexIndexSet
     {
         vIndex = nIndex = tIndex = 0;
     }
-    vertexIndexSet(int vIndex, int nIndex, int tIndex) 
+    vertexIndexSet(int a_vIndex, int a_nIndex, int a_tIndex)
     {
-        this->vIndex = vIndex;
-        this->nIndex = nIndex;
-        this->tIndex = tIndex;
+        vIndex = a_vIndex;
+        nIndex = a_nIndex;
+        tIndex = a_tIndex;
     }
-    vertexIndexSet(int vIndex) 
+    vertexIndexSet(int a_vIndex)
     {
-        this->vIndex = vIndex;
-        this->nIndex = 0;
-        this->tIndex = 0;
+        vIndex = a_vIndex;
+        nIndex = 0;
+        tIndex = 0;
     }
 };
 
@@ -134,9 +134,12 @@ struct ltVertexIndexSet
     {
         if (v1.vIndex < v2.vIndex) return 1;
         if (v2.vIndex < v1.vIndex) return 0;
-        if (v1.nIndex < v2.nIndex) return 1;
-        if (v2.nIndex < v1.nIndex) return 0;
-        if (v1.tIndex < v2.tIndex) return 1;
+        if (!g_objLoaderUnifyVerticesWithSamePosition)
+        {
+            if (v1.nIndex < v2.nIndex) return 1;
+            if (v2.nIndex < v1.nIndex) return 0;
+            if (v1.tIndex < v2.tIndex) return 1;
+        }
         return 0;
     }
 };
@@ -152,7 +155,7 @@ typedef std::map<vertexIndexSet,unsigned int,ltVertexIndexSet> vertexIndexSet_ui
 //==============================================================================
 
 // OBJ maximum length of a path
-#define C_OBJ_SIZE_PATH		255
+#define C_OBJ_SIZE_PATH     255
 
 // OBJ File string identifiers
 #define C_OBJ_VERTEX_ID    "v"
@@ -190,10 +193,10 @@ struct cOBJFileInfo
 
     void init()
     {
-        m_vertexCount = 0;
+        m_vertexCount   = 0;
         m_texCoordCount = 0;
-        m_normalCount = 0;
-        m_faceCount = 0;
+        m_normalCount   = 0;
+        m_faceCount     = 0;
         m_materialCount = 0;
     }
 
@@ -226,7 +229,7 @@ struct cFace
     void init()
     {
         m_numVertices = 0;
-        m_materialIndex = -1;
+        m_materialIndex = 0;
         m_groupIndex = -1;
         m_pVertexIndices = NULL;
         m_pVertices = NULL;

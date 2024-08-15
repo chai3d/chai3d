@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,35 +35,27 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-04-06 17:54:15 +0200 (Wed, 06 Apr 2016) $
-#  $Rev: 2008 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# import settings
-TOP_DIR = ../..
-include $(TOP_DIR)/Makefile.common
-
-# GLFW demos
-SUBDIRS  = 01-ODE-cube \
-           02-ODE-pool \
-           03-ODE-mesh \
-           04-ODE-tool \
-           05-ODE-dental \
-           06-ODE-exploration \
-           07-ODE-articulations
-	       
-# rules
+# Default targets
+SUBDIRS = $(patsubst %/,%,$(sort $(dir $(wildcard */Makefile))))
 all: $(SUBDIRS)
 
-$(SUBDIRS): glfw
-	$(MAKE) -C $@
-
-glfw:
-	$(MAKE) -C $(CHAI3D)/extras/GLFW
+# Project-specific rules
+TOP_DIR = ../..
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common))
+    include $(TOP_DIR)/Makefile.common
+endif
+ifneq (,$(wildcard ./Makefile.project))
+    include ./Makefile.project
+endif
 
 .PHONY: $(SUBDIRS)
+$(SUBDIRS):
+	$(MAKE) -C $@
 
 clean:
 	@for T in $(SUBDIRS); do make -C $$T $@; done
-	-rm -f core *~ *.bak #*

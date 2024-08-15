@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Your name, institution, or company name.
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -600,15 +600,15 @@ bool cMyCustomDevice::setForceAndTorqueAndGripperForce(const cVector3d& a_force,
     m_prevGripperForce = a_gripperForce;
 
     // retrieve force, torque, and gripper force components in individual variables
-    double fx = a_force(0);
-    double fy = a_force(1);
-    double fz = a_force(2);
+    // double fx = a_force(0);
+    // double fy = a_force(1);
+    // double fz = a_force(2);
 
-    double tx = a_torque(0);
-    double ty = a_torque(1);
-    double tz = a_torque(2);
+    // double tx = a_torque(0);
+    // double ty = a_torque(1);
+    // double tz = a_torque(2);
 
-    double gf = a_gripperForce;
+    // double gf = a_gripperForce;
 
     // *** INSERT YOUR CODE HERE ***
 

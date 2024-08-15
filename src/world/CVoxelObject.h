@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -38,7 +38,7 @@
     \author    <http://www.chai3d.org>
     \author    Sonny Chan
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2171 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -117,6 +117,16 @@ public:
 
     //! Destructor of cVoxelObject.
     virtual ~cVoxelObject();
+
+
+    //--------------------------------------------------------------------------
+    // PUBLIC METHODS - GENERAL:
+    //--------------------------------------------------------------------------
+
+public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("VoxelObject"); }
 
 
     //--------------------------------------------------------------------------
@@ -208,8 +218,21 @@ public:
     //! This method converts this voxel object into a triangle mesh.
     bool polygonize(cMesh* a_mesh, double a_gridSizeX = -1.0, double a_gridSizeY = -1.0, double a_gridSizeZ = -1.0);
 
-    //! This method converts this voxel object into a triangle multi-mesh.
+    //! This method converts this voxel object into a triangle multimesh.
     bool polygonize(cMultiMesh* a_multiMesh, double a_gridSizeX = -1.0, double a_gridSizeY = -1.0, double a_gridSizeZ = -1.0);
+
+
+    //--------------------------------------------------------------------------
+    // PUBLIC METHODS - VOXELIZATION:
+    //--------------------------------------------------------------------------
+
+public:
+
+    //! This method creates a voxel model from a triangle mesh.
+    bool voxelize(cMesh* a_mesh, unsigned int a_largestSideInVoxels, cColorb& a_color);
+
+    //! This method fills a voxel object at a given point, with a given color, and color tolerance in respect to neighbour voxels.
+    bool fill(unsigned int a_x, unsigned int a_y, unsigned int a_z, cColorb& a_color, double a_colorTolerance = 0.1);
 
 
     //--------------------------------------------------------------------------

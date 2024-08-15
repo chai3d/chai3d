@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,54 +35,47 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-11-01 19:39:15 +0100 (Tue, 01 Nov 2016) $
-#  $Rev: 2152 $
-
+################################################################################
 
 cmake_minimum_required (VERSION 3.0.0)
 project (ModelViewer)
 
 # chai3d dependency
-find_package (CHAI3D 3.2 REQUIRED)
+find_package (chai3d 3.3 REQUIRED)
 include_directories (${CHAI3D_INCLUDE_DIRS})
 link_directories (${CHAI3D_LIBRARY_DIRS})
 add_definitions (${CHAI3D_DEFINITIONS})
 
 # QT dependency
 # path to Qt installation must be set in CMAKE_PREFIX_PATH
-# (see http://doc-snapshot.qt-project.org/qt5-5.3/cmake-manual.html)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 set (CMAKE_AUTOMOC ON)
-find_package (Qt5Widgets)
-find_package (Qt5OpenGL)
+find_package (Qt6Widgets)
+find_package (Qt6OpenGL)
+find_package (Qt6OpenGLWidgets)
 
-# platform detection
+# Platform detection
 if (${CMAKE_SYSTEM_NAME} MATCHES Windows)
-  set (OS "win")
-  if (${CMAKE_CL_64})
-    set (ARCH "x64")
-  else ()
-    set (ARCH "Win32")
-  endif ()
+    set (OS "win")
+    if (${CMAKE_CL_64})
+        set (ARCH "x64")
+    else ()
+        set (ARCH "Win32")
+    endif ()
 elseif (${CMAKE_SYSTEM_NAME} MATCHES Linux)
-  set (OS "lin")
-  if (${CMAKE_SIZEOF_VOID_P} EQUAL 8)
-    set (ARCH "x86_64")
-  else ()
-    set (ARCH "i686")
-  endif ()
+    set (OS "lin")
+    set (ARCH "${CMAKE_SYSTEM_PROCESSOR}")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
-  set (OS "mac")
-  set (ARCH "x86_64")
+    set (OS "mac")
+    set (ARCH ${CMAKE_HOST_SYSTEM_PROCESSOR})
 endif ()
 
-# enforce build type
+# Enforce build type.
 if (NOT CMAKE_BUILD_TYPE)
-  set (CMAKE_BUILD_TYPE Release CACHE STRING "Setting build mode to Release" FORCE)
+    set (CMAKE_BUILD_TYPE Release CACHE STRING "Setting build mode to Release" FORCE)
 endif()
 
-# set output location
+# Set output location.
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY                ${CHAI3D_SOURCE_DIR}/bin/${OS}-${ARCH})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG          ${CHAI3D_SOURCE_DIR}/bin/${OS}-${ARCH})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL     ${CHAI3D_SOURCE_DIR}/bin/${OS}-${ARCH})
@@ -90,50 +85,50 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CHAI3D_SOURCE_DIR}/bin/${OS
 # Windows global build options
 if (${CMAKE_SYSTEM_NAME} MATCHES Windows)
 
-  # VisualStudio compiler
-  if (MSVC)
-    add_definitions (-D_CRT_SECURE_NO_DEPRECATE)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /MP")
-    if (${CMAKE_CL_64})
-      add_definitions (-DWIN64)
-    else ()
-      add_definitions (-DWIN32)
+    # VisualStudio compiler
+    if (MSVC)
+        add_definitions (-D_CRT_SECURE_NO_DEPRECATE)
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /MP")
+        if (${CMAKE_CL_64})
+            add_definitions (-DWIN64)
+        else ()
+            add_definitions (-DWIN32)
+        endif ()
+  
+    # MinGW compiler
+    elseif (MINGW)
+        add_definitions (-DWIN32)
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -Wno-deprecated -std=c++17")
     endif ()
-
-  # MinGW compiler
-  elseif (MINGW)
-    add_definitions (-DWIN32)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -Wno-deprecated -std=c++0x")
-  endif ()
-
-  # Windows icon resource wrapper
-  set (OS_SPECIFIC_PROPERTIES WinIcon.rc)
+  
+    # Windows icon resource wrapper
+    set (OS_SPECIFIC_PROPERTIES WinIcon.rc)
 
 # Linux global build options
 elseif (${CMAKE_SYSTEM_NAME} MATCHES Linux)
 
-  add_definitions (-DLINUX)
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -Wno-deprecated -std=c++0x")
+    add_definitions (-DLINUX)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -Wno-deprecated -std=c++17")
 
 # Mac OS X global build options
 elseif (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
 
-  add_definitions (-DMACOSX)
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments -Wno-deprecated -std=c++0x -stdlib=libc++")
-
-  # Mac OS X bundle icon
-  SET (ICON "chai3d.icns")
-  SET_SOURCE_FILES_PROPERTIES (${ICON} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set (MACOSX_BUNDLE_ICON_FILE chai3d.icns)
-  set (MACOSX_BUNDLE_INFO_PLIST Info.plist)
-  set (OS_SPECIFIC_PROPERTIES MACOSX_BUNDLE ${ICON})
+    add_definitions (-DMACOSX)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments -Wno-deprecated -std=c++17")
+   
+    # Mac OS X bundle icon
+    SET (ICON "chai3d.icns")
+    SET_SOURCE_FILES_PROPERTIES (${ICON} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set (MACOSX_BUNDLE_ICON_FILE chai3d.icns)
+    set (MACOSX_BUNDLE_INFO_PLIST Info.plist)
+    set (OS_SPECIFIC_PROPERTIES MACOSX_BUNDLE ${ICON})
 
 endif ()
 
-# build QT UI files
-qt5_wrap_ui (UI_HEADERS Interface.ui)
-qt5_add_resources (UI_RESOURCES Application.qrc)
+# Build QT UI files.
+qt6_wrap_ui (UI_HEADERS Interface.ui)
+qt6_add_resources (UI_RESOURCES resources.qrc)
 
-# target executable
+# Target executable
 add_executable (${PROJECT_NAME} ${OS_SPECIFIC_PROPERTIES} Application.h Application.cpp Interface.h Interface.cpp main.cpp ${UI_HEADERS} ${UI_RESOURCES})
-target_link_libraries (${PROJECT_NAME} ${CHAI3D_LIBRARIES} Qt5::Widgets Qt5::OpenGL)
+target_link_libraries (${PROJECT_NAME} ${CHAI3D_LIBRARIES} Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets)

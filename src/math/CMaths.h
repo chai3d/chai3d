@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2163 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -46,6 +46,7 @@
 #define CMathsH
 //------------------------------------------------------------------------------
 #include "math/CTransform.h"
+#define _USE_MATH_DEFINES
 #include <math.h>
 //------------------------------------------------------------------------------
 
@@ -131,7 +132,7 @@ inline unsigned int cSetBit(const unsigned int& a_data, const unsigned int& a_bi
     }
     else
     {
-        return (a_data & !(1<<a_bitPosition));
+        return (a_data & ~(1<<a_bitPosition));
     }
 }
 
@@ -145,14 +146,38 @@ inline unsigned int cSetBit(const unsigned int& a_data, const unsigned int& a_bi
     This function checks if a value passed by argument a_value is equal to 
     or almost near zero.
 
-    \param  a_value  Value to be checked.
+    \param  a_value      Value to be checked.
+    \param  a_tolerance  Tolerance value.
 
     \return __true__ if the value is equal to zero, __false__ otherwise.
 */
 //==============================================================================
-inline bool cZero(const double& a_value)
+inline bool cZero(const double& a_value, const double& a_tolerance = C_TINY)
 {
-    return ((a_value < C_TINY) && (a_value > -C_TINY));
+    return ((a_value < a_tolerance) && (a_value > -a_tolerance));
+}
+
+
+//==============================================================================
+/*!
+    \brief
+    This function checks if a value is equal to a given value.
+
+    \details
+    This function checks if a value passed by argument a_value is equal to 
+    or almost near zero.
+
+    \param  a_value1     Value 1 to be compared.
+    \param  a_value2     Value 2 to be compared.
+    \param  a_tolerance  Tolerance value.
+
+    \return __true__ if the value is equal to zero, __false__ otherwise.
+*/
+//==============================================================================
+inline bool cEqual(const double& a_value1, const double& a_value2, const double& a_tolerance = C_TINY)
+{
+    double value = a_value1 - a_value2;
+    return ((value < a_tolerance) && (value > -a_tolerance));
 }
 
 
@@ -493,6 +518,44 @@ inline double cSqrt(const double& a_value)
 inline double cCbrt(const double& a_value)
 {
     return (pow(a_value, 1.0/3.0));
+}
+
+
+//==============================================================================
+/*!
+    \brief
+    This method computes the modulo of a double within a range.
+
+    \details
+    This method computes the modulo of a double within a range. The range is 
+    defined by __a_min__ and __a_max__ passed by argument
+
+    \param  a_value  Input value.
+    \param  a_min    Minimum range.
+    \param  a_max    Maximum range.
+
+    \return The modulo within the range.
+*/
+//==============================================================================
+inline double cModuloRange(double a_value, double a_min, double a_max)
+{
+    double range = a_max - a_min;
+    double result = a_value;
+
+    if (a_value > a_max)
+    {
+        double value = a_value - a_min;
+        double num = std::trunc(value / range);
+        result = a_value - num * range;
+    }
+    else if (a_value < a_min)
+    {
+        double value = a_max - a_value;
+        double num = std::trunc(value / range);
+        result = a_value + num * range;
+    }
+
+    return result;
 }
 
 
@@ -1190,7 +1253,7 @@ inline cMatrix3d cRotEulerDeg(const double& a_angleDeg1,
     // create matrix
     cMatrix3d rot;
     if (a_useIntrinsicEulerModel)
-        rot.setExtrinsicEulerRotationDeg(a_angleDeg1, a_angleDeg2, a_angleDeg3, a_eulerOrder);
+        rot.setIntrinsicEulerRotationDeg(a_angleDeg1, a_angleDeg2, a_angleDeg3, a_eulerOrder);
     else
         rot.setExtrinsicEulerRotationDeg(a_angleDeg1, a_angleDeg2, a_angleDeg3, a_eulerOrder);
 

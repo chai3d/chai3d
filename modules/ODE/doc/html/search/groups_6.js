@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['lighting_20properties',['Lighting Properties',['../../../../../doc/html/group__lighting.html',1,'']]]
+  ['haptic_20effects_0',['Haptic Effects',['../../../../../doc/html/group__effects.html',1,'']]],
+  ['haptic_20tools_1',['Haptic Tools',['../../../../../doc/html/group__tools.html',1,'']]]
 ];

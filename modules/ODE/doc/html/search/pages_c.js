@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['widgets',['Widgets',['../../../../../doc/html/chapter18-widget.html',1,'']]],
-  ['world',['World',['../../../../../doc/html/chapter7-world.html',1,'']]]
+  ['rendering_0',['Haptic Rendering',['../../../../../doc/html/chapter17-haptics.html',1,'overview']]],
+  ['review_1',['Example Review',['../../../../../doc/html/chapter5-example.html',1,'overview']]]
 ];

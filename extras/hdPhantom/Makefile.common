@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,49 +35,96 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: conti $
-#  $Date: 2015-12-17 06:26:05 +0100 (Thu, 17 Dec 2015) $
-#  $Rev: 1869 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# external dependencies
-CHAI3D_DIR = ../..
-GLEW_DIR   = ../../external/glew
-EIGEN_DIR  = ../../external/Eigen
+# Helper functions
+rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
-# determine version info
-MAJOR   = $(shell cat $(CHAI3D_DIR)/src/version | grep MAJOR   | awk 'BEGIN { FS = "=" } { print $$2 }' )
-MINOR   = $(shell cat $(CHAI3D_DIR)/src/version | grep MINOR   | awk 'BEGIN { FS = "=" } { print $$2 }' )
-RELEASE = $(shell cat $(CHAI3D_DIR)/src/version | grep RELEASE | awk 'BEGIN { FS = "=" } { print $$2 }' )
+# Version
+VERSION    = $(TOP_DIR)/project
+PROJECT    = $(shell cat $(VERSION) | grep PROJECT\=    | awk 'BEGIN { FS = "=" } { print $$2 }' )
+MAJOR      = $(shell cat $(VERSION) | grep MAJOR\=      | awk 'BEGIN { FS = "=" } { print $$2 }' )
+MINOR      = $(shell cat $(VERSION) | grep MINOR\=      | awk 'BEGIN { FS = "=" } { print $$2 }' )
+PATCH      = $(shell cat $(VERSION) | grep PATCH\=      | awk 'BEGIN { FS = "=" } { print $$2 }' )
+PRERELEASE = $(shell cat $(VERSION) | grep PRERELEASE\= | awk 'BEGIN { FS = "=" } { print $$2 }' )
 
-# determine build configuration
+# Determine the build configuration.
 ifneq ($(CFG),debug)
-CFG = release
+    CFG = release
 endif
 
-# determine platform
+# Determine the platform.
 ARCH   ?= $(shell echo `uname -m`)
 SYSTEM ?= $(shell echo `uname -s`)
 ifeq ($(SYSTEM), Linux)
-OS = lin
+    OS = lin
+endif
+ifeq ($(SYSTEM), Darwin)
+    OS = mac
+endif
+ifeq ($(SYSTEM), QNX)
+    OS   = qnx
+    ARCH = $(subst pc,,$(ARCH))
 endif
 
-# common paths
+# Common paths
+BIN_DIR = $(TOP_DIR)/bin
 LIB_DIR = $(TOP_DIR)/lib/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)
 INC_DIR = $(TOP_DIR)/include
 
-# common compiler flags
+# Common compiler flags
+CFLAGS   += -I$(INC_DIR) -fsigned-char
 CXXFLAGS += -I$(INC_DIR) -fsigned-char
 
-# build configuration specific flags
-ifneq ($(CFG),debug)
-CXXFLAGS += -O3
-else
-CXXFLAGS += -O0 -g -DDEBUG
+# Target library headers
+LIB_INCLUDES = $(call rwildcard,$(INC_DIR)/,*.h *.hh *.hpp *.hxx)
+
+# Check for target library source files.
+BUILD_LIB = $(words $(call rwildcard,$(TOP_DIR)/src,*.c *.cc *.cpp))
+
+# Define static library target if required.
+ifneq (0,$(BUILD_LIB))
+    LIB_ROOT_NAME = $(PROJECT)
+    LIB_STATIC = $(LIB_DIR)/lib$(LIB_ROOT_NAME).a
+    LDFLAGS += -L$(LIB_DIR)
+    LDLIBS += -l$(LIB_ROOT_NAME)
 endif
 
-# target libraries
-ROOT_NAME  = hdPhantom
+# Common librarian flags
+ARFLAGS = rs
 
-# platform-specific macros
-include $(TOP_DIR)/Makefile.common.$(OS)
+# Build configuration specific flags
+ifneq ($(CFG),debug)
+    CFLAGS   += -O3
+    CXXFLAGS += -O3
+else
+    CFLAGS   += -O0 -g -DDEBUG -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual
+    CXXFLAGS += -O0 -g -DDEBUG -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual
+endif
+
+# Optional build flags
+ifneq ($(OPTIONS), )
+    CFLAGS   += $(OPTIONS)
+    CXXFLAGS += $(OPTIONS)
+endif
+
+# Library files (include both static and platform-specific shared library files)
+LIB = $(LIB_STATIC) $(LIB_SHARED)
+
+# Import common platform-specific settings.
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common.$(OS)))
+    include $(TOP_DIR)/Makefile.common.$(OS)
+endif
+
+# Import project settings.
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.project.common))
+    include $(TOP_DIR)/Makefile.project.common
+endif
+
+# Import platform-specific project settings.
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.project.common.$(OS)))
+    include $(TOP_DIR)/Makefile.project.common.$(OS)
+endif

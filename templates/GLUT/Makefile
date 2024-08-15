@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,49 +35,27 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-01-21 16:13:27 +0100 (Thu, 21 Jan 2016) $
-#  $Rev: 1906 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# chai3d location
+# Default targets
+SUBDIRS = $(patsubst %/,%,$(sort $(dir $(wildcard */Makefile))))
+all: $(SUBDIRS)
+
+# Project-specific rules
 TOP_DIR = ../..
-
-# chai3d global configuration
-include $(TOP_DIR)/Makefile.common
-
-# GLUT dependency
-LDLIBS += $(LDLIBS_GLUT)
-
-# platform-dependent adjustments
-ifeq ($(OS), mac)
-  DEPLOY = Rez -append $(TOP_DIR)/bin/resources/icons/chai3d.rsrc -o $(OUTPUT); SetFile -a C $(OUTPUT)
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common))
+    include $(TOP_DIR)/Makefile.common
+endif
+ifneq (,$(wildcard ./Makefile.project))
+    include ./Makefile.project
 endif
 
-# local configuration
-SRC_DIR   = .
-HDR_DIR   = .
-OBJ_DIR   = ./obj/$(CFG)/$(OS)-$(ARCH)-$(COMPILER)
-PROG      = application-GLUT 
-SOURCES   = $(wildcard $(SRC_DIR)/*.cpp)
-INCLUDES  = $(wildcard $(HDR_DIR)/*.h)
-OBJECTS   = $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(notdir $(SOURCES)))
-OUTPUT    = $(BIN_DIR)/$(PROG)
-
-all: $(OUTPUT)
-
-$(OBJECTS): $(INCLUDES)
-
-$(OUTPUT): $(OBJ_DIR) $(LIB_TARGET) $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -I$(HDR_DIR) $(OBJECTS) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT)
-	$(DEPLOY)
-
-$(OBJ_DIR):
-	mkdir -p $@
-
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+.PHONY: $(SUBDIRS)
+$(SUBDIRS):
+	$(MAKE) -C $@
 
 clean:
-	rm -f $(OUTPUT) $(OBJECTS) *~
-	-rm -rf $(OBJ_DIR)
+	@for T in $(SUBDIRS); do make -C $$T $@; done

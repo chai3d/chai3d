@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,20 +35,23 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: seb $
-#  $Date: 2016-08-16 23:22:03 +0200 (Tue, 16 Aug 2016) $
-#  $Rev: 2089 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# import settings
-TOP_DIR = ..
-include $(TOP_DIR)/Makefile.common
-
-# GLFW examples group
-SUBDIRS += GLFW
-
-# rules
+# Default targets
+SUBDIRS = $(patsubst %/,%,$(sort $(dir $(wildcard */Makefile))))
 all: $(SUBDIRS)
+
+# Project-specific rules
+TOP_DIR = ..
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common))
+    include $(TOP_DIR)/Makefile.common
+endif
+ifneq (,$(wildcard ./Makefile.project))
+    include ./Makefile.project
+endif
 
 .PHONY: $(SUBDIRS)
 $(SUBDIRS):

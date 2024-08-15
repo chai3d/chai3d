@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,20 +35,23 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: conti $
-#  $Date: 2015-12-17 06:26:05 +0100 (Thu, 17 Dec 2015) $
-#  $Rev: 1869 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project(.*).
 
-# import settings
-TOP_DIR = ..
-include $(TOP_DIR)/Makefile.common
-
-# demo groups
-SUBDIRS  = CLI
-
-# rules
+# Default targets
+SUBDIRS = $(patsubst %/,%,$(sort $(dir $(wildcard */Makefile))))
 all: $(SUBDIRS)
+
+# Project-specific rules
+TOP_DIR = ..
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common))
+    include $(TOP_DIR)/Makefile.common
+endif
+ifneq (,$(wildcard ./Makefile.project))
+    include ./Makefile.project
+endif
 
 .PHONY: $(SUBDIRS)
 $(SUBDIRS):

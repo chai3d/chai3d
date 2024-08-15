@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -102,6 +102,9 @@ public:
     //--------------------------------------------------------------------------
 
 public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("NormalMap"); }
 
     //! This method creates a copy of itself.
     cNormalMapPtr copy();

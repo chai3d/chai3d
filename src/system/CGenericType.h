@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 1869 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -45,7 +45,9 @@
 #ifndef CGenericTypeH
 #define CGenericTypeH
 //------------------------------------------------------------------------------
-#include <list>
+
+//------------------------------------------------------------------------------
+#include <string>
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -79,11 +81,64 @@ class cGenericType
 public:
 
     //! Constructor of cGenericType.
-    cGenericType(){};
+    cGenericType();
 
     //! Destructor of cGenericType.
     virtual ~cGenericType(){};
+
+
+    //-----------------------------------------------------------------------
+    // PUBLIC METHODS
+    //-----------------------------------------------------------------------
+
+public:
+
+    //! This method returns the name of the object class.
+    virtual std::string getClassName() { return ("GenericType"); }
+
+    //! This method return the value of the object counter.
+    virtual int getObjectCounter() { return (s_objectCounter); }
+
+
+    //-----------------------------------------------------------------------
+    // PUBLIC MEMBERS - NAMES
+    //-----------------------------------------------------------------------
+
+public:
+
+    //! Object name
+    std::string m_name;
+
+    //! Object filename
+    std::string m_filename;
+
+
+    //-----------------------------------------------------------------------
+    // PUBLIC MEMBERS - USER DATA
+    //-----------------------------------------------------------------------
+
+public:
+
+    //! This pointer can be used for any user purpose.
+    void* m_userPtr;
+
+    //! This integer can be used for any user purpose.
+    int m_userIndex;
+
+
+    //-----------------------------------------------------------------------
+    // PROTECTED MEMBERS
+    //-----------------------------------------------------------------------
+
+protected:
+
+    //! Static class counter
+    static int s_objectCounter;
 };
+
+//------------------------------------------------------------------------------
+//int cGenericObject::s_objectCounter = 0;
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 } // namespace chai3d

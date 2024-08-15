@@ -1,7 +1,7 @@
 //==============================================================================
 /*
     Software License Agreement (BSD License)
-    Copyright (c) 2003-2016, CHAI3D.
+    Copyright (c) 2003-2024, CHAI3D
     (www.chai3d.org)
 
     All rights reserved.
@@ -37,7 +37,7 @@
 
     \author    <http://www.chai3d.org>
     \author    Francois Conti
-    \version   3.2.0 $Rev: 2162 $
+    \version   3.3.0
 */
 //==============================================================================
 
@@ -161,18 +161,18 @@ void cNormalMap::createMap(cImagePtr a_image)
             double levelU1V = (double)(colorU1V.getLuminance());
 
             // compute normalized gradient
-            double SCALE = 1.0/255.0;
-            double deltaU =-SCALE * (levelU1V - levelU0V);
-            double deltaV = SCALE * (levelUV1 - levelUV0);
-            double deltaH = 1-cSqr(deltaU)-cSqr(deltaV);
+            double scale = 0.01;
+            double deltaU = - scale * (levelU1V - levelU0V);
+            double deltaV = - scale * (levelUV1 - levelUV0);
+            double deltaH = 1.0;
 
             // compute length of vector
             double l = sqrt(deltaU*deltaU + deltaV*deltaV + deltaH*deltaH);
 
             // normalize, scale, and offset
-            deltaU = 128 + 127 * (deltaU / l);
-            deltaV = 128 + 127 * (deltaV / l);
-            deltaH = 128 + 127 * (deltaH / l);
+            deltaU = cClamp(128 + 127 * (deltaU / l), 0.0, 255.0);
+            deltaV = cClamp(128 + 127 * (deltaV / l), 0.0, 255.0);
+            deltaH = cClamp(128 + 127 * (deltaH / l), 0.0, 255.0);
 
             // set gradient value at location (u,v)
             cColorb gradient;

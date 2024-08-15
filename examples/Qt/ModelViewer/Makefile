@@ -1,5 +1,7 @@
+################################################################################
+#
 #  Software License Agreement (BSD License)
-#  Copyright (c) 2003-2016, CHAI3D.
+#  Copyright (c) 2003-2024, CHAI3D
 #  (www.chai3d.org)
 #
 #  All rights reserved.
@@ -33,44 +35,91 @@
 #  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #  POSSIBILITY OF SUCH DAMAGE.
 #
-#  $Author: conti $
-#  $Date: 2015-12-17 06:26:05 +0100 (Thu, 17 Dec 2015) $
-#  $Rev: 1869 $
+################################################################################
 
+# DO NOT MODIFY THIS FILE
+# Project-specific changes should go in Makefile.project.
 
-# chai3d location
+# Default target
+all: project
+
+# Common settings
 TOP_DIR = ../../..
-
-# chai3d global configuration
-include $(TOP_DIR)/Makefile.common
-
-# platform specific flags
-ifeq ($(OS), mac)
-  QFLAGS = -spec macx-g++ CONFIG-=app_bundle
+ifneq (,$(wildcard $(TOP_DIR)/Makefile.common))
+    include $(TOP_DIR)/Makefile.common
 endif
 
-# configuration specific flags
-ifeq ($(CFG),debug)
-QFLAGS += CONFIG+=debug
+# Directories
+SRC_DIR = .
+
+# Files
+SOURCES  = $(call rwildcard,$(SRC_DIR)/,*.cpp)
+INCLUDES = $(call rwildcard,$(SRC_DIR)/,*.h)
+NAME     = $(notdir $(shell pwd))
+TARGET   = $(BIN_DIR)/$(NAME)
+
+# Qt files (including common resource types)
+PRO        = $(call rwildcard,$(SRC_DIR)/,*.pro)
+FORMS      = $(call rwildcard,$(SRC_DIR)/,*.ui)
+RESOURCES  = $(call rwildcard,$(SRC_DIR)/,*.rcc)
+RESOURCES += $(call rwildcard,$(SRC_DIR)/,*.qrc)
+RESOURCES += $(call rwildcard,$(SRC_DIR)/,*.png)
+RESOURCES += $(call rwildcard,$(SRC_DIR)/,*.ico)
+RESOURCES += $(call rwildcard,$(SRC_DIR)/,*.icns)
+RESOURCES += $(call rwildcard,$(SRC_DIR)/,*.qml)
+RESOURCES += $(call rwildcard,$(SRC_DIR)/,*.conf)
+
+# Tool requirement: check that qmake exists.
+ifeq (, $(shell which qmake))
+
+    # Qmake is missing.
+    $(info qmake not found, skipping ${TARGET})
+    TARGET :=
+
 else
-QFLAGS += -Wnone
+
+    # Qmake exists.
+
+    # Import platform-specific settings.
+    ifneq (,$(wildcard ./Makefile.$(OS)))
+        include ./Makefile.$(OS)
+    endif
+
+    # Import project settings.
+    ifneq (,$(wildcard ./Makefile.project))
+        include ./Makefile.project
+    endif
+
+    # Import platform-specific project settings.
+    ifneq (,$(wildcard ./Makefile.project.$(OS)))
+        include ./Makefile.project.$(OS)
+    endif
+
 endif
 
-# definitions
-NAME   = application-QT
-TARGET = $(BIN_DIR)/$(NAME)
+# Build configuration specific flags.
+ifeq ($(CFG),debug)
+    QFLAGS += CONFIG+=debug
+else
+    QFLAGS += CONFIG+=release
+    QFLAGS += CONFIG+=optimize_full
+    QFLAGS += -Wnone
+endif
 
-# rules
-all: $(TARGET)
+# Build rules
 
-$(TARGET): Makefile.$(OS).$(ARCH).$(COMPILER) $(EXTERNAL)
-	$(MAKE) -f Makefile.$(OS).$(ARCH).$(COMPILER)
+project: $(TARGET)
 
-Makefile.$(OS).$(ARCH).$(COMPILER):
-	qmake $(QFLAGS) QMAKE_CXX=$(CXX) QMAKE_CC=$(CC) QMAKE_LINK=$(CXX) ARCH=$(ARCH) COMPILER=$(COMPILER) CFG=$(CFG) -o Makefile.$(OS).$(ARCH).$(COMPILER)
+$(TARGET): Makefile.qt.$(OS).$(ARCH).$(COMPILER) $(SOURCES) $(INCLUDES) $(FORMS) $(RESOURCES) $(LIB_STATIC) $(OBJECTS) | $(BIN_DIR)
+	rm -rf $(TARGET)
+	$(MAKE) -f Makefile.qt.$(OS).$(ARCH).$(COMPILER)
+	$(DEPLOY)
 
-.PHONY: Makefile.$(OS).$(ARCH).$(COMPILER) $(EXTERNAL)
+Makefile.qt.$(OS).$(ARCH).$(COMPILER): $(PRO)
+	qmake $(QFLAGS) QMAKE_CC=$(CC) QMAKE_CXX=$(CXX) QMAKE_LINK=$(CXX) OS=$(OS) ARCH=$(ARCH) COMPILER=$(COMPILER) CFG=$(CFG) -o Makefile.qt.$(OS).$(ARCH).$(COMPILER)
 
-clean: Makefile.$(OS).$(ARCH).$(COMPILER)
-	make -f Makefile.$(OS).$(ARCH).$(COMPILER) clean
-	-rm -rf $(TARGET).app $(TARGET) Makefile.$(OS).$(ARCH).$(COMPILER)
+.PHONY: project
+
+clean:
+	rm -f $(TARGET) *~ TAGS core *.bak #*#
+	-rmdir rcc uic moc
