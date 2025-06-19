@@ -45,6 +45,7 @@
 #include "CGELVertex.h"
 //---------------------------------------------------------------------------
 using namespace chai3d;
+using namespace std;
 //---------------------------------------------------------------------------
 
 //===========================================================================
@@ -59,7 +60,7 @@ cGELVertex::cGELVertex(chai3d::cMesh* a_mesh, unsigned int a_vertexIndex)
 {
     m_mesh = a_mesh;
     m_vertexIndex = a_vertexIndex;
-    m_massParticle = new cGELMassParticle();
+    m_massParticle = make_shared<cGELMassParticle>();
     m_link = NULL;
     m_node = NULL;
     m_massParticle->m_pos = a_mesh->m_vertices->getLocalPos(a_vertexIndex);
@@ -73,6 +74,4 @@ cGELVertex::cGELVertex(chai3d::cMesh* a_mesh, unsigned int a_vertexIndex)
 //==========================================================================
 cGELVertex::~cGELVertex()
 {
-    // \todo this causes a crash
-    // delete m_massParticle;
 }

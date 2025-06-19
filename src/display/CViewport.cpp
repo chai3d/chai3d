@@ -90,7 +90,6 @@ cViewport::cViewport(cCamera* a_camera, double a_contentScaleWidth, double a_con
 cViewport::~cViewport()
 {
     delete m_cameraViewport;
-    delete m_viewPanel;
 }
 
 

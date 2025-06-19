@@ -48,6 +48,7 @@
 #include "CGELMassParticle.h"
 #include "CGELSkeletonLink.h"
 #include "CGELSkeletonNode.h"
+#include <memory>
 //---------------------------------------------------------------------------
 #include "chai3d.h"
 //---------------------------------------------------------------------------
@@ -103,7 +104,7 @@ public:
     chai3d::cMesh* m_mesh;
 
     //! Mass particle for current vertex.
-    cGELMassParticle* m_massParticle;
+    std::shared_ptr<cGELMassParticle> m_massParticle;
 
     //! Skeleton link to which this vertex may be linked to.
     cGELSkeletonLink* m_link;
