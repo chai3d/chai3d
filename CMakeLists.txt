@@ -131,6 +131,22 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
     set (CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Qunused-arguments -Wno-deprecated")
 endif ()
 
+option(USE_OPENAL_SOFT OFF "Use OpenAL-soft")
+if(USE_OPENAL_SOFT)
+    if(APPLE)
+        # Install OpenAL-soft with: brew install openal-soft && brew link openal-soft
+        execute_process(COMMAND brew --prefix OUTPUT_VARIABLE "BREW_PREFIX")
+        message("BREW_PREFIX ${BREW_PREFIX}")
+        set(OPENALDIR "${BREW_PREFIX}")
+        set(CMAKE_FIND_FRAMEWORK LAST)
+    endif()
+    find_package(OpenAL)
+    if(NOT OPENAL_FOUND)
+        message(FATAL_ERROR "OpenAL-soft not found. Install OpenAL-soft or set USE_OPENAL_SOFT to OFF.")
+    endif()
+    string(REPLACE "/AL" "" OPENAL_INCLUDE_DIR "${OPENAL_INCLUDE_DIR}")
+endif()
+
 ################################################################################
 #
 # Static library
@@ -146,9 +162,12 @@ include_directories (${PROJECT_SOURCE_DIR}/externals/lib3ds/include)
 include_directories (${PROJECT_SOURCE_DIR}/externals/libjpeg/include)
 include_directories (${PROJECT_SOURCE_DIR}/externals/libpng/include)
 include_directories (${PROJECT_SOURCE_DIR}/externals/minimp3/include)
+if(USE_OPENAL_SOFT)
+else()
 include_directories (${PROJECT_SOURCE_DIR}/externals/openal/include)
 include_directories (${PROJECT_SOURCE_DIR}/externals/openal/OpenAL32/Include)
 include_directories (${PROJECT_SOURCE_DIR}/externals/openal/Alc)
+endif()
 include_directories (${PROJECT_SOURCE_DIR}/externals/pugixml/include)
 include_directories (${PROJECT_SOURCE_DIR}/externals/STB/include)
 include_directories (${PROJECT_SOURCE_DIR}/externals/theoraplayer/include/theoraplayer)
@@ -170,7 +189,9 @@ file (GLOB_RECURSE source_3ds       RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOU
 file (GLOB_RECURSE source_jpeg      RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/externals/libjpeg/*.c      ${PROJECT_SOURCE_DIR}/externals/libjpeg/*.h)
 file (GLOB_RECURSE source_png       RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/externals/libpng/*.c       ${PROJECT_SOURCE_DIR}/externals/libpng/*.h)
 file (GLOB_RECURSE source_pugixml   RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/externals/pugixml/*.c      ${PROJECT_SOURCE_DIR}/externals/pugixml/*.h)
+if(NOT USE_OPENAL_SOFT)
 file (GLOB_RECURSE source_openal    RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/externals/openal/*.c       ${PROJECT_SOURCE_DIR}/externals/openal/*.h)
+endif()
 file (GLOB_RECURSE source_theora    RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/externals/theoraplayer/*.c ${PROJECT_SOURCE_DIR}/externals/theoraplayer/*.cpp ${PROJECT_SOURCE_DIR}/externals/theoraplayer/*.h)
 file (GLOB_RECURSE source_rtmidi    RELATIVE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/externals/RtMidi/*.cpp     ${PROJECT_SOURCE_DIR}/externals/RtMidi/*.h)
 
@@ -203,6 +224,11 @@ endif ()
 
 # Static library
 add_library (chai3d STATIC ${source} ${source_eigen} ${source_gif} ${source_glew} ${source_3ds} ${source_jpeg} ${source_png} ${source_pugixml} ${source_openal} ${source_theora})
+
+if(USE_OPENAL_SOFT AND OPENAL_FOUND)
+    include_directories(${OPENAL_INCLUDE_DIR})
+    link_libraries(${OPENAL_LIBRARY})
+endif()
 
 # Library exports
 set (CHAI3D_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src" "${PROJECT_SOURCE_DIR}/externals/Eigen" "${PROJECT_SOURCE_DIR}/externals/glew/include" "${OPENGL_INCLUDE_DIR}")
