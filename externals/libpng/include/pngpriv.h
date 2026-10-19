@@ -447,6 +447,9 @@
     */
 #  include <float.h>
 
+#if __APPLE__
+#include <math.h>
+#else
 #  if (defined(__MWERKS__) && defined(macintosh)) || defined(applec) || \
     defined(THINK_C) || defined(__SC__) || defined(TARGET_OS_MAC)
    /* We need to check that <math.h> hasn't already been included earlier
@@ -465,6 +468,7 @@
     */
 #    include <m68881.h>
 #  endif
+#endif
 #endif
 
 /* This provides the non-ANSI (far) memory allocation routines. */
