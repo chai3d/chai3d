@@ -18,6 +18,10 @@
 #  define ZLIB_INTERNAL
 #endif
 
+#ifdef fdopen
+#undef fdopen
+#endif
+
 #include <stdio.h>
 #include "zlib.h"
 #ifdef STDC
